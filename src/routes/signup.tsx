@@ -15,7 +15,7 @@ export const Route = createFileRoute("/signup")({
 });
 
 function Signup() {
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string; confirm?: string }>({});
   const [notice, setNotice] = useState("");
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -23,7 +23,7 @@ function Signup() {
     const f = new FormData(e.currentTarget);
     const email = String(f.get("email") ?? "");
     const pw = String(f.get("password") ?? "");
-    const next: Record<string, string> = {};
+    const next: { email?: string; password?: string; confirm?: string } = {};
     if (!/^\S+@\S+\.\S+$/.test(email)) next.email = "Enter a valid email address.";
     if (pw.length < 8) next.password = "Use at least 8 characters.";
     if (pw !== f.get("confirm")) next.confirm = "Passwords don't match.";
