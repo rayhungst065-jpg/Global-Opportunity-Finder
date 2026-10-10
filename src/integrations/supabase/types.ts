@@ -14,16 +14,164 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      opportunities: {
+        Row: {
+          application_status: Database["public"]["Enums"]["application_status"]
+          category: Database["public"]["Enums"]["opportunity_category"]
+          created_at: string
+          deadline: string | null
+          description: string
+          eligibility: string
+          id: string
+          is_demo: boolean
+          location: string
+          official_url: string | null
+          organizer: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          application_status?: Database["public"]["Enums"]["application_status"]
+          category: Database["public"]["Enums"]["opportunity_category"]
+          created_at?: string
+          deadline?: string | null
+          description?: string
+          eligibility?: string
+          id?: string
+          is_demo?: boolean
+          location?: string
+          official_url?: string | null
+          organizer: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          application_status?: Database["public"]["Enums"]["application_status"]
+          category?: Database["public"]["Enums"]["opportunity_category"]
+          created_at?: string
+          deadline?: string | null
+          description?: string
+          eligibility?: string
+          id?: string
+          is_demo?: boolean
+          location?: string
+          official_url?: string | null
+          organizer?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          education_level: string | null
+          grade: string | null
+          id: string
+          intended_major: string | null
+          interests: string[]
+          onboarded: boolean
+          preferences: Json
+          preferred_categories: Database["public"]["Enums"]["opportunity_category"][]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          education_level?: string | null
+          grade?: string | null
+          id: string
+          intended_major?: string | null
+          interests?: string[]
+          onboarded?: boolean
+          preferences?: Json
+          preferred_categories?: Database["public"]["Enums"]["opportunity_category"][]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          education_level?: string | null
+          grade?: string | null
+          id?: string
+          intended_major?: string | null
+          interests?: string[]
+          onboarded?: boolean
+          preferences?: Json
+          preferred_categories?: Database["public"]["Enums"]["opportunity_category"][]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      saved_opportunities: {
+        Row: {
+          created_at: string
+          id: string
+          opportunity_id: string
+          status: Database["public"]["Enums"]["saved_status"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          opportunity_id: string
+          status?: Database["public"]["Enums"]["saved_status"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          opportunity_id?: string
+          status?: Database["public"]["Enums"]["saved_status"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_opportunities_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
+      application_status: "open" | "rolling" | "upcoming" | "closed"
+      opportunity_category: "volunteer" | "competitions" | "research" | "awards"
+      saved_status: "interested" | "applying" | "submitted"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +298,11 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+      application_status: ["open", "rolling", "upcoming", "closed"],
+      opportunity_category: ["volunteer", "competitions", "research", "awards"],
+      saved_status: ["interested", "applying", "submitted"],
+    },
   },
 } as const
