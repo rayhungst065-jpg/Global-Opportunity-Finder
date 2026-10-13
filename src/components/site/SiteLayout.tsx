@@ -1,5 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { useUser } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
 
 export function Logo() {
   return (
@@ -14,11 +16,13 @@ export function Logo() {
 
 const nav = [
   { to: "/how-it-works", label: "How It Works" },
+  { to: "/opportunities", label: "Browse" },
   { to: "/categories", label: "Explore Categories" },
   { to: "/about", label: "About" },
 ] as const;
 
 export function SiteHeader() {
+  const { user } = useUser();
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5">
@@ -30,6 +34,13 @@ export function SiteHeader() {
             </Link>
           ))}
         </nav>
+        {user ? (
+        <div className="flex items-center gap-2 text-sm">
+          <Link to="/profile" className="rounded-full px-3 py-1.5 text-muted-foreground hover:text-foreground">Profile</Link>
+          <Link to="/dashboard" className="rounded-full bg-primary px-4 py-1.5 font-medium text-primary-foreground transition hover:opacity-90">Dashboard</Link>
+          <button onClick={() => supabase.auth.signOut().then(() => { window.location.href = "/"; })} className="rounded-full px-3 py-1.5 text-muted-foreground hover:text-foreground">Log Out</button>
+        </div>
+        ) : (
         <div className="flex items-center gap-2 text-sm">
           <Link to="/login" className="rounded-full px-3 py-1.5 text-muted-foreground hover:text-foreground">
             Log In
@@ -38,6 +49,7 @@ export function SiteHeader() {
             Sign Up
           </Link>
         </div>
+        )}
       </div>
     </header>
   );

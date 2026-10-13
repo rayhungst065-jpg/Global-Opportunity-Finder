@@ -8,3 +8,9 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Architecture rules
+- Public opportunity reads go through `src/lib/opportunities.functions.ts` (publishable-key server client) so listing pages SSR; why: anon RLS read policy, no session on server.
+- Student-owned data (profiles, saved_opportunities) is read/written from the browser client under RLS; why: RLS scopes rows to auth.uid().
+- Opportunity writes are admin-only via `public.has_role`; roles live in `user_roles`; why: prevents privilege escalation.
+- Demo rows carry `is_demo = true` and must be labeled in the UI; why: never present fake opportunities as real.
