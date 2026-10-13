@@ -1,0 +1,70 @@
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
+import type { Opportunity } from "@/lib/saved";
+
+export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
+export type Category = Database["public"]["Enums"]["opportunity_category"];
+
+/** The signed-in student's own profile row (RLS restricts to auth.uid()). */
+export function useProfile(userId: string | undefined) {
+  return useQuery({
+    queryKey: ["profile", userId],
+    enabled: !!userId,
+    queryFn: async () => {
+      const { data, error } = await supabase.from("profiles").select("*").eq("id", userId!).maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
+}
+
+/** All public listings, read in the browser (anon/auth SELECT policy). */
+export function useAllOpportunities() {
+  return useQuery({
+    queryKey: ["opportunities-all"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("opportunities").select("*");
+      if (error) throw error;
+      return data;
+    },
+  });
+}
+
+/** Which profile fields count toward the completion meter. */
+export function profileCompletion(p: Profile | null | undefined) {
+  if (!p) return 0;
+  const checks = [
+    !!p.first_name,
+    !!p.education_level,
+    !!p.grade,
+    !!p.country_region,
+    !!p.intended_major,
+    p.interests.length > 0,
+    p.preferred_categories.length > 0,
+    !!p.format_preference && p.format_preference !== "either" ? true : p.onboarded,
+  ];
+  return Math.round((checks.filter(Boolean).length / checks.length) * 100);
+}
+
+/** Simple rule-based matching: category, interest keywords, format. Closed listings excluded. */
+export function recommend(p: Profile | null | undefined, list: Opportunity[]) {
+  if (!p) return [];
+  const words = [...p.interests, p.intended_major ?? ""].map((w) => w.toLowerCase().trim()).filter(Boolean);
+  return list
+    .filter((o) => o.application_status !== "closed")
+    .map((o) => {
+      const text = `${o.title} ${o.description} ${o.eligibility}`.toLowerCase();
+      const online = o.location.toLowerCase().includes("online");
+      let score = 0;
+      const reasons: string[] = [];
+      if (p.preferred_categories.includes(o.category)) { score += 3; reasons.push("Matches a category you chose"); }
+      const hit = words.find((w) => text.includes(w));
+      if (hit) { score += 2; reasons.push(`Mentions "${hit}"`); }
+      if (p.format_preference === "online" && online) { score += 1; reasons.push("Available online"); }
+      if (p.format_preference === "in_person" && !online) { score += 1; reasons.push("In person"); }
+      return { o, score, reasons };
+    })
+    .filter((r) => r.score > 0)
+    .sort((a, b) => b.score - a.score);
+}

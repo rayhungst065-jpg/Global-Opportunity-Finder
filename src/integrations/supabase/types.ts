@@ -64,9 +64,12 @@ export type Database = {
       }
       profiles: {
         Row: {
+          country_region: string | null
           created_at: string
           display_name: string | null
           education_level: string | null
+          first_name: string | null
+          format_preference: string
           grade: string | null
           id: string
           intended_major: string | null
@@ -74,12 +77,16 @@ export type Database = {
           onboarded: boolean
           preferences: Json
           preferred_categories: Database["public"]["Enums"]["opportunity_category"][]
+          preferred_regions: string[]
           updated_at: string
         }
         Insert: {
+          country_region?: string | null
           created_at?: string
           display_name?: string | null
           education_level?: string | null
+          first_name?: string | null
+          format_preference?: string
           grade?: string | null
           id: string
           intended_major?: string | null
@@ -87,12 +94,16 @@ export type Database = {
           onboarded?: boolean
           preferences?: Json
           preferred_categories?: Database["public"]["Enums"]["opportunity_category"][]
+          preferred_regions?: string[]
           updated_at?: string
         }
         Update: {
+          country_region?: string | null
           created_at?: string
           display_name?: string | null
           education_level?: string | null
+          first_name?: string | null
+          format_preference?: string
           grade?: string | null
           id?: string
           intended_major?: string | null
@@ -100,6 +111,7 @@ export type Database = {
           onboarded?: boolean
           preferences?: Json
           preferred_categories?: Database["public"]["Enums"]["opportunity_category"][]
+          preferred_regions?: string[]
           updated_at?: string
         }
         Relationships: []
