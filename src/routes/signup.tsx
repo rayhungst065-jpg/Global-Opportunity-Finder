@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { AuthCard, Field, submitBtn } from "@/components/site/AuthCard";
 
 export const Route = createFileRoute("/signup")({
@@ -18,7 +19,7 @@ function Signup() {
   const [errors, setErrors] = useState<{ email?: string; password?: string; confirm?: string }>({});
   const [notice, setNotice] = useState("");
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
     const email = String(f.get("email") ?? "");
@@ -28,8 +29,10 @@ function Signup() {
     if (pw.length < 8) next.password = "Use at least 8 characters.";
     if (pw !== f.get("confirm")) next.confirm = "Passwords don't match.";
     setErrors(next);
-    // Real account creation is connected in the next build step — no fake success.
-    if (!Object.keys(next).length) setNotice("Accounts aren't switched on yet. This form will create real accounts in the next step.");
+    if (Object.keys(next).length) return;
+    const { error } = await supabase.auth.signUp({ email, password: pw, options: { emailRedirectTo: window.location.origin + "/profile" } });
+    if (error) return setErrors({ email: error.message });
+    setNotice("Check your email and click the confirmation link, then log in to set up your profile.");
   }
 
   return (
