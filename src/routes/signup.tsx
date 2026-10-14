@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthCard, Field, submitBtn } from "@/components/site/AuthCard";
@@ -18,6 +18,8 @@ export const Route = createFileRoute("/signup")({
 function Signup() {
   const [errors, setErrors] = useState<{ email?: string; password?: string; confirm?: string }>({});
   const [notice, setNotice] = useState("");
+  const [busy, setBusy] = useState(false);
+  const navigate = useNavigate();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -30,9 +32,12 @@ function Signup() {
     if (pw !== f.get("confirm")) next.confirm = "Passwords don't match.";
     setErrors(next);
     if (Object.keys(next).length) return;
-    const { error } = await supabase.auth.signUp({ email, password: pw, options: { emailRedirectTo: window.location.origin + "/profile" } });
+    setBusy(true);
+    const { data, error } = await supabase.auth.signUp({ email, password: pw, options: { emailRedirectTo: window.location.origin + "/onboarding" } });
+    setBusy(false);
     if (error) return setErrors({ email: error.message });
-    setNotice("Check your email and click the confirmation link, then log in to set up your profile.");
+    if (data.session) return navigate({ to: "/onboarding" });
+    setNotice("Check your email and click the confirmation link. It will bring you straight to profile setup.");
   }
 
   return (
@@ -41,7 +46,7 @@ function Signup() {
         <Field label="Email address" name="email" type="email" autoComplete="email" error={errors.email} />
         <Field label="Password" name="password" type="password" autoComplete="new-password" error={errors.password} />
         <Field label="Confirm password" name="confirm" type="password" autoComplete="new-password" error={errors.confirm} />
-        <button className={submitBtn}>Create account</button>
+        <button className={submitBtn} disabled={busy}>{busy ? "Creating account…" : "Create account"}</button>
         {notice && <p className="rounded-xl bg-primary-soft p-3 text-sm text-accent-foreground">{notice}</p>}
       </form>
     </AuthCard>

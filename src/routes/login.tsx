@@ -26,10 +26,11 @@ function Login() {
     const password = String(f.get("password") ?? "");
     if (!email || !password) return setError("Enter your email and password.");
     setBusy(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) { setBusy(false); return setError(error.message); }
+    const { data: prof } = await supabase.from("profiles").select("onboarded").eq("id", data.user.id).maybeSingle();
     setBusy(false);
-    if (error) return setError(error.message);
-    navigate({ to: "/dashboard" });
+    navigate({ to: prof?.onboarded ? "/dashboard" : "/onboarding" });
   }
   return (
     <AuthCard title="Welcome back" subtitle="Log in to continue." footer={<>New here? <Link to="/signup" className="text-primary hover:underline">Create an account</Link></>}>
