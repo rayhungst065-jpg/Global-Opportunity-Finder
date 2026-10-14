@@ -1,128 +1,115 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { SiteShell } from "@/components/site/SiteLayout";
-import { formatDeadline, OpportunityCard } from "@/components/site/OpportunityCard";
-import { supabase } from "@/integrations/supabase/client";
+import { WorkspaceShell, Panel } from "@/components/site/WorkspaceShell";
+import { categoryName, formatDeadline } from "@/components/site/OpportunityCard";
 import { useUser } from "@/lib/auth";
-import { useToggleSave, type SavedStatus } from "@/lib/saved";
+import { profileCompletion, recommend, useAllOpportunities, useProfile } from "@/lib/profile";
+import { upcomingOf, useSavedList } from "@/lib/saved-list";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
-      { title: "Your Dashboard — Opportunity Finder" },
-      { name: "description", content: "Your saved opportunities and upcoming deadlines." },
-      { property: "og:title", content: "Your Dashboard — Opportunity Finder" },
-      { property: "og:description", content: "Track saved opportunities and deadlines." },
+      { title: "My Dashboard — Opportunity Finder" },
+      { name: "description", content: "Your recommendations, saved opportunities and upcoming deadlines." },
+      { property: "og:title", content: "My Dashboard — Opportunity Finder" },
+      { property: "og:description", content: "Your personal opportunity workspace." },
     ],
   }),
   component: Dashboard,
 });
 
-const statuses: SavedStatus[] = ["interested", "applying", "submitted"];
+const btn = "inline-flex rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90";
+const more = "text-sm text-primary hover:underline";
 
 function Dashboard() {
   const { user } = useUser();
-  const qc = useQueryClient();
-  const toggle = useToggleSave(user?.id);
-  const profile = useQuery({
-    queryKey: ["profile"],
-    enabled: !!user,
-    queryFn: async () => (await supabase.from("profiles").select("*").eq("id", user!.id).maybeSingle()).data,
-  });
-  const saved = useQuery({
-    queryKey: ["saved-list", user?.id],
-    enabled: !!user,
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("saved_opportunities")
-        .select("id, status, opportunity:opportunities(*)")
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data;
-    },
-  });
-
-  async function setStatus(id: string, status: SavedStatus) {
-    await supabase.from("saved_opportunities").update({ status }).eq("id", id);
-    qc.invalidateQueries({ queryKey: ["saved-list"] });
-  }
-
+  const profile = useProfile(user?.id);
+  const all = useAllOpportunities();
+  const saved = useSavedList(user?.id);
+  const p = profile.data;
+  const pct = profileCompletion(p);
+  const recs = recommend(p, all.data ?? []).slice(0, 3);
   const items = saved.data ?? [];
-  const upcoming = items
-    .filter((s) => s.opportunity?.deadline && s.opportunity.deadline >= new Date().toISOString().slice(0, 10))
-    .sort((a, b) => a.opportunity!.deadline!.localeCompare(b.opportunity!.deadline!));
+  const upcoming = upcomingOf(items).slice(0, 5);
 
   return (
-    <SiteShell>
-      <section className="mx-auto max-w-6xl px-5 py-16">
-        <h1 className="text-4xl font-semibold">Hi{profile.data?.display_name ? `, ${profile.data.display_name}` : ""}</h1>
-        {profile.data && !profile.data.onboarded && (
-          <p className="mt-4 rounded-xl bg-primary-soft p-4 text-sm text-accent-foreground">
-            Finish your profile so we can suggest better opportunities. <Link to="/profile" className="font-medium underline">Set up profile</Link>
-          </p>
-        )}
+    <WorkspaceShell title={`Welcome${p?.first_name ? `, ${p.first_name}` : ""}`} subtitle="Here's what's happening with your opportunities.">
+      <div className="grid gap-6 lg:grid-cols-3">
+        <Panel title="Profile completion" action={<Link to="/profile" className={more}>Edit</Link>}>
+          <p className="text-4xl font-semibold">{pct}%</p>
+          <div className="mt-3 h-2 rounded-full bg-muted"><div className="h-2 rounded-full bg-primary" style={{ width: `${pct}%` }} /></div>
+          {pct < 100 && <p className="mt-3 text-sm text-muted-foreground">A fuller profile means better suggestions.</p>}
+        </Panel>
 
-        <div className="mt-10 grid gap-5 md:grid-cols-3">
-          <Stat label="Saved" value={items.length} />
-          <Stat label="Applying" value={items.filter((i) => i.status === "applying").length} />
-          <Stat label="Submitted" value={items.filter((i) => i.status === "submitted").length} />
+        <div className="lg:col-span-2">
+          <Panel title="Your interests & preferences" action={<Link to="/profile" className={more}>Update</Link>}>
+            {p && (p.interests.length || p.preferred_categories.length || p.intended_major) ? (
+              <div className="flex flex-wrap gap-2 text-sm">
+                {p.intended_major && <Tag>{p.intended_major}</Tag>}
+                {p.preferred_categories.map((c) => <Tag key={c} strong>{categoryName(c)}</Tag>)}
+                {p.interests.map((i) => <Tag key={i}>{i}</Tag>)}
+                <Tag>{p.format_preference === "in_person" ? "In person" : p.format_preference === "online" ? "Online" : "Online or in person"}</Tag>
+                {p.preferred_regions.map((r) => <Tag key={r}>{r}</Tag>)}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">You haven't added interests yet. <Link to="/onboarding" className="text-primary hover:underline">Answer a few questions</Link></p>
+            )}
+          </Panel>
         </div>
+      </div>
 
-        <h2 className="mt-14 text-2xl font-semibold">Upcoming deadlines</h2>
-        {upcoming.length === 0 ? (
-          <p className="mt-3 text-muted-foreground">No upcoming deadlines among your saved opportunities.</p>
-        ) : (
-          <ul className="mt-4 divide-y divide-border rounded-2xl border border-border">
-            {upcoming.map((s) => (
-              <li key={s.id} className="flex justify-between px-5 py-3 text-sm">
-                <span>{s.opportunity!.title}</span>
-                <span className="text-muted-foreground">{formatDeadline(s.opportunity!.deadline)}</span>
-              </li>
-            ))}
-          </ul>
-        )}
+      <div className="mt-6">
+        <Panel title="Recommended for you" action={<Link to="/recommended" className={more}>See all</Link>}>
+          {recs.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No matches yet. Add categories or interests to your profile, or browse all opportunities.</p>
+          ) : (
+            <ul className="grid gap-4 md:grid-cols-3">
+              {recs.map(({ o, reasons }) => (
+                <li key={o.id} className="rounded-2xl border border-border p-4">
+                  <p className="text-xs text-primary">{categoryName(o.category)}{o.is_demo && <span className="ml-2 text-destructive">Demo data</span>}</p>
+                  <Link to="/opportunities/$id" params={{ id: o.id }} className="mt-1 block font-medium hover:underline">{o.title}</Link>
+                  <p className="mt-2 text-xs text-muted-foreground">{reasons.join(" · ")}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Panel>
+      </div>
 
-        <div className="mt-14 flex items-center justify-between">
-          <h2 className="text-2xl font-semibold">Saved opportunities</h2>
-          <Link to="/opportunities" className="text-sm text-primary hover:underline">Browse more</Link>
-        </div>
-        {saved.isLoading ? (
-          <p className="mt-3 text-muted-foreground">Loading…</p>
-        ) : items.length === 0 ? (
-          <p className="mt-3 text-muted-foreground">You haven't saved anything yet.</p>
-        ) : (
-          <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {items.map((s) => s.opportunity && (
-              <OpportunityCard
-                key={s.id}
-                o={s.opportunity}
-                action={
-                  <div className="flex items-center gap-2">
-                    <select
-                      aria-label="Application progress"
-                      value={s.status}
-                      onChange={(e) => setStatus(s.id, e.target.value as SavedStatus)}
-                      className="rounded-full border border-border bg-background px-2 py-1 text-xs capitalize"
-                    >
-                      {statuses.map((st) => <option key={st} value={st}>{st}</option>)}
-                    </select>
-                    <button onClick={() => toggle.mutate({ id: s.opportunity!.id, saved: true })} className="text-xs text-muted-foreground hover:text-destructive">Remove</button>
-                  </div>
-                }
-              />
-            ))}
-          </div>
-        )}
-      </section>
-    </SiteShell>
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        <Panel title="Recently saved" action={<Link to="/saved" className={more}>View all</Link>}>
+          {items.length === 0 ? <p className="text-sm text-muted-foreground">Nothing saved yet.</p> : (
+            <ul className="divide-y divide-border">
+              {items.slice(0, 4).map((s) => s.opportunity && (
+                <li key={s.id} className="flex justify-between gap-4 py-3 text-sm">
+                  <Link to="/opportunities/$id" params={{ id: s.opportunity.id }} className="hover:underline">{s.opportunity.title}</Link>
+                  <span className="capitalize text-muted-foreground">{s.status}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Panel>
+        <Panel title="Upcoming deadlines" action={<Link to="/deadlines" className={more}>View all</Link>}>
+          {upcoming.length === 0 ? <p className="text-sm text-muted-foreground">No upcoming deadlines among your saved opportunities.</p> : (
+            <ul className="divide-y divide-border">
+              {upcoming.map((s) => (
+                <li key={s.id} className="flex justify-between gap-4 py-3 text-sm">
+                  <span>{s.opportunity!.title}</span>
+                  <span className="text-muted-foreground">{formatDeadline(s.opportunity!.deadline)}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Panel>
+      </div>
+
+      <div className="mt-10 rounded-3xl bg-primary-soft p-8 text-center">
+        <p className="text-lg font-medium text-accent-foreground">Ready to find something new?</p>
+        <Link to="/opportunities" className={`${btn} mt-4`}>Discover more opportunities</Link>
+      </div>
+    </WorkspaceShell>
   );
 }
 
-function Stat({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="rounded-3xl border border-border bg-card p-6">
-      <p className="text-sm text-muted-foreground">{label}</p>
-      <p className="mt-2 text-4xl font-semibold">{value}</p>
-    </div>
-  );
+function Tag({ children, strong }: { children: React.ReactNode; strong?: boolean }) {
+  return <span className={`rounded-full px-3 py-1 ${strong ? "bg-primary-soft text-accent-foreground" : "border border-border text-muted-foreground"}`}>{children}</span>;
 }
