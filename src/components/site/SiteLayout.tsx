@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { useUser } from "@/lib/auth";
-import { supabase } from "@/integrations/supabase/client";
+import { useSignOut } from "./WorkspaceShell";
 
 export function Logo() {
   return (
@@ -23,6 +23,7 @@ const nav = [
 
 export function SiteHeader() {
   const { user } = useUser();
+  const signOut = useSignOut();
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5">
@@ -38,7 +39,7 @@ export function SiteHeader() {
         <div className="flex items-center gap-2 text-sm">
           <Link to="/profile" className="rounded-full px-3 py-1.5 text-muted-foreground hover:text-foreground">Profile</Link>
           <Link to="/dashboard" className="rounded-full bg-primary px-4 py-1.5 font-medium text-primary-foreground transition hover:opacity-90">Dashboard</Link>
-          <button onClick={() => supabase.auth.signOut().then(() => { window.location.href = "/"; })} className="rounded-full px-3 py-1.5 text-muted-foreground hover:text-foreground">Log Out</button>
+          <button onClick={signOut} className="rounded-full px-3 py-1.5 text-muted-foreground hover:text-foreground">Log Out</button>
         </div>
         ) : (
         <div className="flex items-center gap-2 text-sm">
