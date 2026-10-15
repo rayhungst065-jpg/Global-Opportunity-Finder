@@ -64,55 +64,76 @@ export type Database = {
       }
       profiles: {
         Row: {
+          avatar_path: string | null
+          bio: string | null
           country_region: string | null
           created_at: string
+          discoverable: boolean
           display_name: string | null
           education_level: string | null
           first_name: string | null
           format_preference: string
+          goals: string[]
           grade: string | null
           id: string
           intended_major: string | null
           interests: string[]
+          languages: string[]
           onboarded: boolean
           preferences: Json
           preferred_categories: Database["public"]["Enums"]["opportunity_category"][]
           preferred_regions: string[]
+          skills: string[]
           updated_at: string
+          visibility: Json
         }
         Insert: {
+          avatar_path?: string | null
+          bio?: string | null
           country_region?: string | null
           created_at?: string
+          discoverable?: boolean
           display_name?: string | null
           education_level?: string | null
           first_name?: string | null
           format_preference?: string
+          goals?: string[]
           grade?: string | null
           id: string
           intended_major?: string | null
           interests?: string[]
+          languages?: string[]
           onboarded?: boolean
           preferences?: Json
           preferred_categories?: Database["public"]["Enums"]["opportunity_category"][]
           preferred_regions?: string[]
+          skills?: string[]
           updated_at?: string
+          visibility?: Json
         }
         Update: {
+          avatar_path?: string | null
+          bio?: string | null
           country_region?: string | null
           created_at?: string
+          discoverable?: boolean
           display_name?: string | null
           education_level?: string | null
           first_name?: string | null
           format_preference?: string
+          goals?: string[]
           grade?: string | null
           id?: string
           intended_major?: string | null
           interests?: string[]
+          languages?: string[]
           onboarded?: boolean
           preferences?: Json
           preferred_categories?: Database["public"]["Enums"]["opportunity_category"][]
           preferred_regions?: string[]
+          skills?: string[]
           updated_at?: string
+          visibility?: Json
         }
         Relationships: []
       }

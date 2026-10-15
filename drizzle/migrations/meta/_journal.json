@@ -15,6 +15,13 @@
       "when": 1791935111362,
       "tag": "0001_profile_onboarding_fields",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792034218856,
+      "tag": "0002_profile_stage2",
+      "breakpoints": true
     }
   ]
 }
