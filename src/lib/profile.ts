@@ -35,14 +35,16 @@ export function useAllOpportunities() {
 export function profileCompletion(p: Profile | null | undefined) {
   if (!p) return 0;
   const checks = [
-    !!p.first_name,
+    !!(p.display_name || p.first_name),
+    !!p.avatar_path,
+    !!p.bio,
     !!p.education_level,
     !!p.grade,
-    !!p.country_region,
     !!p.intended_major,
     p.interests.length > 0,
+    p.goals.length > 0,
     p.preferred_categories.length > 0,
-    !!p.format_preference && p.format_preference !== "either" ? true : p.onboarded,
+    p.languages.length > 0 || p.skills.length > 0,
   ];
   return Math.round((checks.filter(Boolean).length / checks.length) * 100);
 }
