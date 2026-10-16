@@ -36,6 +36,13 @@
       "when": 1792194022318,
       "tag": "0004_connections_and_discovery",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792194142067,
+      "tag": "0005_avatars_authenticated_read",
+      "breakpoints": true
     }
   ]
 }
