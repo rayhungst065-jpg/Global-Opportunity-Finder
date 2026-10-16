@@ -112,8 +112,15 @@
   50% { transform: translateY(8px); opacity: 1; }
 }
 
+/* Parallax layer: JS sets --py (0 at section center, ±0.5 at edges). */
+@utility parallax-layer {
+  transform: translateY(calc(var(--py, 0) * -70px)) scale(1.18);
+  will-change: transform;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal, .reveal-zoom { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .parallax-layer { transform: none !important; }
   .scroll-cue { animation: none; }
 }

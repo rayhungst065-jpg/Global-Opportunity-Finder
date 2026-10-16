@@ -30,6 +30,8 @@ const items = [
   { to: "/saved", label: "Saved Opportunities" },
   { to: "/deadlines", label: "Deadlines" },
   { to: "/communities", label: "Communities" },
+  { to: "/meet-students", label: "Meet Students" },
+  { to: "/college-match", label: "College Match" },
   { to: "/settings", label: "Settings" },
 ] as const;
 
