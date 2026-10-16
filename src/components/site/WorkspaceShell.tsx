@@ -3,6 +3,24 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import { Logo } from "./SiteLayout";
 import { supabase } from "@/integrations/supabase/client";
+import { Avatar } from "./Avatar";
+import { useUser } from "@/lib/auth";
+import { useProfile } from "@/lib/profile";
+
+function SidebarUser() {
+  const { user } = useUser();
+  const p = useProfile(user?.id).data;
+  if (!user) return null;
+  return (
+    <Link to="/profile" className="mt-6 flex items-center gap-3 rounded-2xl border border-border p-3 transition hover:bg-accent">
+      <Avatar path={p?.avatar_path} name={p?.display_name ?? user.email} size="sm" />
+      <span className="min-w-0">
+        <span className="block truncate text-sm font-medium">{p?.display_name || "Add your name"}</span>
+        <span className="block text-xs text-muted-foreground">View profile</span>
+      </span>
+    </Link>
+  );
+}
 
 const items = [
   { to: "/dashboard", label: "My Dashboard" },
@@ -34,6 +52,7 @@ export function WorkspaceShell({ title, subtitle, children }: { title: string; s
     <div className="min-h-screen bg-surface md:flex">
       <aside className="hidden w-64 shrink-0 flex-col border-r border-border bg-background px-4 py-6 md:sticky md:top-0 md:flex md:h-screen">
         <div className="px-2"><Logo /></div>
+        <SidebarUser />
         <nav className="mt-8 space-y-1" aria-label="Student workspace">
           {items.map((i) => (
             <Link key={i.to} to={i.to} className={link} activeProps={active}>{i.label}</Link>
