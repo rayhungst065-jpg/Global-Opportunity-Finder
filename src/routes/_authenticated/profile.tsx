@@ -9,7 +9,7 @@ import { useUser } from "@/lib/auth";
 import { useProfile, type Profile } from "@/lib/profile";
 
 export const Route = createFileRoute("/_authenticated/profile")({
-  validateSearch: (s: Record<string, unknown>) => ({ edit: s.edit === true }),
+  validateSearch: (s: Record<string, unknown>) => ({ edit: s["edit"] === true }),
   head: () => ({
     meta: [
       { title: "My Profile — Opportunity Finder" },
@@ -34,7 +34,7 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
 }
 
 function ProfileView({ p, onEdit }: { p: Profile; onEdit: () => void }) {
-  const name = p.display_name || [p.first_name, p.last_name].filter(Boolean).join(" ") || "Unnamed student";
+  const name = p.display_name || p.first_name || "Unnamed student";
   return (
     <div className="space-y-5">
       <section className="rounded-2xl border border-border bg-card p-6 shadow-soft">
