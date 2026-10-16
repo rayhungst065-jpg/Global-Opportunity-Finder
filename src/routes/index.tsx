@@ -55,8 +55,8 @@ function Parallax({ src, alt, className = "" }: { src: string; alt: string; clas
     };
   }, []);
   return (
-    <div ref={ref} className={`overflow-hidden ${className}`}>
-      <img src={src} alt={alt} loading="lazy" width={1920} height={1088} className="parallax-layer aspect-[16/10] w-full object-cover" />
+    <div ref={ref} className={`absolute inset-0 overflow-hidden ${className}`}>
+      <img src={src} alt={alt} loading="lazy" width={1920} height={1088} className="parallax-layer h-full w-full object-cover" />
     </div>
   );
 }
