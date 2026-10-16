@@ -56,7 +56,7 @@ function ProposalCard({ p, onDone }: { p: ProposalRow; onDone: () => void }) {
     <li className="rounded-3xl border border-border bg-card p-6">
       <div className="flex flex-wrap items-center gap-3">
         <h2 className="font-display text-lg font-medium">{p.name}</h2>
-        <span className={`rounded-full px-3 py-1 text-xs font-medium capitalize ${statusChip[p.status] ?? statusChip.pending}`}>
+        <span className={`rounded-full px-3 py-1 text-xs font-medium capitalize ${statusChip[p.status] ?? statusChip["pending"]}`}>
           {p.status === "pending" ? "Pending review" : p.status}
         </span>
         <span className="text-xs text-muted-foreground">{p.category} · {p.format} · submitted {new Date(p.created_at).toLocaleDateString()}</span>

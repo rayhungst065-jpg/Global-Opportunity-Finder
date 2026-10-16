@@ -31,7 +31,8 @@ export const communityCategories = [
 ] as const;
 
 const text = (max: number) => z.string().trim().min(1).max(max);
-const optionalText = (max: number) => z.string().trim().max(max).optional();
+const optionalText = (max: number) =>
+  z.string().trim().max(max).optional().transform((v) => (v ? v : null));
 
 const proposalInput = z.object({
   name: text(120),
