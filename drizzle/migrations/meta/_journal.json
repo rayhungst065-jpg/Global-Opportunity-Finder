@@ -43,6 +43,13 @@
       "when": 1792194142067,
       "tag": "0005_avatars_authenticated_read",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792194157100,
+      "tag": "0006_college_preferences",
+      "breakpoints": true
     }
   ]
 }

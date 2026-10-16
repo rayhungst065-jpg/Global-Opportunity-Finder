@@ -14,6 +14,47 @@ export type Database = {
   }
   public: {
     Tables: {
+      college_preferences: {
+        Row: {
+          budget_range: string | null
+          campus_size: string | null
+          financial_aid_interest: boolean
+          institution_types: string[]
+          intended_major: string | null
+          preferred_regions: string[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          budget_range?: string | null
+          campus_size?: string | null
+          financial_aid_interest?: boolean
+          institution_types?: string[]
+          intended_major?: string | null
+          preferred_regions?: string[]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          budget_range?: string | null
+          campus_size?: string | null
+          financial_aid_interest?: boolean
+          institution_types?: string[]
+          intended_major?: string | null
+          preferred_regions?: string[]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "college_preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       communities: {
         Row: {
           activities: string | null
