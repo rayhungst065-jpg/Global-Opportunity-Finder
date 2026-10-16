@@ -61,16 +61,30 @@ function Parallax({ src, alt, className = "" }: { src: string; alt: string; clas
   );
 }
 
-function Eyebrow({ children, dark }: { children: ReactNode; dark?: boolean }) {
-  return <p className={`text-sm font-medium ${dark ? "text-teal" : "text-primary"}`}>{children}</p>;
+function Eyebrow({ children, dark, tone = "primary" }: { children: ReactNode; dark?: boolean; tone?: "primary" | "teal" | "coral" }) {
+  const color = dark ? "text-teal" : tone === "teal" ? "text-teal" : tone === "coral" ? "text-coral" : "text-primary";
+  return <p className={`text-sm font-medium ${color}`}>{children}</p>;
 }
+
+/** Per-category accent: violet, coral, teal, lavender. */
+const categoryAccent: Record<string, string> = {
+  volunteer: "border-t-teal",
+  competitions: "border-t-coral",
+  research: "border-t-primary",
+  awards: "border-t-accent-foreground",
+};
 
 function Landing() {
   return (
     <SiteShell>
       {/* 1 — Hero */}
       <section className="relative overflow-hidden">
-        <div className="mx-auto max-w-6xl px-5 pt-20 text-center md:pt-28">
+        <div aria-hidden className="pointer-events-none absolute inset-0">
+          <div className="absolute -top-24 left-1/2 h-96 w-[42rem] -translate-x-1/2 rounded-full bg-lavender blur-3xl" />
+          <div className="absolute -left-32 top-40 h-72 w-72 rounded-full bg-teal-soft blur-3xl" />
+          <div className="absolute -right-32 top-64 h-72 w-72 rounded-full bg-coral-soft blur-3xl" />
+        </div>
+        <div className="relative mx-auto max-w-6xl px-5 pt-20 text-center md:pt-28">
           <Reveal>
             <Eyebrow>For students aged 15–20, everywhere</Eyebrow>
             <h1 className="mx-auto mt-4 max-w-4xl text-5xl font-semibold leading-[1.02] md:text-7xl lg:text-8xl">
