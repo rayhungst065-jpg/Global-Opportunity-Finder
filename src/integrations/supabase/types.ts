@@ -14,6 +14,155 @@ export type Database = {
   }
   public: {
     Tables: {
+      communities: {
+        Row: {
+          activities: string | null
+          category: string
+          created_at: string
+          created_by: string
+          description: string
+          format: string
+          goals: string | null
+          id: string
+          meeting_frequency: string | null
+          name: string
+          purpose: string | null
+          rules: string | null
+        }
+        Insert: {
+          activities?: string | null
+          category: string
+          created_at?: string
+          created_by: string
+          description: string
+          format?: string
+          goals?: string | null
+          id?: string
+          meeting_frequency?: string | null
+          name: string
+          purpose?: string | null
+          rules?: string | null
+        }
+        Update: {
+          activities?: string | null
+          category?: string
+          created_at?: string
+          created_by?: string
+          description?: string
+          format?: string
+          goals?: string | null
+          id?: string
+          meeting_frequency?: string | null
+          name?: string
+          purpose?: string | null
+          rules?: string | null
+        }
+        Relationships: []
+      }
+      community_memberships: {
+        Row: {
+          community_id: string
+          created_at: string
+          id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          community_id: string
+          created_at?: string
+          id?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          community_id?: string
+          created_at?: string
+          id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_memberships_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_proposals: {
+        Row: {
+          activities: string | null
+          category: string
+          created_at: string
+          creator_id: string
+          description: string
+          format: string
+          id: string
+          long_term_goals: string | null
+          meeting_frequency: string | null
+          name: string
+          participants: string | null
+          problem: string | null
+          purpose: string
+          review_note: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          rules: string | null
+          short_term_goals: string | null
+          status: string
+          topic: string
+          updated_at: string
+        }
+        Insert: {
+          activities?: string | null
+          category: string
+          created_at?: string
+          creator_id: string
+          description: string
+          format?: string
+          id?: string
+          long_term_goals?: string | null
+          meeting_frequency?: string | null
+          name: string
+          participants?: string | null
+          problem?: string | null
+          purpose: string
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          rules?: string | null
+          short_term_goals?: string | null
+          status?: string
+          topic: string
+          updated_at?: string
+        }
+        Update: {
+          activities?: string | null
+          category?: string
+          created_at?: string
+          creator_id?: string
+          description?: string
+          format?: string
+          id?: string
+          long_term_goals?: string | null
+          meeting_frequency?: string | null
+          name?: string
+          participants?: string | null
+          problem?: string | null
+          purpose?: string
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          rules?: string | null
+          short_term_goals?: string | null
+          status?: string
+          topic?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       opportunities: {
         Row: {
           application_status: Database["public"]["Enums"]["application_status"]
