@@ -125,7 +125,9 @@ export const updateProposal = createServerFn({ method: "POST" })
     return row;
   });
 
-async function requireAdmin(supabase: typeof import("@/integrations/supabase/client") extends never ? never : any, userId: string) {
+type AuthedClient = { from: (t: string) => any };
+
+async function requireAdmin(supabase: AuthedClient, userId: string) {
   const { data, error } = await supabase.from("user_roles").select("role").eq("user_id", userId).eq("role", "admin").maybeSingle();
   if (error) throw new Error(error.message);
   if (!data) throw new Error("Not authorized: administrators only.");
