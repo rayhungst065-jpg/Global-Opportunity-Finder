@@ -6,8 +6,9 @@
 
 /*
  * Design system — Global Student Opportunity Finder.
- * All colors live here as oklch tokens. Components only use semantic
- * classes like bg-primary, text-muted-foreground, bg-surface.
+ * Palette: violet primary, coral warmth, teal/mint freshness,
+ * lavender + warm cream surfaces. All colors live here as oklch
+ * tokens; components only use semantic classes.
  */
 
 @theme inline {
@@ -35,6 +36,10 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-teal: var(--teal);
   --color-teal-soft: var(--teal-soft);
+  --color-coral: var(--coral);
+  --color-coral-soft: var(--coral-soft);
+  --color-lavender: var(--lavender);
+  --color-cream: var(--cream);
   --color-primary-soft: var(--primary-soft);
   --color-surface: var(--surface);
   --color-ink: var(--ink);
@@ -48,33 +53,42 @@
 
 :root {
   --radius: 1rem;
-  --background: oklch(0.995 0.002 250);
-  --foreground: oklch(0.2 0.04 262);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.2 0.04 262);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.2 0.04 262);
-  --primary: oklch(0.53 0.19 258);
+  /* Warm cream-lavender canvas */
+  --background: oklch(0.975 0.012 90);
+  --foreground: oklch(0.24 0.05 295);
+  --card: oklch(0.995 0.006 90);
+  --card-foreground: oklch(0.24 0.05 295);
+  --popover: oklch(0.995 0.006 90);
+  --popover-foreground: oklch(0.24 0.05 295);
+  /* Violet primary */
+  --primary: oklch(0.52 0.22 290);
   --primary-foreground: oklch(0.99 0 0);
-  --primary-soft: oklch(0.95 0.03 258);
-  --teal: oklch(0.62 0.11 190);
-  --teal-soft: oklch(0.95 0.03 190);
-  --secondary: oklch(0.965 0.005 255);
-  --secondary-foreground: oklch(0.2 0.04 262);
-  --surface: oklch(0.975 0.004 255);
-  --ink: oklch(0.18 0.04 262);
-  --ink-foreground: oklch(0.98 0.003 250);
-  --muted: oklch(0.965 0.005 255);
-  --muted-foreground: oklch(0.5 0.03 258);
-  --accent: oklch(0.95 0.03 258);
-  --accent-foreground: oklch(0.3 0.1 258);
+  --primary-soft: oklch(0.93 0.05 295);
+  /* Teal / mint */
+  --teal: oklch(0.6 0.12 185);
+  --teal-soft: oklch(0.94 0.04 185);
+  /* Coral / warm orange */
+  --coral: oklch(0.66 0.19 35);
+  --coral-soft: oklch(0.94 0.04 45);
+  /* Lavender + cream surfaces */
+  --lavender: oklch(0.92 0.05 300);
+  --cream: oklch(0.96 0.025 85);
+  --secondary: oklch(0.94 0.03 300);
+  --secondary-foreground: oklch(0.3 0.08 295);
+  --surface: oklch(0.955 0.02 300);
+  --ink: oklch(0.2 0.05 295);
+  --ink-foreground: oklch(0.97 0.01 90);
+  --muted: oklch(0.945 0.02 300);
+  --muted-foreground: oklch(0.48 0.05 295);
+  --accent: oklch(0.93 0.05 295);
+  --accent-foreground: oklch(0.38 0.14 290);
   --destructive: oklch(0.58 0.22 27);
   --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.92 0.008 255);
-  --input: oklch(0.9 0.01 255);
-  --ring: oklch(0.53 0.19 258);
-  --shadow-soft: 0 1px 2px oklch(0.2 0.04 262 / 4%), 0 12px 32px -12px oklch(0.2 0.04 262 / 12%);
-  --shadow-lift: 0 2px 4px oklch(0.2 0.04 262 / 5%), 0 30px 60px -20px oklch(0.2 0.04 262 / 22%);
+  --border: oklch(0.9 0.025 300);
+  --input: oklch(0.88 0.03 300);
+  --ring: oklch(0.52 0.22 290);
+  --shadow-soft: 0 1px 2px oklch(0.3 0.08 295 / 4%), 0 12px 32px -12px oklch(0.3 0.08 295 / 12%);
+  --shadow-lift: 0 2px 4px oklch(0.3 0.08 295 / 5%), 0 30px 60px -20px oklch(0.35 0.12 295 / 25%);
 }
 
 @layer base {
