@@ -91,7 +91,7 @@ function ProfilePage() {
   const { edit } = Route.useSearch();
   const navigate = useNavigate();
   const [saved, setSaved] = useState(false);
-  const setEdit = (v: boolean) => navigate({ to: "/profile", search: { edit: v }, replace: true });
+  const setEdit = (v: boolean) => navigate({ to: "/profile", search: v ? { edit: true as const } : {}, replace: true });
 
   return (
     <WorkspaceShell
