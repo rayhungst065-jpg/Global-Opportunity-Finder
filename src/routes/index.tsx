@@ -112,7 +112,7 @@ function Landing() {
       {/* 2 — The problem */}
       <section className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-32 md:grid-cols-2">
         <Reveal>
-          <Eyebrow>The problem</Eyebrow>
+          <Eyebrow tone="coral">The problem</Eyebrow>
           <h2 className="mt-3 text-4xl font-semibold leading-tight md:text-5xl">Finding the Right Opportunity Shouldn't Be So Difficult.</h2>
           <p className="mt-6 text-lg text-muted-foreground">
             Competitions, research programs, volunteering, internships, and awards are scattered across hundreds of websites, countries, organizations, and application portals. Many students never hear about the ones that fit them best.
@@ -124,7 +124,7 @@ function Landing() {
         <Reveal delay={150}>
           <div className="grid grid-cols-3 gap-3">
             {["University sites", "Nonprofits", "Government portals", "Foundations", "Social posts", "Newsletters"].map((s, i) => (
-              <div key={s} className="rounded-2xl border border-border bg-card p-4 text-sm text-muted-foreground shadow-soft" style={{ transform: `rotate(${(i % 2 ? 1 : -1) * 2}deg)` }}>
+              <div key={s} className={`rounded-2xl border border-border p-4 text-sm shadow-soft ${["bg-lavender", "bg-cream", "bg-teal-soft", "bg-coral-soft", "bg-primary-soft", "bg-card"][i % 6]}`} style={{ transform: `rotate(${(i % 2 ? 1 : -1) * 2}deg)` }}>
                 {s}
               </div>
             ))}
@@ -145,7 +145,7 @@ function Landing() {
           <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {categories.map((c, i) => (
               <Reveal key={c.key} delay={i * 100}>
-                <Link to="/categories" hash={c.key} className="group block overflow-hidden rounded-3xl border border-ink-foreground/15">
+                <Link to="/categories" hash={c.key} className={`group block overflow-hidden rounded-3xl border border-ink-foreground/15 border-t-4 ${categoryAccent[c.key] ?? "border-t-primary"}`}>
                   <div className="overflow-hidden">
                     <img src={c.image} alt={c.name} loading="lazy" width={1280} height={960} className="aspect-[4/3] w-full object-cover transition duration-700 group-hover:scale-105" />
                   </div>
@@ -164,9 +164,10 @@ function Landing() {
       </section>
 
       {/* 4 — Personalized matching */}
-      <section className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-32 md:grid-cols-2">
+      <section className="bg-cream">
+        <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-32 md:grid-cols-2">
         <Reveal>
-          <Eyebrow>Personalized matching</Eyebrow>
+          <Eyebrow tone="teal">Personalized matching</Eyebrow>
           <h2 className="mt-3 text-4xl font-semibold md:text-5xl">Made Around Your Goals.</h2>
           <p className="mt-6 text-lg text-muted-foreground">
             Tell us your education level, interests, intended major, and preferences. Simple, transparent matching suggests opportunities that may fit — no black box, and you always confirm eligibility with the organizer.
