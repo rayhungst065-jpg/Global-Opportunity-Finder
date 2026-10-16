@@ -22,7 +22,7 @@ function CollegeMatch() {
         <p className="mx-auto mt-4 max-w-md text-sm text-muted-foreground">
           For now, make sure your intended major and interests are up to date — they'll power your matches.
         </p>
-        <Link to="/profile" search={{ edit: undefined }} className="mt-6 inline-block rounded-full border border-border bg-background px-5 py-2 text-sm hover:bg-accent">
+        <Link to="/profile" search={{ edit: false }} className="mt-6 inline-block rounded-full border border-border bg-background px-5 py-2 text-sm hover:bg-accent">
           Update my profile
         </Link>
       </div>
