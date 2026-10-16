@@ -246,7 +246,7 @@ function Landing() {
       </section>
 
       {/* 8 — How it works */}
-      <section className="bg-surface py-32">
+      <section className="bg-lavender py-32">
         <div className="mx-auto max-w-6xl px-5">
           <Reveal><h2 className="text-center text-4xl font-semibold md:text-5xl">How It Works</h2></Reveal>
           <div className="mt-14 grid gap-5 md:grid-cols-4">
