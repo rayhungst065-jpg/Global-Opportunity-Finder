@@ -3,7 +3,7 @@ import { useAvatarUrl } from "@/lib/avatar";
 const sizes = { sm: "h-9 w-9 text-sm", md: "h-14 w-14 text-lg", lg: "h-24 w-24 text-3xl" } as const;
 
 /** Profile picture with an initial-letter fallback. */
-export function Avatar({ path, name, size = "md", src }: { path?: string | null; name?: string | null; size?: keyof typeof sizes; src?: string }) {
+export function Avatar({ path, name, size = "md", src }: { path?: string | null | undefined; name?: string | null | undefined; size?: keyof typeof sizes; src?: string | undefined }) {
   const url = useAvatarUrl(src ? null : path);
   const img = src ?? url.data;
   const initial = (name?.trim()[0] ?? "?").toUpperCase();
