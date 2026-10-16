@@ -1,0 +1,1 @@
+CREATE POLICY "Signed-in students can view avatar images" ON storage.objects FOR SELECT TO authenticated USING (bucket_id = 'avatars');

@@ -88,16 +88,16 @@ function Landing() {
           <Reveal>
             <Eyebrow>For students aged 15–20, everywhere</Eyebrow>
             <h1 className="mx-auto mt-4 max-w-4xl text-5xl font-semibold leading-[1.02] md:text-7xl lg:text-8xl">
-              Your Future Has More Possibilities.
+              Your Next Opportunity Could Change Everything.
             </h1>
           </Reveal>
           <Reveal delay={150}>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
-              Discover volunteer opportunities, competitions, research programs, and awards from around the world—all in one place.
+              Discover competitions, research programs, internships, volunteering, and awards that move your goals forward—all in one place.
             </p>
             <div className="mt-9 flex flex-wrap justify-center gap-3">
-              <Link to="/opportunities" className={btnPrimary}>Discover Opportunities</Link>
-              <Link to="/signup" className={btnGhost}>Get Started</Link>
+              <Link to="/opportunities" className={btnPrimary}>Explore Opportunities</Link>
+              <Link to="/signup" className={btnGhost}>Find Your Next Step</Link>
             </div>
           </Reveal>
         </div>
