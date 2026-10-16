@@ -27,7 +27,7 @@ function Recommended() {
   return (
     <WorkspaceShell title="Recommended for Me" subtitle="Matched on the categories, interests and format in your profile. Closed listings are hidden.">
       {all.isLoading || profile.isLoading ? <p className="text-muted-foreground">Loading…</p> : recs.length === 0 ? (
-        <p className="text-muted-foreground">No matches yet. <Link to="/profile" search={{ edit: false }} className="text-primary hover:underline">Update your profile</Link> or <Link to="/opportunities" className="text-primary hover:underline">browse everything</Link>.</p>
+        <p className="text-muted-foreground">No matches yet. <Link to="/profile" className="text-primary hover:underline">Update your profile</Link> or <Link to="/opportunities" className="text-primary hover:underline">browse everything</Link>.</p>
       ) : (
         <div className="grid gap-5 md:grid-cols-2">
           {recs.map(({ o, reasons }) => {

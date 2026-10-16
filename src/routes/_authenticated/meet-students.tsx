@@ -28,7 +28,7 @@ function MeetStudents() {
             ? "You've opted in to discovery in your profile, so you'll appear in search once this launches."
             : "Discovery is currently off for your account. You can turn it on in your profile's privacy settings."}
         </p>
-        <Link to="/profile" search={{ edit: false }} className="mt-6 inline-block rounded-full border border-border bg-background px-5 py-2 text-sm hover:bg-accent">
+        <Link to="/profile" className="mt-6 inline-block rounded-full border border-border bg-background px-5 py-2 text-sm hover:bg-accent">
           Review privacy settings
         </Link>
       </div>

@@ -9,7 +9,7 @@ import { useUser } from "@/lib/auth";
 import { useProfile, type Profile } from "@/lib/profile";
 
 export const Route = createFileRoute("/_authenticated/profile")({
-  validateSearch: (s: Record<string, unknown>) => ({ edit: s["edit"] === true }),
+  validateSearch: (s: Record<string, unknown>) => (s["edit"] === true ? { edit: true as const } : {}),
   head: () => ({
     meta: [
       { title: "My Profile — Opportunity Finder" },
