@@ -14,3 +14,4 @@
 - Student-owned data (profiles, saved_opportunities) is read/written from the browser client under RLS; why: RLS scopes rows to auth.uid().
 - Opportunity writes are admin-only via `public.has_role`; roles live in `user_roles`; why: prevents privilege escalation.
 - Demo rows carry `is_demo = true` and must be labeled in the UI; why: never present fake opportunities as real.
+- Profile pictures live in the private `avatars` bucket under `<user_id>/…`, shown via signed URLs; why: storage RLS limits access to the owner folder.
