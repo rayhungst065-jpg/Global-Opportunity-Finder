@@ -19,8 +19,10 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as AuthenticatedCollegeMatchRouteImport } from './routes/_authenticated/college-match'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDeadlinesRouteImport } from './routes/_authenticated/deadlines'
+import { Route as AuthenticatedMeetStudentsRouteImport } from './routes/_authenticated/meet-students'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedRecommendedRouteImport } from './routes/_authenticated/recommended'
@@ -83,6 +85,12 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedCollegeMatchRoute =
+  AuthenticatedCollegeMatchRouteImport.update({
+    id: '/college-match',
+    path: '/college-match',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -93,6 +101,12 @@ const AuthenticatedDeadlinesRoute = AuthenticatedDeadlinesRouteImport.update({
   path: '/deadlines',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMeetStudentsRoute =
+  AuthenticatedMeetStudentsRouteImport.update({
+    id: '/meet-students',
+    path: '/meet-students',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
@@ -170,8 +184,10 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
+  '/college-match': typeof AuthenticatedCollegeMatchRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deadlines': typeof AuthenticatedDeadlinesRoute
+  '/meet-students': typeof AuthenticatedMeetStudentsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/recommended': typeof AuthenticatedRecommendedRoute
@@ -195,8 +211,10 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
+  '/college-match': typeof AuthenticatedCollegeMatchRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deadlines': typeof AuthenticatedDeadlinesRoute
+  '/meet-students': typeof AuthenticatedMeetStudentsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/recommended': typeof AuthenticatedRecommendedRoute
@@ -222,8 +240,10 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
+  '/_authenticated/college-match': typeof AuthenticatedCollegeMatchRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/deadlines': typeof AuthenticatedDeadlinesRoute
+  '/_authenticated/meet-students': typeof AuthenticatedMeetStudentsRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/recommended': typeof AuthenticatedRecommendedRoute
@@ -249,8 +269,10 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/signup'
     | '/terms'
+    | '/college-match'
     | '/dashboard'
     | '/deadlines'
+    | '/meet-students'
     | '/onboarding'
     | '/profile'
     | '/recommended'
@@ -274,8 +296,10 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/signup'
     | '/terms'
+    | '/college-match'
     | '/dashboard'
     | '/deadlines'
+    | '/meet-students'
     | '/onboarding'
     | '/profile'
     | '/recommended'
@@ -300,8 +324,10 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/signup'
     | '/terms'
+    | '/_authenticated/college-match'
     | '/_authenticated/dashboard'
     | '/_authenticated/deadlines'
+    | '/_authenticated/meet-students'
     | '/_authenticated/onboarding'
     | '/_authenticated/profile'
     | '/_authenticated/recommended'
@@ -403,6 +429,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/college-match': {
+      id: '/_authenticated/college-match'
+      path: '/college-match'
+      fullPath: '/college-match'
+      preLoaderRoute: typeof AuthenticatedCollegeMatchRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -415,6 +448,13 @@ declare module '@tanstack/react-router' {
       path: '/deadlines'
       fullPath: '/deadlines'
       preLoaderRoute: typeof AuthenticatedDeadlinesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/meet-students': {
+      id: '/_authenticated/meet-students'
+      path: '/meet-students'
+      fullPath: '/meet-students'
+      preLoaderRoute: typeof AuthenticatedMeetStudentsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/onboarding': {
@@ -505,8 +545,10 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCollegeMatchRoute: typeof AuthenticatedCollegeMatchRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDeadlinesRoute: typeof AuthenticatedDeadlinesRoute
+  AuthenticatedMeetStudentsRoute: typeof AuthenticatedMeetStudentsRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedRecommendedRoute: typeof AuthenticatedRecommendedRoute
@@ -520,8 +562,10 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCollegeMatchRoute: AuthenticatedCollegeMatchRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDeadlinesRoute: AuthenticatedDeadlinesRoute,
+  AuthenticatedMeetStudentsRoute: AuthenticatedMeetStudentsRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedRecommendedRoute: AuthenticatedRecommendedRoute,
