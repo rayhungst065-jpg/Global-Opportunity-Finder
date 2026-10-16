@@ -61,16 +61,30 @@ function Parallax({ src, alt, className = "" }: { src: string; alt: string; clas
   );
 }
 
-function Eyebrow({ children, dark }: { children: ReactNode; dark?: boolean }) {
-  return <p className={`text-sm font-medium ${dark ? "text-teal" : "text-primary"}`}>{children}</p>;
+function Eyebrow({ children, dark, tone = "primary" }: { children: ReactNode; dark?: boolean; tone?: "primary" | "teal" | "coral" }) {
+  const color = dark ? "text-teal" : tone === "teal" ? "text-teal" : tone === "coral" ? "text-coral" : "text-primary";
+  return <p className={`text-sm font-medium ${color}`}>{children}</p>;
 }
+
+/** Per-category accent: violet, coral, teal, lavender. */
+const categoryAccent: Record<string, string> = {
+  volunteer: "border-t-teal",
+  competitions: "border-t-coral",
+  research: "border-t-primary",
+  awards: "border-t-accent-foreground",
+};
 
 function Landing() {
   return (
     <SiteShell>
       {/* 1 — Hero */}
       <section className="relative overflow-hidden">
-        <div className="mx-auto max-w-6xl px-5 pt-20 text-center md:pt-28">
+        <div aria-hidden className="pointer-events-none absolute inset-0">
+          <div className="absolute -top-24 left-1/2 h-96 w-[42rem] -translate-x-1/2 rounded-full bg-lavender blur-3xl" />
+          <div className="absolute -left-32 top-40 h-72 w-72 rounded-full bg-teal-soft blur-3xl" />
+          <div className="absolute -right-32 top-64 h-72 w-72 rounded-full bg-coral-soft blur-3xl" />
+        </div>
+        <div className="relative mx-auto max-w-6xl px-5 pt-20 text-center md:pt-28">
           <Reveal>
             <Eyebrow>For students aged 15–20, everywhere</Eyebrow>
             <h1 className="mx-auto mt-4 max-w-4xl text-5xl font-semibold leading-[1.02] md:text-7xl lg:text-8xl">
@@ -98,7 +112,7 @@ function Landing() {
       {/* 2 — The problem */}
       <section className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-32 md:grid-cols-2">
         <Reveal>
-          <Eyebrow>The problem</Eyebrow>
+          <Eyebrow tone="coral">The problem</Eyebrow>
           <h2 className="mt-3 text-4xl font-semibold leading-tight md:text-5xl">Finding the Right Opportunity Shouldn't Be So Difficult.</h2>
           <p className="mt-6 text-lg text-muted-foreground">
             Competitions, research programs, volunteering, internships, and awards are scattered across hundreds of websites, countries, organizations, and application portals. Many students never hear about the ones that fit them best.
@@ -110,7 +124,7 @@ function Landing() {
         <Reveal delay={150}>
           <div className="grid grid-cols-3 gap-3">
             {["University sites", "Nonprofits", "Government portals", "Foundations", "Social posts", "Newsletters"].map((s, i) => (
-              <div key={s} className="rounded-2xl border border-border bg-card p-4 text-sm text-muted-foreground shadow-soft" style={{ transform: `rotate(${(i % 2 ? 1 : -1) * 2}deg)` }}>
+              <div key={s} className={`rounded-2xl border border-border p-4 text-sm shadow-soft ${["bg-lavender", "bg-cream", "bg-teal-soft", "bg-coral-soft", "bg-primary-soft", "bg-card"][i % 6]}`} style={{ transform: `rotate(${(i % 2 ? 1 : -1) * 2}deg)` }}>
                 {s}
               </div>
             ))}
@@ -131,7 +145,7 @@ function Landing() {
           <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {categories.map((c, i) => (
               <Reveal key={c.key} delay={i * 100}>
-                <Link to="/categories" hash={c.key} className="group block overflow-hidden rounded-3xl border border-ink-foreground/15">
+                <Link to="/categories" hash={c.key} className={`group block overflow-hidden rounded-3xl border border-ink-foreground/15 border-t-4 ${categoryAccent[c.key] ?? "border-t-primary"}`}>
                   <div className="overflow-hidden">
                     <img src={c.image} alt={c.name} loading="lazy" width={1280} height={960} className="aspect-[4/3] w-full object-cover transition duration-700 group-hover:scale-105" />
                   </div>
@@ -150,9 +164,10 @@ function Landing() {
       </section>
 
       {/* 4 — Personalized matching */}
-      <section className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-32 md:grid-cols-2">
+      <section className="bg-cream">
+        <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-32 md:grid-cols-2">
         <Reveal>
-          <Eyebrow>Personalized matching</Eyebrow>
+          <Eyebrow tone="teal">Personalized matching</Eyebrow>
           <h2 className="mt-3 text-4xl font-semibold md:text-5xl">Made Around Your Goals.</h2>
           <p className="mt-6 text-lg text-muted-foreground">
             Tell us your education level, interests, intended major, and preferences. Simple, transparent matching suggests opportunities that may fit — no black box, and you always confirm eligibility with the organizer.
@@ -175,6 +190,7 @@ function Landing() {
             </Reveal>
           ))}
           <p className="text-xs text-muted-foreground">Illustrative preview — not real listings.</p>
+        </div>
         </div>
       </section>
 
@@ -220,7 +236,7 @@ function Landing() {
           </div>
         </Reveal>
         <Reveal delay={150}>
-          <Eyebrow>College discovery</Eyebrow>
+          <Eyebrow tone="coral">College discovery</Eyebrow>
           <h2 className="mt-3 text-4xl font-semibold md:text-5xl">Find Colleges That Fit Your Goals.</h2>
           <p className="mt-6 text-lg text-muted-foreground">
             College Match will compare colleges by your intended major, preferred regions, campus size, and budget — with honest explanations of why each might fit. No prestige rankings, no invented statistics, and never a promise of admission.
@@ -230,7 +246,7 @@ function Landing() {
       </section>
 
       {/* 8 — How it works */}
-      <section className="bg-surface py-32">
+      <section className="bg-lavender py-32">
         <div className="mx-auto max-w-6xl px-5">
           <Reveal><h2 className="text-center text-4xl font-semibold md:text-5xl">How It Works</h2></Reveal>
           <div className="mt-14 grid gap-5 md:grid-cols-4">
