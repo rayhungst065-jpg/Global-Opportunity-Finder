@@ -29,6 +29,7 @@ const items = [
   { to: "/recommended", label: "Recommended for Me" },
   { to: "/saved", label: "Saved Opportunities" },
   { to: "/deadlines", label: "Deadlines" },
+  { to: "/communities", label: "Communities" },
   { to: "/settings", label: "Settings" },
 ] as const;
 

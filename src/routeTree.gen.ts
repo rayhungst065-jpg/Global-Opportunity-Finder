@@ -28,6 +28,11 @@ import { Route as AuthenticatedSavedRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as OpportunitiesIndexRouteImport } from './routes/opportunities.index'
 import { Route as OpportunitiesIdRouteImport } from './routes/opportunities.$id'
+import { Route as AuthenticatedAdminProposalsRouteImport } from './routes/_authenticated/admin.proposals'
+import { Route as AuthenticatedCommunitiesIndexRouteImport } from './routes/_authenticated/communities.index'
+import { Route as AuthenticatedCommunitiesIdRouteImport } from './routes/_authenticated/communities.$id'
+import { Route as AuthenticatedCommunitiesMyRouteImport } from './routes/_authenticated/communities.my'
+import { Route as AuthenticatedCommunitiesNewRouteImport } from './routes/_authenticated/communities.new'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -124,6 +129,36 @@ const OpportunitiesIdRoute = OpportunitiesIdRouteImport.update({
   path: '/opportunities/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminProposalsRoute =
+  AuthenticatedAdminProposalsRouteImport.update({
+    id: '/admin/proposals',
+    path: '/admin/proposals',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCommunitiesIndexRoute =
+  AuthenticatedCommunitiesIndexRouteImport.update({
+    id: '/communities/',
+    path: '/communities/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCommunitiesIdRoute =
+  AuthenticatedCommunitiesIdRouteImport.update({
+    id: '/communities/$id',
+    path: '/communities/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCommunitiesMyRoute =
+  AuthenticatedCommunitiesMyRouteImport.update({
+    id: '/communities/my',
+    path: '/communities/my',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCommunitiesNewRoute =
+  AuthenticatedCommunitiesNewRouteImport.update({
+    id: '/communities/new',
+    path: '/communities/new',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -144,6 +179,11 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRoute
   '/opportunities/$id': typeof OpportunitiesIdRoute
   '/opportunities/': typeof OpportunitiesIndexRoute
+  '/admin/proposals': typeof AuthenticatedAdminProposalsRoute
+  '/communities/$id': typeof AuthenticatedCommunitiesIdRoute
+  '/communities/my': typeof AuthenticatedCommunitiesMyRoute
+  '/communities/new': typeof AuthenticatedCommunitiesNewRoute
+  '/communities/': typeof AuthenticatedCommunitiesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -164,6 +204,11 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsRoute
   '/opportunities/$id': typeof OpportunitiesIdRoute
   '/opportunities': typeof OpportunitiesIndexRoute
+  '/admin/proposals': typeof AuthenticatedAdminProposalsRoute
+  '/communities/$id': typeof AuthenticatedCommunitiesIdRoute
+  '/communities/my': typeof AuthenticatedCommunitiesMyRoute
+  '/communities/new': typeof AuthenticatedCommunitiesNewRoute
+  '/communities': typeof AuthenticatedCommunitiesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -186,6 +231,11 @@ export interface FileRoutesById {
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/opportunities/$id': typeof OpportunitiesIdRoute
   '/opportunities/': typeof OpportunitiesIndexRoute
+  '/_authenticated/admin/proposals': typeof AuthenticatedAdminProposalsRoute
+  '/_authenticated/communities/$id': typeof AuthenticatedCommunitiesIdRoute
+  '/_authenticated/communities/my': typeof AuthenticatedCommunitiesMyRoute
+  '/_authenticated/communities/new': typeof AuthenticatedCommunitiesNewRoute
+  '/_authenticated/communities/': typeof AuthenticatedCommunitiesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -208,6 +258,11 @@ export interface FileRouteTypes {
     | '/settings'
     | '/opportunities/$id'
     | '/opportunities/'
+    | '/admin/proposals'
+    | '/communities/$id'
+    | '/communities/my'
+    | '/communities/new'
+    | '/communities/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -228,6 +283,11 @@ export interface FileRouteTypes {
     | '/settings'
     | '/opportunities/$id'
     | '/opportunities'
+    | '/admin/proposals'
+    | '/communities/$id'
+    | '/communities/my'
+    | '/communities/new'
+    | '/communities'
   id:
     | '__root__'
     | '/'
@@ -249,6 +309,11 @@ export interface FileRouteTypes {
     | '/_authenticated/settings'
     | '/opportunities/$id'
     | '/opportunities/'
+    | '/_authenticated/admin/proposals'
+    | '/_authenticated/communities/$id'
+    | '/_authenticated/communities/my'
+    | '/_authenticated/communities/new'
+    | '/_authenticated/communities/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -401,6 +466,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OpportunitiesIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/proposals': {
+      id: '/_authenticated/admin/proposals'
+      path: '/admin/proposals'
+      fullPath: '/admin/proposals'
+      preLoaderRoute: typeof AuthenticatedAdminProposalsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/communities/': {
+      id: '/_authenticated/communities/'
+      path: '/communities'
+      fullPath: '/communities/'
+      preLoaderRoute: typeof AuthenticatedCommunitiesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/communities/$id': {
+      id: '/_authenticated/communities/$id'
+      path: '/communities/$id'
+      fullPath: '/communities/$id'
+      preLoaderRoute: typeof AuthenticatedCommunitiesIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/communities/my': {
+      id: '/_authenticated/communities/my'
+      path: '/communities/my'
+      fullPath: '/communities/my'
+      preLoaderRoute: typeof AuthenticatedCommunitiesMyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/communities/new': {
+      id: '/_authenticated/communities/new'
+      path: '/communities/new'
+      fullPath: '/communities/new'
+      preLoaderRoute: typeof AuthenticatedCommunitiesNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -412,6 +512,11 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedRecommendedRoute: typeof AuthenticatedRecommendedRoute
   AuthenticatedSavedRoute: typeof AuthenticatedSavedRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedAdminProposalsRoute: typeof AuthenticatedAdminProposalsRoute
+  AuthenticatedCommunitiesIdRoute: typeof AuthenticatedCommunitiesIdRoute
+  AuthenticatedCommunitiesMyRoute: typeof AuthenticatedCommunitiesMyRoute
+  AuthenticatedCommunitiesNewRoute: typeof AuthenticatedCommunitiesNewRoute
+  AuthenticatedCommunitiesIndexRoute: typeof AuthenticatedCommunitiesIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -422,6 +527,11 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedRecommendedRoute: AuthenticatedRecommendedRoute,
   AuthenticatedSavedRoute: AuthenticatedSavedRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedAdminProposalsRoute: AuthenticatedAdminProposalsRoute,
+  AuthenticatedCommunitiesIdRoute: AuthenticatedCommunitiesIdRoute,
+  AuthenticatedCommunitiesMyRoute: AuthenticatedCommunitiesMyRoute,
+  AuthenticatedCommunitiesNewRoute: AuthenticatedCommunitiesNewRoute,
+  AuthenticatedCommunitiesIndexRoute: AuthenticatedCommunitiesIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

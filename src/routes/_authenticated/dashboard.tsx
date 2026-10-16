@@ -55,7 +55,7 @@ function Dashboard() {
         <div className="mt-6 flex flex-wrap gap-2">
           <Link to="/profile" className={ghost}>Edit profile</Link>
           <Link to="/opportunities" className={ghost}>Explore opportunities</Link>
-          <span className={`${ghost} cursor-not-allowed opacity-60`} title="Coming in the next stage">Communities · coming soon</span>
+          <Link to="/communities" className={ghost}>Communities</Link>
           <span className={`${ghost} cursor-not-allowed opacity-60`} title="Coming in a later stage">Meet students · coming soon</span>
         </div>
       </section>
