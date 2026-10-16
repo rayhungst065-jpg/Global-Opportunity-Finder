@@ -70,7 +70,7 @@ function Settings() {
     setPwMsg({ ok: true, text: "Password updated." });
   }
 
-  async function saveProfile(patch: Record<string, unknown>) {
+  async function saveProfile(patch: import("@/integrations/supabase/types").Database["public"]["Tables"]["profiles"]["Update"]) {
     if (!user) return;
     setSaving(true);
     setSaveMsg(null);
