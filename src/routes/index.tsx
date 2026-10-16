@@ -191,6 +191,7 @@ function Landing() {
           ))}
           <p className="text-xs text-muted-foreground">Illustrative preview — not real listings.</p>
         </div>
+        </div>
       </section>
 
       {/* 5 — Find your team (parallax) */}
@@ -235,7 +236,7 @@ function Landing() {
           </div>
         </Reveal>
         <Reveal delay={150}>
-          <Eyebrow>College discovery</Eyebrow>
+          <Eyebrow tone="coral">College discovery</Eyebrow>
           <h2 className="mt-3 text-4xl font-semibold md:text-5xl">Find Colleges That Fit Your Goals.</h2>
           <p className="mt-6 text-lg text-muted-foreground">
             College Match will compare colleges by your intended major, preferred regions, campus size, and budget — with honest explanations of why each might fit. No prestige rankings, no invented statistics, and never a promise of admission.
