@@ -6,9 +6,9 @@
 
 /*
  * Design system — Global Student Opportunity Finder.
- * Palette: violet primary, coral warmth, teal/mint freshness,
- * lavender + warm cream surfaces. All colors live here as oklch
- * tokens; components only use semantic classes.
+ * Coffee-inspired palette: espresso text, coffee-brown primary,
+ * caramel CTAs, warm cream + latte surfaces, sage + terracotta accents.
+ * All colors live here as oklch tokens; components use semantic classes.
  */
 
 @theme inline {
@@ -52,43 +52,44 @@
 }
 
 :root {
-  --radius: 1rem;
-  /* Warm cream-lavender canvas */
-  --background: oklch(0.975 0.012 90);
-  --foreground: oklch(0.24 0.05 295);
-  --card: oklch(0.995 0.006 90);
-  --card-foreground: oklch(0.24 0.05 295);
-  --popover: oklch(0.995 0.006 90);
-  --popover-foreground: oklch(0.24 0.05 295);
-  /* Violet primary */
-  --primary: oklch(0.52 0.22 290);
-  --primary-foreground: oklch(0.99 0 0);
-  --primary-soft: oklch(0.93 0.05 295);
-  /* Teal / mint */
-  --teal: oklch(0.6 0.12 185);
-  --teal-soft: oklch(0.94 0.04 185);
-  /* Coral / warm orange */
-  --coral: oklch(0.66 0.19 35);
-  --coral-soft: oklch(0.94 0.04 45);
-  /* Lavender + cream surfaces */
-  --lavender: oklch(0.92 0.05 300);
-  --cream: oklch(0.96 0.025 85);
-  --secondary: oklch(0.94 0.03 300);
-  --secondary-foreground: oklch(0.3 0.08 295);
-  --surface: oklch(0.955 0.02 300);
-  --ink: oklch(0.2 0.05 295);
-  --ink-foreground: oklch(0.97 0.01 90);
-  --muted: oklch(0.945 0.02 300);
-  --muted-foreground: oklch(0.48 0.05 295);
-  --accent: oklch(0.93 0.05 295);
-  --accent-foreground: oklch(0.38 0.14 290);
-  --destructive: oklch(0.58 0.22 27);
-  --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.9 0.025 300);
-  --input: oklch(0.88 0.03 300);
-  --ring: oklch(0.52 0.22 290);
-  --shadow-soft: 0 1px 2px oklch(0.3 0.08 295 / 4%), 0 12px 32px -12px oklch(0.3 0.08 295 / 12%);
-  --shadow-lift: 0 2px 4px oklch(0.3 0.08 295 / 5%), 0 30px 60px -20px oklch(0.35 0.12 295 / 25%);
+  --radius: 0.75rem;
+  /* Warm cream canvas, espresso text */
+  --background: oklch(0.955 0.02 85);      /* #F7F0E6 warm cream */
+  --foreground: oklch(0.27 0.03 45);       /* #38251F espresso */
+  --card: oklch(0.975 0.015 85);
+  --card-foreground: oklch(0.27 0.03 45);
+  --popover: oklch(0.975 0.015 85);
+  --popover-foreground: oklch(0.27 0.03 45);
+  /* Coffee brown primary */
+  --primary: oklch(0.44 0.06 55);          /* #6F4E37 coffee */
+  --primary-foreground: oklch(0.97 0.01 85);
+  --primary-soft: oklch(0.915 0.03 70);
+  /* Sage (teal slot) */
+  --teal: oklch(0.58 0.05 140);            /* #87977A muted sage, deepened for text */
+  --teal-soft: oklch(0.92 0.03 130);
+  /* Terracotta (coral slot) */
+  --coral: oklch(0.58 0.11 40);            /* #C87961 soft terracotta, deepened for text */
+  --coral-soft: oklch(0.92 0.035 50);
+  /* Latte + cream surfaces */
+  --lavender: oklch(0.885 0.035 75);       /* #E8D7C3 latte beige */
+  --cream: oklch(0.94 0.025 80);
+  /* Caramel accent for CTAs/highlights */
+  --secondary: oklch(0.66 0.11 60);        /* #C58B55 caramel */
+  --secondary-foreground: oklch(0.27 0.03 45);
+  --surface: oklch(0.93 0.025 78);
+  --ink: oklch(0.27 0.03 45);              /* espresso dark sections */
+  --ink-foreground: oklch(0.955 0.02 85);
+  --muted: oklch(0.92 0.025 78);
+  --muted-foreground: oklch(0.48 0.04 55);
+  --accent: oklch(0.915 0.03 70);
+  --accent-foreground: oklch(0.4 0.07 55);
+  --destructive: oklch(0.55 0.17 30);
+  --destructive-foreground: oklch(0.97 0.01 85);
+  --border: oklch(0.87 0.03 70);
+  --input: oklch(0.85 0.03 70);
+  --ring: oklch(0.44 0.06 55);
+  --shadow-soft: 0 1px 2px oklch(0.27 0.03 45 / 5%), 0 12px 32px -12px oklch(0.27 0.03 45 / 14%);
+  --shadow-lift: 0 2px 4px oklch(0.27 0.03 45 / 6%), 0 30px 60px -20px oklch(0.3 0.05 50 / 28%);
 }
 
 @layer base {
