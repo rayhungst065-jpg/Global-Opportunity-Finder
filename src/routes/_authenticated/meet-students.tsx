@@ -182,7 +182,7 @@ function FriendsTab({ userId, rows }: { userId: string | undefined; rows: Connec
         {accepted.length === 0 ? (
           <p className="mt-3 rounded-2xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
             No connections yet. Find students under{" "}
-            <Link to="/communities" className="text-primary hover:underline">Communities → Discover Groups → Find Students</Link>.
+            <Link to="/communities" className="text-primary hover:underline">Communities → Discover Communities → Find Students</Link>.
           </p>
         ) : (
           <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
