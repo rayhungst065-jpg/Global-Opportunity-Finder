@@ -34,7 +34,8 @@ function ResetPassword() {
         } else if (hash.get("type") === "recovery") {
           const r = await supabase.auth.getUser(); if (active && !r.error && r.data.user) setReady(true);
         }
-      } finally { if (active) setChecked(true); }
+      } catch { if (active) setReady(false); }
+      finally { if (active) setChecked(true); }
     }
     void verify();
     return () => { active = false; data.subscription.unsubscribe(); };

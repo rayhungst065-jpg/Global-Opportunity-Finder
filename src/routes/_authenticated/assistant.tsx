@@ -20,6 +20,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useUser } from "@/lib/auth";
 import type { Json } from "@/integrations/supabase/types";
 import symbol from "@/assets/logo-symbol.png.asset.json";
+import { OpportunityCard } from "@/components/site/OpportunityCard";
+import type { Opportunity } from "@/lib/saved";
 
 export const Route = createFileRoute("/_authenticated/assistant")({ head: () => ({ meta: [
   { title: "AI Opportunity Assistant — Global Opportunity Finder" },
@@ -52,7 +54,7 @@ function AssistantPage() {
       <Button variant="outline" onClick={startNew} disabled={creating}><Plus />Start New Chat</Button>
       <DropdownMenu><DropdownMenuTrigger asChild><Button variant="ghost"><History />Previous chats</Button></DropdownMenuTrigger><DropdownMenuContent className="max-h-80 w-72 overflow-y-auto">{history.data?.map(c => <DropdownMenuItem key={c.id} onClick={() => setSelected(c.id)} className="whitespace-normal">{c.title}</DropdownMenuItem>)}{!history.data?.length && <p className="p-3 text-sm text-muted-foreground">No previous chats.</p>}</DropdownMenuContent></DropdownMenu>
     </div>
-    <p className="mb-4 flex items-start gap-2 text-xs text-muted-foreground"><ShieldCheck className="h-4 w-4 shrink-0" />Chat messages and selected profile preferences are sent to Lovable AI (OpenAI). Do not include sensitive information. Live web search is not connected.</p>
+    <p className="mb-4 flex items-start gap-2 text-xs text-muted-foreground"><ShieldCheck className="h-4 w-4 shrink-0" />Chat messages and selected preferences are sent to Lovable AI (OpenAI). Opportunity search terms and matching preferences are sent to Parallel. Do not include sensitive information.</p>
     {(notice || history.error || chat.error) && <p role="alert" className="mb-4 text-sm text-destructive">{notice || history.error?.message || chat.error?.message}</p>}
     {history.isPending || (activeId && chat.isPending) ? <Shimmer>Loading your chat…</Shimmer> : chat.data ? <ChatWindow key={chat.data.chat.id} id={chat.data.chat.id} initialMessages={chat.data.messages.map(m => ({ id: m.message_id, role: m.role, parts: m.parts })) as UIMessage[]} summary={chat.data.chat.summary} /> : <div className="py-16 text-center"><img src={symbol.url} alt="Global Opportunity Finder" className="mx-auto h-16 w-auto" /><h2 className="mt-5 text-xl font-semibold">Your next opportunity</h2><Button className="mt-6" onClick={startNew} disabled={creating}>Start a conversation</Button></div>}
   </WorkspaceShell>;
@@ -89,7 +91,7 @@ function ChatWindow({ id, initialMessages, summary }: { id: string; initialMessa
       {messages.map(m => <Message key={m.id} from={m.role}><MessageContent className={m.role === "user" ? "bg-primary text-primary-foreground" : "w-full"}>{m.parts.map((p, i) => {
         if (p.type === "text") return <MessageResponse key={i}>{p.text}</MessageResponse>;
         if (p.type === "reasoning") return <Reasoning key={i} defaultOpen={false}><ReasoningTrigger /><ReasoningContent>{p.text}</ReasoningContent></Reasoning>;
-        if (p.type.startsWith("tool-")) { const part = p as ToolUIPart; return <div key={i} className="w-full"><Tool defaultOpen={false}><ToolHeader type={part.type} state={part.state} /><ToolContent><ToolInput input={part.input} /><ToolOutput output={part.state === "output-available" ? part.output : undefined} errorText={part.state === "output-error" ? part.errorText : undefined} /></ToolContent></Tool>{part.state === "approval-requested" && <div className="mt-2 flex gap-2"><Button size="sm" onClick={() => addToolApprovalResponse({ id: part.approval.id, approved: true })}><Bookmark />Approve save</Button><Button size="sm" variant="outline" onClick={() => addToolApprovalResponse({ id: part.approval.id, approved: false })}>Decline</Button></div>}</div>; }
+        if (p.type.startsWith("tool-")) { const part = p as ToolUIPart; const output = part.state === "output-available" && part.type === "tool-liveSearch" ? part.output as { results?: { o: Opportunity; reasons: string[] }[] } : undefined; return <div key={i} className="w-full"><Tool defaultOpen={false}><ToolHeader type={part.type} state={part.state} /><ToolContent><ToolInput input={part.input} /><ToolOutput output={part.state === "output-available" ? part.output : undefined} errorText={part.state === "output-error" ? part.errorText : undefined} /></ToolContent></Tool>{output?.results?.map(r => <div key={r.o.id} className="my-3"><OpportunityCard o={r.o} /><p className="mt-2 text-sm text-muted-foreground">{r.reasons.join(" · ")}</p></div>)}{part.state === "approval-requested" && <div className="mt-2 flex gap-2"><Button size="sm" onClick={() => addToolApprovalResponse({ id: part.approval.id, approved: true })}><Bookmark />Approve save</Button><Button size="sm" variant="outline" onClick={() => addToolApprovalResponse({ id: part.approval.id, approved: false })}>Decline</Button></div>}</div>; }
         return null;
       })}</MessageContent></Message>)}
       {status === "submitted" && <Shimmer>Thinking about your next steps…</Shimmer>}

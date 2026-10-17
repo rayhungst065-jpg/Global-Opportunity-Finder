@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 import type { Opportunity } from "@/lib/saved";
+import { isNormalRecommendation } from "@/lib/opportunity-source";
 
 export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 export type Category = Database["public"]["Enums"]["opportunity_category"];
@@ -12,7 +13,8 @@ export function useProfile(userId: string | undefined) {
     queryKey: ["profile", userId],
     enabled: !!userId,
     queryFn: async () => {
-      const { data, error } = await supabase.from("profiles").select("*").eq("id", userId!).maybeSingle();
+      if (!userId) return null;
+      const { data, error } = await supabase.from("profiles").select("*").eq("id", userId).maybeSingle();
       if (error) throw error;
       return data;
     },
@@ -50,11 +52,11 @@ export function profileCompletion(p: Profile | null | undefined) {
 }
 
 /** Simple rule-based matching: category, interest keywords, format. Closed listings excluded. */
-export function recommend(p: Profile | null | undefined, list: Opportunity[]) {
+export function recommend(p: Profile | null | undefined, list: Opportunity[], includeDemo = false) {
   if (!p) return [];
   const words = [...p.interests, p.intended_major ?? ""].map((w) => w.toLowerCase().trim()).filter(Boolean);
   return list
-    .filter((o) => o.application_status !== "closed")
+    .filter((o) => (includeDemo && o.is_demo && o.application_status !== "closed") || isNormalRecommendation(o))
     .map((o) => {
       const text = `${o.title} ${o.description} ${o.eligibility}`.toLowerCase();
       const online = o.location.toLowerCase().includes("online");

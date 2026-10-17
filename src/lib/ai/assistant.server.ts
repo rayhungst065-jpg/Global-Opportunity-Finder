@@ -4,6 +4,7 @@ import { convertToModelMessages, streamText, stepCountIs, tool, generateId, type
 import { z } from "zod";
 import type { Database, Json } from "@/integrations/supabase/types";
 import { ASSISTANT_POLICY, isSummaryRequest, permittedProfile } from "@/lib/assistant-policy";
+import { discoverOnlineOpportunities } from "@/lib/online-opportunities.server";
 import { createLovableAiGatewayRunIdFetch, getLovableAiGatewayRunId, withLovableAiGatewayRunIdHeader } from "./run-id.ts";
 
 export async function handleAssistant(request: Request) {
@@ -80,7 +81,7 @@ export async function handleAssistant(request: Request) {
           const words = query.toLowerCase().split(/\s+/).filter(Boolean);
           return (rows ?? []).filter(r => words.some(w => `${r.title} ${r.description} ${r.category} ${r.eligibility}`.toLowerCase().includes(w))).map(r => ({ ...r, verification: r.is_demo ? "DEMO — not real" : "Catalog record; details require official confirmation" }));
         } }),
-        liveSearch: tool({ description: "Check whether live internet opportunity search is available.", inputSchema: z.object({ query: z.string() }), execute: async () => ({ available: false, reason: "The project owner skipped the Parallel search connection. No live internet search has run. Ask for an official opportunity link or use the catalog without claiming current verification." }) }),
+        liveSearch: tool({ description: "Find current student opportunities from official online sources, extract accessible source pages, and return catalog IDs, exact official URLs, organizer, eligibility, dates and fit. No rows means no reliable results. Use for every current online opportunity request.", inputSchema: z.object({ query: z.string().min(1).max(500) }), execute: async ({ query }) => ({ available: true, results: await discoverOnlineOpportunities(db, userId, query, request.signal) }) }),
         saveCatalogOpportunity: tool({ description: "Save an existing shared catalog opportunity to this student's dashboard. Requires student approval. Never inserts or edits shared opportunity records.", inputSchema: z.object({ opportunityId: z.string() }), needsApproval: true, execute: async ({ opportunityId }) => {
           const id = z.string().uuid().parse(opportunityId);
           const { data: row, error: rowError } = await db.from("opportunities").select("id, title, is_demo, deadline").eq("id", id).single();
