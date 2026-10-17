@@ -47,15 +47,16 @@ export const createGroup = createServerFn({ method: "POST" })
   )
   .middleware([requireSupabaseAuth])
   .handler(async ({ context, data }) => {
-    const { data: group, error } = await context.supabase
+    // Generate the id here: the read policy requires membership, which only
+    // exists after the owner row below, so insert-then-select would fail RLS.
+    const id = crypto.randomUUID();
+    const { error } = await context.supabase
       .from("collab_groups")
-      .insert({ ...data, created_by: context.userId })
-      .select()
-      .single();
+      .insert({ id, ...data, created_by: context.userId });
     if (error) throw new Error(error.message);
     const { error: mErr } = await context.supabase
       .from("collab_group_members")
-      .insert({ group_id: group.id, user_id: context.userId, role: "owner", status: "active" });
+      .insert({ group_id: id, user_id: context.userId, role: "owner", status: "active" });
     if (mErr) throw new Error(mErr.message);
     return { ok: true };
   });
