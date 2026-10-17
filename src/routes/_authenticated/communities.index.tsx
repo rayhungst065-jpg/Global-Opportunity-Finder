@@ -338,7 +338,7 @@ function Posts({ userId }: { userId: string | undefined }) {
                     </>
                   ) : (
                     <p className="text-xs text-muted-foreground">
-                      To respond, send {p.author?.display_name ?? "the author"} a connection request from Discover Groups → Find Students.
+                      To respond, send {p.author?.display_name ?? "the author"} a connection request from Discover Communities → Find Students.
                     </p>
                   )}
                 </div>
