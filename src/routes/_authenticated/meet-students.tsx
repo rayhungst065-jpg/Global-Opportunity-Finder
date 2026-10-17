@@ -111,7 +111,7 @@ function MessagesTab() {
 
 /* ---------------- Friends ---------------- */
 
-function FriendsTab({ userId, rows }: { userId?: string; rows: ConnectionRow[] }) {
+function FriendsTab({ userId, rows }: { userId: string | undefined; rows: ConnectionRow[] }) {
   const qc = useQueryClient();
   const [notice, setNotice] = useState("");
   const refresh = () => qc.invalidateQueries({ queryKey: ["my-connections"] });
@@ -189,7 +189,7 @@ function FriendsTab({ userId, rows }: { userId?: string; rows: ConnectionRow[] }
 
 /* ---------------- Groups (private collaboration) ---------------- */
 
-function GroupsTab({ userId, connections }: { userId?: string; connections: ConnectionRow[] }) {
+function GroupsTab({ userId, connections }: { userId: string | undefined; connections: ConnectionRow[] }) {
   const qc = useQueryClient();
   const [composing, setComposing] = useState(false);
   const [notice, setNotice] = useState("");
