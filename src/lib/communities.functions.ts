@@ -65,8 +65,11 @@ export const listCommunities = createServerFn({ method: "GET" })
     const { data: rows, error } = await query;
     if (error) throw new Error(error.message);
     const ids = (rows ?? []).map((c) => c.id);
+    // Approved-member counts are non-sensitive aggregates; membership rows are
+    // member-scoped by RLS, so count them with the privileged client.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: members, error: mErr } = ids.length
-      ? await publicClient().from("community_memberships").select("community_id").in("community_id", ids).eq("status", "approved")
+      ? await supabaseAdmin.from("community_memberships").select("community_id").in("community_id", ids).eq("status", "approved")
       : { data: [], error: null };
     if (mErr) throw new Error(mErr.message);
     const counts = new Map<string, number>();

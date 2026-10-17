@@ -103,7 +103,9 @@ function DiscoverGroups({ userId }: { userId: string | undefined }) {
                 <li key={c.id} className="flex flex-col rounded-3xl border border-border bg-card p-6 shadow-soft">
                   <div className="flex items-center justify-between gap-3">
                     <span className="rounded-full bg-primary-soft px-3 py-1 text-xs font-medium text-accent-foreground">{c.category}</span>
-                    <span className="text-xs text-muted-foreground">{formatLabel[c.format] ?? c.format}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {formatLabel[c.format] ?? c.format} · {c.member_count} member{c.member_count === 1 ? "" : "s"}
+                    </span>
                   </div>
                   <Link to="/communities/$id" params={{ id: c.id }} className="mt-3 font-display text-lg font-medium hover:underline">
                     {c.name}
