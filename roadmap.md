@@ -12,6 +12,11 @@
 - [x] Verified: logo placements, palette, auth pages, tabs, post + group creation, mobile homepage — no page errors
 
 ## Remaining
+- [ ] Branding/legal/AI update: exact new homepage messaging, verify original logo placements
+- [ ] Substantive legal pages based on actual practices; flag operator/contact/age/jurisdiction and legal review gaps
+- [ ] Real account-private AI chat with full history, summaries, new-chat archives, profile/catalog tools and action plans
+- [ ] Live search connector, source-aware results and integration with saved opportunities; verify real requests
+- [ ] End-to-end assistant, history, summary, save, desktop/mobile and regression tests; final status report
 - [ ] Two-account handshake test (connection request → accept → group invite) — needs a second account
 - [ ] Blocking/reporting users, notifications, self-serve account deletion
 - [ ] Real opportunity listings (current ones are labeled demo data)
