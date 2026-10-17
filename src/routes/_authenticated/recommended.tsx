@@ -35,7 +35,7 @@ function Recommended() {
   const findOnline = useServerFn(onlineRecommendations);
   const [showDemo, setShowDemo] = useState(false);
   const online = useQuery({ queryKey: ["online-recommendations", user?.id, profile.data?.updated_at], queryFn: () => findOnline(), enabled: !!user && !!profile.data, staleTime: Infinity, retry: false, refetchOnWindowFocus: false });
-  const recs = showDemo ? recommend(profile.data, all.data ?? []).filter(r => r.o.is_demo) : online.data ?? [];
+  const recs = showDemo ? recommend(profile.data, all.data ?? [], true).filter(r => r.o.is_demo) : online.data ?? [];
   return (
     <WorkspaceShell title="Recommended for Me" subtitle="Official-source opportunities matched to your interests, major, education and region. Always confirm eligibility and dates with the organizer.">
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
