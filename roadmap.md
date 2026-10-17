@@ -3,8 +3,9 @@
 ## Focused fixes
 - [x] Real online recommendation retrieval through connected Parallel; extracted official links and real catalog save verified
 - [x] Original symbol plus readable brand name; Capstone footer sentence removed
-- [ ] Assistant real-search link verification
-- [ ] Provider password recovery and minimal end-to-end verification
+- [x] Assistant real search returned FRC/FTC organizer links inline; both official URLs returned HTTP 200
+- [x] Provider recovery request accepted (HTTP 200); generic response and invalid/expired-link rejection verified
+- [ ] Recovery email receipt, password change and redirect allowlist — needs the user to follow the emailed link; hosted redirect settings are not accessible through current tools
 
 ## Done
 - [x] Logo assets (full + symbol) via lovable-assets; favicon from symbol; brand renamed to Global Opportunity Finder
@@ -24,10 +25,10 @@
 - [x] Real AI requests verified: profile-aware plans, multi-turn history after refresh, summary persistence and previous-chat selection
 - [x] Approved catalog save verified through the assistant and existing Saved Opportunities screen (labeled DEMO test record)
 - [x] Desktop/mobile overflow checks and routing/privacy-helper regression tests passed; preview build OK
-- [ ] Live search and verified online recommendations — blocked by skipped Parallel connection; no current source verification or online-result saving
+- [x] Parallel connected; real source extraction, recommendations and catalog saving verified
 - [ ] Cross-account assistant isolation and Stop/denial-state end-to-end verification — not exercised; owner policies and Stop propagation implemented
 - [ ] Legal launch readiness — needs operator/contact, age/guardian policy, jurisdiction, retention/deletion/provider disclosures and legal review
 - [ ] Two-account handshake test (connection request → accept → group invite) — needs a second account
 - [ ] Blocking/reporting users, notifications, self-serve account deletion
-- [ ] Real opportunity listings (current ones are labeled demo data)
+- [x] Real extracted official-source records added without changing existing demo records or accounts
 - [ ] Privacy remediation — discoverable profile rows expose more fields than the UI; authenticated avatar read policy broader than owner-folder design
