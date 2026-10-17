@@ -12,12 +12,16 @@
 - [x] Verified: logo placements, palette, auth pages, tabs, post + group creation, mobile homepage — no page errors
 
 ## Remaining
-- [ ] Branding/legal/AI update: exact new homepage messaging, verify original logo placements
-- [ ] Substantive legal pages based on actual practices; flag operator/contact/age/jurisdiction and legal review gaps
-- [ ] Real account-private AI chat with full history, summaries, new-chat archives, profile/catalog tools and action plans
-- [ ] Live search connector, source-aware results and integration with saved opportunities; verify real requests
-- [ ] End-to-end assistant, history, summary, save, desktop/mobile and regression tests; final status report
+- [x] Exact new homepage/auth messaging; original logos retained; desktop/mobile pages inspected
+- [x] Substantive Privacy and Terms based on actual implementation; outstanding legal/privacy requirements disclosed
+- [x] Authenticated streaming Lovable AI/OpenAI assistant with stored history, summaries, retained older chats and profile/catalog tools
+- [x] Real AI requests verified: profile-aware plans, multi-turn history after refresh, summary persistence and previous-chat selection
+- [x] Approved catalog save verified through the assistant and existing Saved Opportunities screen (labeled DEMO test record)
+- [x] Desktop/mobile overflow checks and routing/privacy-helper regression tests passed; preview build OK
+- [ ] Live search and verified online recommendations — blocked by skipped Parallel connection; no current source verification or online-result saving
+- [ ] Cross-account assistant isolation and Stop/denial-state end-to-end verification — not exercised; owner policies and Stop propagation implemented
+- [ ] Legal launch readiness — needs operator/contact, age/guardian policy, jurisdiction, retention/deletion/provider disclosures and legal review
 - [ ] Two-account handshake test (connection request → accept → group invite) — needs a second account
 - [ ] Blocking/reporting users, notifications, self-serve account deletion
 - [ ] Real opportunity listings (current ones are labeled demo data)
-- [ ] Avatar storage policy review: authenticated-read policy is broader than the private owner-folder design
+- [ ] Privacy remediation — discoverable profile rows expose more fields than the UI; authenticated avatar read policy broader than owner-folder design
