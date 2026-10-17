@@ -10,6 +10,10 @@ export const Route = createFileRoute("/_authenticated/admin/proposals")({
     meta: [
       { title: "Review Community Proposals — Global Opportunity Finder" },
       { name: "description", content: "Administrator review of student community proposals." },
+          { property: "og:title", content: "Review Community Proposals — Global Opportunity Finder" },
+      { property: "og:description", content: "Administrator review of student community proposals." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: AdminProposals,

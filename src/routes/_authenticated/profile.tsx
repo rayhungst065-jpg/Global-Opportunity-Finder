@@ -16,6 +16,8 @@ export const Route = createFileRoute("/_authenticated/profile")({
       { name: "description", content: "View and edit your student profile, interests and opportunity preferences." },
       { property: "og:title", content: "My Profile — Global Opportunity Finder" },
       { property: "og:description", content: "Your student profile and preferences." },
+          { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: ProfilePage,

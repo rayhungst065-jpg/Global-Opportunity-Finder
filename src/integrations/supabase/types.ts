@@ -14,6 +14,95 @@ export type Database = {
   }
   public: {
     Tables: {
+      assistant_access_state: {
+        Row: {
+          blocked_message: string
+          created_at: string
+          status: number
+          user_id: string
+        }
+        Insert: {
+          blocked_message: string
+          created_at?: string
+          status: number
+          user_id: string
+        }
+        Update: {
+          blocked_message?: string
+          created_at?: string
+          status?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      assistant_conversations: {
+        Row: {
+          archived: boolean
+          created_at: string
+          id: string
+          summary: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          archived?: boolean
+          created_at?: string
+          id?: string
+          summary?: string | null
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          archived?: boolean
+          created_at?: string
+          id?: string
+          summary?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      assistant_messages: {
+        Row: {
+          conversation_id: string
+          created_at: string
+          id: string
+          message_id: string
+          parts: Json
+          role: string
+          user_id: string
+        }
+        Insert: {
+          conversation_id: string
+          created_at?: string
+          id?: string
+          message_id: string
+          parts?: Json
+          role: string
+          user_id: string
+        }
+        Update: {
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          message_id?: string
+          parts?: Json
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assistant_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "assistant_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       collab_group_members: {
         Row: {
           created_at: string

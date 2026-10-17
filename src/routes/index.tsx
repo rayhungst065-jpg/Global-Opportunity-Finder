@@ -12,8 +12,8 @@ import teammates from "@/assets/teammates.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Global Opportunity Finder — Discover. Connect. Grow." },
-      { name: "description", content: "Discover opportunities, connect with like-minded students, and explore pathways toward your future—all in one place." },
+      { title: "Global Opportunity Finder — Your Future Starts Here." },
+      { name: "description", content: "Big Dreams. Real Opportunities. Find opportunities. Meet your people. Build your future." },
       { property: "og:title", content: "Global Opportunity Finder" },
       { property: "og:description", content: "Discover opportunities, connect with like-minded students, and explore pathways toward your future." },
       { property: "og:type", content: "website" },
@@ -86,14 +86,14 @@ function Landing() {
         </div>
         <div className="relative mx-auto max-w-6xl px-5 pt-20 text-center md:pt-28">
           <Reveal>
-            <Eyebrow>Discover. Connect. Grow.</Eyebrow>
+            <p className="font-display text-lg font-semibold text-primary md:text-xl">Big Dreams. Real Opportunities.</p>
             <h1 className="mx-auto mt-4 max-w-4xl text-5xl font-semibold leading-[1.02] md:text-7xl lg:text-8xl">
-              Find Your Next Opportunity. Build What Comes Next.
+              Your Future Starts Here.
             </h1>
           </Reveal>
           <Reveal delay={150}>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
-              Discover opportunities, connect with like-minded students, and explore pathways toward your future—all in one place.
+              Find opportunities. Meet your people. Build your future.
             </p>
             <div className="mt-9 flex flex-wrap justify-center gap-3">
               <Link to="/opportunities" className={btnPrimary}>Explore Opportunities</Link>

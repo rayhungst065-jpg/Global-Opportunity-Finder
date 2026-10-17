@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import {
   LayoutDashboard, Compass, Sparkles, Bookmark, CalendarClock,
   Users, Handshake, GraduationCap, Settings, ChevronDown,
-  UserRound, Pencil, LogOut, Home,
+  UserRound, Pencil, LogOut, Home, MessageCircle,
 } from "lucide-react";
 import { LogoSymbol } from "./SiteLayout";
 import { supabase } from "@/integrations/supabase/client";
@@ -68,6 +68,7 @@ function SidebarUser() {
 
 const items = [
   { to: "/dashboard", label: "Overview", icon: LayoutDashboard },
+  { to: "/assistant", label: "AI Opportunity Assistant", icon: MessageCircle },
   { to: "/opportunities", label: "Explore Opportunities", icon: Compass },
   { to: "/recommended", label: "Recommended for Me", icon: Sparkles },
   { to: "/saved", label: "Saved Opportunities", icon: Bookmark },
@@ -100,7 +101,7 @@ export function WorkspaceShell({ title, subtitle, children }: { title: string; s
         </div>
       </aside>
 
-      <div className="flex-1">
+      <div className="min-w-0 flex-1">
         <div className="border-b border-border bg-background md:hidden">
           <div className="flex items-center justify-between px-5 py-4">
             <LogoSymbol className="h-8" />

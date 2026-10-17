@@ -20,6 +20,7 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as AuthenticatedAssistantRouteImport } from './routes/_authenticated/assistant'
 import { Route as AuthenticatedCollegeMatchRouteImport } from './routes/_authenticated/college-match'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDeadlinesRouteImport } from './routes/_authenticated/deadlines'
@@ -29,6 +30,7 @@ import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedRecommendedRouteImport } from './routes/_authenticated/recommended'
 import { Route as AuthenticatedSavedRouteImport } from './routes/_authenticated/saved'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as ApiAssistantRouteImport } from './routes/api/assistant'
 import { Route as OpportunitiesIndexRouteImport } from './routes/opportunities.index'
 import { Route as OpportunitiesIdRouteImport } from './routes/opportunities.$id'
 import { Route as AuthenticatedAdminProposalsRouteImport } from './routes/_authenticated/admin.proposals'
@@ -91,6 +93,11 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAssistantRoute = AuthenticatedAssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedCollegeMatchRoute =
   AuthenticatedCollegeMatchRouteImport.update({
     id: '/college-match',
@@ -138,6 +145,11 @@ const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const ApiAssistantRoute = ApiAssistantRouteImport.update({
+  id: '/api/assistant',
+  path: '/api/assistant',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const OpportunitiesIndexRoute = OpportunitiesIndexRouteImport.update({
   id: '/opportunities/',
@@ -191,6 +203,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
+  '/assistant': typeof AuthenticatedAssistantRoute
   '/college-match': typeof AuthenticatedCollegeMatchRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deadlines': typeof AuthenticatedDeadlinesRoute
@@ -200,6 +213,7 @@ export interface FileRoutesByFullPath {
   '/recommended': typeof AuthenticatedRecommendedRoute
   '/saved': typeof AuthenticatedSavedRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/api/assistant': typeof ApiAssistantRoute
   '/opportunities/$id': typeof OpportunitiesIdRoute
   '/opportunities/': typeof OpportunitiesIndexRoute
   '/admin/proposals': typeof AuthenticatedAdminProposalsRoute
@@ -219,6 +233,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
+  '/assistant': typeof AuthenticatedAssistantRoute
   '/college-match': typeof AuthenticatedCollegeMatchRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deadlines': typeof AuthenticatedDeadlinesRoute
@@ -228,6 +243,7 @@ export interface FileRoutesByTo {
   '/recommended': typeof AuthenticatedRecommendedRoute
   '/saved': typeof AuthenticatedSavedRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/api/assistant': typeof ApiAssistantRoute
   '/opportunities/$id': typeof OpportunitiesIdRoute
   '/opportunities': typeof OpportunitiesIndexRoute
   '/admin/proposals': typeof AuthenticatedAdminProposalsRoute
@@ -249,6 +265,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
+  '/_authenticated/assistant': typeof AuthenticatedAssistantRoute
   '/_authenticated/college-match': typeof AuthenticatedCollegeMatchRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/deadlines': typeof AuthenticatedDeadlinesRoute
@@ -258,6 +275,7 @@ export interface FileRoutesById {
   '/_authenticated/recommended': typeof AuthenticatedRecommendedRoute
   '/_authenticated/saved': typeof AuthenticatedSavedRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/api/assistant': typeof ApiAssistantRoute
   '/opportunities/$id': typeof OpportunitiesIdRoute
   '/opportunities/': typeof OpportunitiesIndexRoute
   '/_authenticated/admin/proposals': typeof AuthenticatedAdminProposalsRoute
@@ -279,6 +297,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/support'
     | '/terms'
+    | '/assistant'
     | '/college-match'
     | '/dashboard'
     | '/deadlines'
@@ -288,6 +307,7 @@ export interface FileRouteTypes {
     | '/recommended'
     | '/saved'
     | '/settings'
+    | '/api/assistant'
     | '/opportunities/$id'
     | '/opportunities/'
     | '/admin/proposals'
@@ -307,6 +327,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/support'
     | '/terms'
+    | '/assistant'
     | '/college-match'
     | '/dashboard'
     | '/deadlines'
@@ -316,6 +337,7 @@ export interface FileRouteTypes {
     | '/recommended'
     | '/saved'
     | '/settings'
+    | '/api/assistant'
     | '/opportunities/$id'
     | '/opportunities'
     | '/admin/proposals'
@@ -336,6 +358,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/support'
     | '/terms'
+    | '/_authenticated/assistant'
     | '/_authenticated/college-match'
     | '/_authenticated/dashboard'
     | '/_authenticated/deadlines'
@@ -345,6 +368,7 @@ export interface FileRouteTypes {
     | '/_authenticated/recommended'
     | '/_authenticated/saved'
     | '/_authenticated/settings'
+    | '/api/assistant'
     | '/opportunities/$id'
     | '/opportunities/'
     | '/_authenticated/admin/proposals'
@@ -366,6 +390,7 @@ export interface RootRouteChildren {
   SignupRoute: typeof SignupRoute
   SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
+  ApiAssistantRoute: typeof ApiAssistantRoute
   OpportunitiesIdRoute: typeof OpportunitiesIdRoute
   OpportunitiesIndexRoute: typeof OpportunitiesIndexRoute
 }
@@ -449,6 +474,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/assistant': {
+      id: '/_authenticated/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AuthenticatedAssistantRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/college-match': {
       id: '/_authenticated/college-match'
       path: '/college-match'
@@ -512,6 +544,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/assistant': {
+      id: '/api/assistant'
+      path: '/api/assistant'
+      fullPath: '/api/assistant'
+      preLoaderRoute: typeof ApiAssistantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/opportunities/': {
       id: '/opportunities/'
       path: '/opportunities'
@@ -565,6 +604,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAssistantRoute: typeof AuthenticatedAssistantRoute
   AuthenticatedCollegeMatchRoute: typeof AuthenticatedCollegeMatchRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDeadlinesRoute: typeof AuthenticatedDeadlinesRoute
@@ -582,6 +622,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAssistantRoute: AuthenticatedAssistantRoute,
   AuthenticatedCollegeMatchRoute: AuthenticatedCollegeMatchRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDeadlinesRoute: AuthenticatedDeadlinesRoute,
@@ -613,6 +654,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignupRoute: SignupRoute,
   SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,
+  ApiAssistantRoute: ApiAssistantRoute,
   OpportunitiesIdRoute: OpportunitiesIdRoute,
   OpportunitiesIndexRoute: OpportunitiesIndexRoute,
 }

@@ -8,6 +8,8 @@ export const Route = createFileRoute("/about")({
       { name: "description", content: "Why Global Opportunity Finder exists and who it's for." },
       { property: "og:title", content: "About — Global Opportunity Finder" },
       { property: "og:description", content: "More access. More possibilities." },
+          { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: () => (

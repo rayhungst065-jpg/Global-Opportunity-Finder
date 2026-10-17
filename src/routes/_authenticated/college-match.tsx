@@ -12,6 +12,10 @@ export const Route = createFileRoute("/_authenticated/college-match")({
     meta: [
       { title: "College Match — Global Opportunity Finder" },
       { name: "description", content: "Explore colleges that fit your intended major, preferences, and goals." },
+          { property: "og:title", content: "College Match — Global Opportunity Finder" },
+      { property: "og:description", content: "Explore colleges that fit your intended major, preferences, and goals." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: CollegeMatch,

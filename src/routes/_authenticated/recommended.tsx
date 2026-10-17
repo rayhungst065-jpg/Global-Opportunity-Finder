@@ -12,6 +12,8 @@ export const Route = createFileRoute("/_authenticated/recommended")({
       { name: "description", content: "Opportunities matched to your profile and interests." },
       { property: "og:title", content: "Recommended for Me — Global Opportunity Finder" },
       { property: "og:description", content: "Personal opportunity suggestions." },
+          { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Recommended,

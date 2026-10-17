@@ -18,6 +18,8 @@ export const Route = createFileRoute("/opportunities/$id")({
       { name: "description", content: loaderData?.description?.slice(0, 150) ?? "Student opportunity details." },
       { property: "og:title", content: loaderData?.title ?? "Opportunity" },
       { property: "og:description", content: loaderData?.description?.slice(0, 150) ?? "Student opportunity details." },
+          { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   notFoundComponent: () => (

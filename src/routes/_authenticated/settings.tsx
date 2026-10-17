@@ -18,6 +18,8 @@ export const Route = createFileRoute("/_authenticated/settings")({
       { name: "description", content: "Manage your profile, privacy, preferences and account." },
       { property: "og:title", content: "Settings — Global Opportunity Finder" },
       { property: "og:description", content: "Account and privacy settings." },
+          { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Settings,

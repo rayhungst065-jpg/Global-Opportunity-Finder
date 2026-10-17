@@ -17,6 +17,10 @@ export const Route = createFileRoute("/_authenticated/meet-students")({
     meta: [
       { title: "Meet Students — Global Opportunity Finder" },
       { name: "description", content: "Your connections, messages, and private collaboration groups." },
+          { property: "og:title", content: "Meet Students — Global Opportunity Finder" },
+      { property: "og:description", content: "Your connections, messages, and private collaboration groups." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: MeetStudents,

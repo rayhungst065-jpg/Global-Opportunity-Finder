@@ -1,19 +1,41 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { SimplePage } from "@/components/site/SiteLayout";
 
 export const Route = createFileRoute("/privacy")({
   head: () => ({
     meta: [
       { title: "Privacy Policy — Global Opportunity Finder" },
-      { name: "description", content: "Draft privacy information for the Opportunity Finder." },
+      { name: "description", content: "How Global Opportunity Finder handles accounts, student preferences, community content and private AI conversations." },
       { property: "og:title", content: "Privacy Policy — Global Opportunity Finder" },
-      { property: "og:description", content: "Draft privacy information." },
+      { property: "og:description", content: "Information about student data, visibility controls, AI conversations and outstanding privacy requirements." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: () => (
-    <SimplePage eyebrow="Privacy Policy" title="Draft — not yet reviewed.">
-      <p>This is a placeholder. A full privacy policy has not been written or legally reviewed.</p>
-      <p>Our intent: collect only what's needed to personalize suggestions (education level, interests, general region), never exact addresses or school ID numbers, and never show your profile publicly.</p>
+    <SimplePage eyebrow="Last updated: 17 October 2026" title="Privacy Policy">
+      <p className="border-l-4 border-coral pl-4 text-base">Implementation-based draft, not legally reviewed. Operator identity, privacy contact, jurisdiction, minimum age, retention schedule and provider/data-location disclosures still need confirmation before public launch.</p>
+      <h2 className="text-2xl font-semibold text-foreground">1. Scope and operator</h2>
+      <p>Global Opportunity Finder is a student Capstone project for discovering opportunities and connecting with other students. This policy describes the current website, not a promise that every planned feature is available. The responsible operator's legal name, address and working privacy contact have not been supplied. The Support and Contact pages do not currently offer a working request-submission channel.</p>
+      <h2 className="text-2xl font-semibold text-foreground">2. Information we handle</h2>
+      <p>Account information includes your email address, authentication identifiers and sign-in session. Passwords are handled by the authentication service; the opportunity assistant does not receive them. Sessions are kept in browser storage so you can stay signed in.</p>
+      <p>Your profile may contain your name, education level, grade, intended major, interests, preferred categories, country or region, languages, skills, goals, bio, optional picture and privacy choices. We also store saved opportunities, college preferences, connection requests, memberships, collaboration-group invitations, community proposals and posts you submit. Do not provide exact addresses, identification numbers, confidential records or sensitive information in profiles, posts or chats.</p>
+      <h2 className="text-2xl font-semibold text-foreground">3. How information is used</h2>
+      <p>We use this information to maintain accounts, personalize opportunity suggestions, keep your saved items, enable opted-in student discovery and connection requests, operate communities and private groups, and review proposals. College preferences can be saved, but no verified college dataset is currently connected. Existing demonstration opportunities are labeled; they are not real opportunities.</p>
+      <h2 className="text-2xl font-semibold text-foreground">4. Who can see content</h2>
+      <p>Published communities and opportunity listings are public. Community posts are visible to signed-in users. Proposals are accessible to their creator and authorized administrators. Connection records are limited to participants; collaboration-group records are limited to the people permitted by group membership rules. Saved opportunities, college preferences and AI conversations are account-scoped.</p>
+      <p>Student discovery is off by default. When enabled, the discovery screen uses your visibility choices to limit displayed fields. Important limitation: the current database policy can allow signed-in users to read more columns of discoverable profiles than that screen displays. The avatar access policy also currently permits broader signed-in reads than an owner-only design. These controls need security remediation and cross-account testing; do not treat the screen's visibility choices as complete field-level or avatar confidentiality guarantees.</p>
+      <h2 className="text-2xl font-semibold text-foreground">5. AI Opportunity Assistant</h2>
+      <p>When you send a message, your conversation history and selected opportunity-related preferences are sent through Lovable AI to OpenAI to generate an answer. Permitted preferences include education, grade, intended major, interests, category and format preferences, country/region, skills and goals. Email, passwords, tokens, profile bio, private groups and private student messages are not included in that profile context. Anything you type in a chat is itself sent to the AI service.</p>
+      <p>Conversations and summaries are stored under your account, including older chats when you start a new one. Ownership rules restrict access to the signed-in owner, but cross-account testing has not yet been completed. Authorized infrastructure or operator access is not eliminated by those rules. The model request disables provider-side response storage, and the gateway catalog marks this model's Responses endpoint as zero-retention. This does not establish all application or gateway logging practices. Provider terms, processing locations, transfer safeguards and broader retention disclosures still require confirmation.</p>
+      <p>Live internet search is not connected. If search is enabled later, search terms may be sent to that service, and this policy must be updated with its identity and practices. The assistant cannot change shared listings or submit applications. Saving an existing catalog item requires your approval. AI output may be wrong; check official sources before acting.</p>
+      <h2 className="text-2xl font-semibold text-foreground">6. Storage, services and technical records</h2>
+      <p>Lovable Cloud provides account authentication, application data and file storage. Images and other website assets may be delivered through Lovable's asset service. Browser sessions support login; no advertising-cookie purpose has been identified in this review. The application includes error-reporting instrumentation and operational request handling. Its full payloads, recipients and retention have not been verified. Hosting regions, international transfers, analytics use and any additional service-provider disclosures must be confirmed rather than assumed.</p>
+      <h2 className="text-2xl font-semibold text-foreground">7. Your controls and retention</h2>
+      <p>You can edit your profile and preferences, disable discovery, replace or remove your picture, manage saved opportunities, change your password and sign out. Starting a new AI chat preserves existing chats; it does not delete them. There is no self-service account deletion or data-export control yet. A confirmed retention schedule, backup-deletion policy and working channel for access, correction or deletion requests are still required. We do not promise immediate deletion or a specific retention period.</p>
+      <h2 className="text-2xl font-semibold text-foreground">8. Young users, rights and changes</h2>
+      <p>The service is designed for students, but a minimum-age rule and any parent/guardian-consent process have not been established. Applicable rights, legal bases, regulator contacts and jurisdiction depend on the operator and users and require legal review. Until those safeguards and a working contact channel are confirmed, public launch for minors is not approved by this draft. Material changes to data practices should be reflected here with an updated date.</p>
+      <p className="text-base"><Link to="/terms" className="text-primary underline">Read the Terms of Use</Link></p>
     </SimplePage>
   ),
 });

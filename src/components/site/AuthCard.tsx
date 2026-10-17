@@ -14,7 +14,7 @@ export function AuthCard({ title, subtitle, children, footer }: { title: string;
         <div className="relative flex h-full flex-col justify-between p-10 text-ink-foreground">
           <Link to="/" className="text-sm opacity-80 hover:opacity-100">← Back to home</Link>
           <div>
-            <p className="font-display text-3xl font-semibold leading-snug md:text-4xl">Discover. Connect. Grow.</p>
+            <p className="font-display text-3xl font-semibold leading-snug md:text-4xl">Big Dreams. Real Opportunities.</p>
             <p className="mt-3 max-w-md opacity-80">Opportunities, teammates, and pathways toward your future — in one place.</p>
           </div>
         </div>
