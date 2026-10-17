@@ -11,6 +11,10 @@ export const Route = createFileRoute("/_authenticated/communities/my")({
     meta: [
       { title: "My Community Proposals — Global Opportunity Finder" },
       { name: "description", content: "Track, edit, or withdraw your community proposals." },
+          { property: "og:title", content: "My Community Proposals — Global Opportunity Finder" },
+      { property: "og:description", content: "Track, edit, or withdraw your community proposals." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: MyProposals,

@@ -11,6 +11,8 @@ export const Route = createFileRoute("/_authenticated/onboarding")({
       { name: "description", content: "Tell us about your studies and interests to get matched with opportunities." },
       { property: "og:title", content: "Set Up Your Profile — Global Opportunity Finder" },
       { property: "og:description", content: "A few quick, optional questions to personalize your matches." },
+          { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Onboarding,

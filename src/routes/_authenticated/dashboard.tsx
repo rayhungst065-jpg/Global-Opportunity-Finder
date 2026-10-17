@@ -14,6 +14,8 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
       { name: "description", content: "Your recommendations, saved opportunities and upcoming deadlines." },
       { property: "og:title", content: "My Dashboard — Global Opportunity Finder" },
       { property: "og:description", content: "Your personal opportunity workspace." },
+          { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Dashboard,

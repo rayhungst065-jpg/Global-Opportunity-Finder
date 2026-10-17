@@ -10,6 +10,8 @@ export const Route = createFileRoute("/signup")({
       { name: "description", content: "Create your student account." },
       { property: "og:title", content: "Sign Up — Global Opportunity Finder" },
       { property: "og:description", content: "Create your free student account." },
+          { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Signup,

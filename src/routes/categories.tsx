@@ -10,6 +10,8 @@ export const Route = createFileRoute("/categories")({
       { name: "description", content: "Volunteer, competitions, research, and awards & scholarships for students." },
       { property: "og:title", content: "Explore Categories — Global Opportunity Finder" },
       { property: "og:description", content: "Four kinds of student opportunities, all in one place." },
+          { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Categories,

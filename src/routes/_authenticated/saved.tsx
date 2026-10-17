@@ -14,6 +14,8 @@ export const Route = createFileRoute("/_authenticated/saved")({
       { name: "description", content: "Opportunities you saved, with your application progress." },
       { property: "og:title", content: "Saved Opportunities — Global Opportunity Finder" },
       { property: "og:description", content: "Track your saved opportunities." },
+          { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Saved,

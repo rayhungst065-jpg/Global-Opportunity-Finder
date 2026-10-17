@@ -9,6 +9,10 @@ export const Route = createFileRoute("/_authenticated/communities/new")({
     meta: [
       { title: "Start a Community — Global Opportunity Finder" },
       { name: "description", content: "Propose a new student community. An administrator reviews every proposal before it goes live." },
+          { property: "og:title", content: "Start a Community — Global Opportunity Finder" },
+      { property: "og:description", content: "Propose a new student community. An administrator reviews every proposal before it goes live." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: NewCommunity,

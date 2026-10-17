@@ -28,6 +28,8 @@ export const Route = createFileRoute("/opportunities/")({
       { name: "description", content: "Search volunteer programs, competitions, research and scholarships for students." },
       { property: "og:title", content: "Browse Opportunities — Global Opportunity Finder" },
       { property: "og:description", content: "Search and save student opportunities by category." },
+          { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Opportunities,

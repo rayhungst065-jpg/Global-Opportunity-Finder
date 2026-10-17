@@ -10,6 +10,10 @@ export const Route = createFileRoute("/_authenticated/communities/$id")({
     meta: [
       { title: "Community — Global Opportunity Finder" },
       { name: "description", content: "Community goals, activities, rules, and membership." },
+          { property: "og:title", content: "Community — Global Opportunity Finder" },
+      { property: "og:description", content: "Community goals, activities, rules, and membership." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: CommunityPage,

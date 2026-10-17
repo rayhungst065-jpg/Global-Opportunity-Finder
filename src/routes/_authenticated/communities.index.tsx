@@ -17,6 +17,8 @@ export const Route = createFileRoute("/_authenticated/communities/")({
       { name: "description", content: "Find student groups based on shared interests, academic goals, and projects." },
       { property: "og:title", content: "Communities — Global Opportunity Finder" },
       { property: "og:description", content: "Discover and join student communities." },
+          { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Communities,
