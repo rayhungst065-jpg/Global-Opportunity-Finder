@@ -20,6 +20,7 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as AuthenticatedAssistantRouteImport } from './routes/_authenticated/assistant'
 import { Route as AuthenticatedCollegeMatchRouteImport } from './routes/_authenticated/college-match'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDeadlinesRouteImport } from './routes/_authenticated/deadlines'
@@ -91,6 +92,11 @@ const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAssistantRoute = AuthenticatedAssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedCollegeMatchRoute =
   AuthenticatedCollegeMatchRouteImport.update({
@@ -197,6 +203,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
+  '/assistant': typeof AuthenticatedAssistantRoute
   '/college-match': typeof AuthenticatedCollegeMatchRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deadlines': typeof AuthenticatedDeadlinesRoute
@@ -226,6 +233,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
+  '/assistant': typeof AuthenticatedAssistantRoute
   '/college-match': typeof AuthenticatedCollegeMatchRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deadlines': typeof AuthenticatedDeadlinesRoute
@@ -257,6 +265,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
+  '/_authenticated/assistant': typeof AuthenticatedAssistantRoute
   '/_authenticated/college-match': typeof AuthenticatedCollegeMatchRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/deadlines': typeof AuthenticatedDeadlinesRoute
@@ -288,6 +297,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/support'
     | '/terms'
+    | '/assistant'
     | '/college-match'
     | '/dashboard'
     | '/deadlines'
@@ -317,6 +327,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/support'
     | '/terms'
+    | '/assistant'
     | '/college-match'
     | '/dashboard'
     | '/deadlines'
@@ -347,6 +358,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/support'
     | '/terms'
+    | '/_authenticated/assistant'
     | '/_authenticated/college-match'
     | '/_authenticated/dashboard'
     | '/_authenticated/deadlines'
@@ -461,6 +473,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/assistant': {
+      id: '/_authenticated/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AuthenticatedAssistantRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/college-match': {
       id: '/_authenticated/college-match'
@@ -585,6 +604,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAssistantRoute: typeof AuthenticatedAssistantRoute
   AuthenticatedCollegeMatchRoute: typeof AuthenticatedCollegeMatchRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDeadlinesRoute: typeof AuthenticatedDeadlinesRoute
@@ -602,6 +622,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAssistantRoute: AuthenticatedAssistantRoute,
   AuthenticatedCollegeMatchRoute: AuthenticatedCollegeMatchRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDeadlinesRoute: AuthenticatedDeadlinesRoute,
