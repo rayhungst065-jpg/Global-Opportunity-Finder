@@ -2,25 +2,21 @@ import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { useUser } from "@/lib/auth";
 import { useSignOut } from "./WorkspaceShell";
-import logoFull from "@/assets/logo-full.png.asset.json";
-import logoSymbol from "@/assets/logo-symbol.png.asset.json";
+import logoSymbol from "@/assets/original-logo-symbol.png.asset.json";
 
 /** Full logo (symbol + wordmark + tagline) for public/auth pages and footer. */
 export function Logo({ className = "h-10" }: { className?: string }) {
   return (
-    <Link to="/" aria-label="Global Opportunity Finder — home" className="inline-flex items-center">
-      <img src={logoFull.url} alt="Global Opportunity Finder — Discover Explore Grow" className={`w-auto ${className}`} />
+    <Link to="/" aria-label="Global Opportunity Finder — home" className="inline-flex min-w-0 items-center gap-2">
+      <img src={logoSymbol.url} alt="" className={`w-auto shrink-0 object-contain ${className}`} />
+      <span className="max-w-44 font-display text-sm font-semibold leading-tight text-foreground">Global Opportunity Finder</span>
     </Link>
   );
 }
 
 /** Symbol-only mark for the compact dashboard sidebar. */
 export function LogoSymbol({ className = "h-9" }: { className?: string }) {
-  return (
-    <Link to="/" aria-label="Global Opportunity Finder — home" className="inline-flex items-center">
-      <img src={logoSymbol.url} alt="Global Opportunity Finder" className={`w-auto ${className}`} />
-    </Link>
-  );
+  return <Logo className={className} />;
 }
 
 const nav = [
@@ -35,9 +31,9 @@ export function SiteHeader() {
   const signOut = useSignOut();
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5">
+      <div className="mx-auto flex min-h-16 max-w-6xl flex-wrap items-center justify-between gap-2 px-5 py-2">
         <Logo />
-        <nav className="hidden items-center gap-7 text-sm text-muted-foreground md:flex">
+        <nav className="hidden items-center gap-5 text-sm text-muted-foreground xl:flex">
           {nav.map((n) => (
             <Link key={n.to} to={n.to} className="transition-colors hover:text-foreground" activeProps={{ className: "text-foreground" }}>
               {n.label}
@@ -77,7 +73,6 @@ export function SiteFooter() {
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-10 md:flex-row md:items-center md:justify-between">
         <div>
           <Logo className="h-12" />
-          <p className="mt-2 text-sm text-muted-foreground">A student Capstone project. Always confirm details with official organizers.</p>
         </div>
         <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
           {links.map((l) => (
