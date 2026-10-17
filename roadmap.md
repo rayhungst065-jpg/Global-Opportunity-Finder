@@ -6,8 +6,8 @@
 - [x] Homepage headline + slogan per brief; nine-section design kept
 - [x] Split-screen login/signup with full logo
 - [x] Footer: About, Support, Privacy, Terms only; About rewritten; new Support page
-- [x] Communities: exactly two tabs (Discover Groups, Posts); posts table + create/edit/close; student discovery moved into Discover Groups
-- [x] Meet Students: exactly three tabs (Messages placeholder, Friends, Groups); private collab groups with invite/accept/remove/leave
+- [x] Communities: exactly two tabs (Discover Communities, Posts); posts table + create/edit/close; student discovery in Discover Communities; real approved-member counts on cards
+- [x] Meet Students: exactly three tabs (Messages placeholder, Friends, Groups); private collab groups with invite/accept/remove/leave; explainer + "Explore Communities" link
 - [x] RLS fixed for groups (is_group_member / is_group_creator security-definer functions)
 - [x] Verified: logo placements, palette, auth pages, tabs, post + group creation, mobile homepage — no page errors
 
