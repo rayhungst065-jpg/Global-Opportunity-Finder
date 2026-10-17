@@ -39,7 +39,7 @@ function Login() {
       <form onSubmit={onSubmit} className="space-y-4" noValidate>
         <Field label="Email address" name="email" type="email" autoComplete="email" />
         <Field label="Password" name="password" type="password" autoComplete="current-password" />
-        <div className="text-right text-sm"><span className="text-muted-foreground">Forgot password? (coming soon)</span></div>
+        <div className="text-right text-sm"><Link to="/forgot-password" className="text-primary hover:underline">Forgot Password?</Link></div>
         <button className={submitBtn} disabled={busy}>{busy ? "Signing in…" : "Sign in"}</button>
         {error && <p className="text-sm text-destructive">{error}</p>}
       </form>
