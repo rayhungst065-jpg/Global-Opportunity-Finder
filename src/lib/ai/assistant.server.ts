@@ -69,7 +69,7 @@ export async function handleAssistant(request: Request) {
       stopWhen: stepCountIs(50),
       tools: {
         searchCatalog: tool({ description: "Read shared opportunity records. Demo records are not actual opportunities. Returns eligibility, deadline and official link if recorded.", inputSchema: z.object({ query: z.string() }), execute: async ({ query }) => {
-          const { data: rows, error } = await db.from("opportunities").select("*\ start:0");
+          const { data: rows, error } = await db.from("opportunities").select("*");
           if (error) throw new Error(error.message);
           const words = query.toLowerCase().split(/\s+/).filter(Boolean);
           return (rows ?? []).filter(r => words.some(w => `${r.title} ${r.description} ${r.category} ${r.eligibility}`.toLowerCase().includes(w))).map(r => ({ ...r, verification: r.is_demo ? "DEMO — not real" : "Catalog record; details require official confirmation" }));

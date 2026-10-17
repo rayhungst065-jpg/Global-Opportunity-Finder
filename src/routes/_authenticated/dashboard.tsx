@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Users, Handshake, GraduationCap, ArrowRight } from "lucide-react";
+import { Users, Handshake, GraduationCap, ArrowRight, MessageCircle } from "lucide-react";
 import { WorkspaceShell, Panel } from "@/components/site/WorkspaceShell";
 import { categoryName, formatDeadline, SaveButton } from "@/components/site/OpportunityCard";
 import { useUser } from "@/lib/auth";
@@ -22,6 +22,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 const more = "text-sm text-primary hover:underline";
 
 const quickLinks = [
+  { to: "/assistant", label: "Opportunity Assistant", desc: "Your opportunities and action plans", icon: MessageCircle, classes: "bg-primary-soft text-accent-foreground" },
   { to: "/communities", label: "Communities", desc: "Browse and join student groups", icon: Users, classes: "bg-primary-soft text-accent-foreground" },
   { to: "/meet-students", label: "Meet Students", desc: "Find teammates — in development", icon: Handshake, classes: "bg-teal-soft text-teal" },
   { to: "/college-match", label: "College Match", desc: "Compare colleges — in development", icon: GraduationCap, classes: "bg-coral-soft text-coral" },
