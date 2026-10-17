@@ -33,9 +33,9 @@ function Communities() {
   const [tab, setTab] = useState<"groups" | "posts">("groups");
 
   return (
-    <WorkspaceShell title="Communities" subtitle="Interest-based student spaces — discover approved groups, or post to find teammates.">
+    <WorkspaceShell title="Communities" subtitle="Discover public, interest-based communities and share posts with other students. New communities appear here only after an administrator approves them.">
       <div className="mb-6 flex gap-1 rounded-full border border-border bg-card p-1">
-        {([["groups", "Discover Groups"], ["posts", "Posts"]] as const).map(([key, label]) => (
+        {([["groups", "Discover Communities"], ["posts", "Posts"]] as const).map(([key, label]) => (
           <button key={key} onClick={() => setTab(key)}
             className={`flex-1 rounded-full px-4 py-2 text-sm transition ${tab === key ? "bg-primary font-medium text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}>
             {label}
@@ -103,7 +103,9 @@ function DiscoverGroups({ userId }: { userId: string | undefined }) {
                 <li key={c.id} className="flex flex-col rounded-3xl border border-border bg-card p-6 shadow-soft">
                   <div className="flex items-center justify-between gap-3">
                     <span className="rounded-full bg-primary-soft px-3 py-1 text-xs font-medium text-accent-foreground">{c.category}</span>
-                    <span className="text-xs text-muted-foreground">{formatLabel[c.format] ?? c.format}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {formatLabel[c.format] ?? c.format} · {c.member_count} member{c.member_count === 1 ? "" : "s"}
+                    </span>
                   </div>
                   <Link to="/communities/$id" params={{ id: c.id }} className="mt-3 font-display text-lg font-medium hover:underline">
                     {c.name}
@@ -336,7 +338,7 @@ function Posts({ userId }: { userId: string | undefined }) {
                     </>
                   ) : (
                     <p className="text-xs text-muted-foreground">
-                      To respond, send {p.author?.display_name ?? "the author"} a connection request from Discover Groups → Find Students.
+                      To respond, send {p.author?.display_name ?? "the author"} a connection request from Discover Communities → Find Students.
                     </p>
                   )}
                 </div>

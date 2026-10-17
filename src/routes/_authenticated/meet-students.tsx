@@ -74,7 +74,16 @@ function MeetStudents() {
   ] as const;
 
   return (
-    <WorkspaceShell title="Meet Students" subtitle="Your direct connections and private collaboration groups.">
+    <WorkspaceShell title="Meet Students" subtitle="Manage your personal connections and private project groups — spaces for you and the students you choose to work with.">
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-card px-5 py-4">
+        <p className="max-w-xl text-sm text-muted-foreground">
+          This page is for your personal network: friends, requests, and private collaboration groups.
+          Looking for public, interest-based communities and student posts instead?
+        </p>
+        <Link to="/communities" className={`${smallBtn} shrink-0 bg-primary px-4 py-2 text-primary-foreground hover:opacity-90`}>
+          Explore Communities
+        </Link>
+      </div>
       {!profile?.discoverable && (
         <p className="mb-5 rounded-xl bg-coral-soft p-3 text-sm text-coral">
           You're not discoverable yet, so other students can't find or request you.{" "}
@@ -173,7 +182,7 @@ function FriendsTab({ userId, rows }: { userId: string | undefined; rows: Connec
         {accepted.length === 0 ? (
           <p className="mt-3 rounded-2xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
             No connections yet. Find students under{" "}
-            <Link to="/communities" className="text-primary hover:underline">Communities → Discover Groups → Find Students</Link>.
+            <Link to="/communities" className="text-primary hover:underline">Communities → Discover Communities → Find Students</Link>.
           </p>
         ) : (
           <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
