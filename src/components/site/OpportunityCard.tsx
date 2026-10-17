@@ -1,6 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { categories } from "@/lib/categories";
 import { statusLabel, type Opportunity } from "@/lib/saved";
+import { Button } from "@/components/ui/button";
+import { ExternalLink } from "lucide-react";
+import { safeOfficialUrl } from "@/lib/opportunity-source";
 
 export function categoryName(key: string) {
   return categories.find((c) => c.key === key)?.name ?? key;
@@ -13,7 +16,7 @@ export function formatDeadline(d: string | null) {
 
 export function SaveButton({ saved, onClick, disabled }: { saved: boolean; onClick: () => void; disabled?: boolean }) {
   return (
-    <button
+    <Button
       type="button"
       onClick={onClick}
       disabled={disabled}
@@ -21,7 +24,7 @@ export function SaveButton({ saved, onClick, disabled }: { saved: boolean; onCli
       className={`rounded-full px-4 py-1.5 text-sm font-medium transition disabled:opacity-50 ${saved ? "bg-primary text-primary-foreground" : "border border-border hover:bg-accent"}`}
     >
       {saved ? "Saved" : "Save"}
-    </button>
+    </Button>
   );
 }
 
@@ -38,6 +41,8 @@ export function OpportunityCard({ o, action }: { o: Opportunity; action?: React.
       </h3>
       <p className="mt-1 text-sm text-muted-foreground">{o.organizer} · {o.location}</p>
       <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">{o.description}</p>
+      {!o.is_demo && <p className="mt-3 text-sm"><span className="font-medium">Eligibility: </span>{o.eligibility}</p>}
+      {safeOfficialUrl(o.official_url) && <Button asChild variant="link" className="mt-3 h-auto justify-start whitespace-normal p-0 text-left"><a href={safeOfficialUrl(o.official_url) ?? undefined} target="_blank" rel="noopener noreferrer"><ExternalLink className="h-4 w-4 shrink-0" />View Official Opportunity</a></Button>}
       <div className="mt-auto flex items-center justify-between pt-5 text-sm">
         <span className="text-muted-foreground">{formatDeadline(o.deadline)}</span>
         {action}

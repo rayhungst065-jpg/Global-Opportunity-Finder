@@ -4,6 +4,13 @@ import { OpportunityCard, SaveButton } from "@/components/site/OpportunityCard";
 import { useUser } from "@/lib/auth";
 import { recommend, useAllOpportunities, useProfile } from "@/lib/profile";
 import { useSavedIds, useToggleSave } from "@/lib/saved";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { useState } from "react";
+import { RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { onlineRecommendations } from "@/lib/recommendations.functions";
 
 export const Route = createFileRoute("/_authenticated/recommended")({
   head: () => ({
@@ -25,10 +32,18 @@ function Recommended() {
   const all = useAllOpportunities();
   const saved = useSavedIds(user?.id);
   const toggle = useToggleSave(user?.id);
-  const recs = recommend(profile.data, all.data ?? []);
+  const findOnline = useServerFn(onlineRecommendations);
+  const [showDemo, setShowDemo] = useState(false);
+  const online = useQuery({ queryKey: ["online-recommendations", user?.id, profile.data?.updated_at], queryFn: () => findOnline(), enabled: !!user && !!profile.data, staleTime: Infinity, retry: false, refetchOnWindowFocus: false });
+  const recs = showDemo ? recommend(profile.data, all.data ?? []).filter(r => r.o.is_demo) : online.data ?? [];
   return (
-    <WorkspaceShell title="Recommended for Me" subtitle="Matched on the categories, interests and format in your profile. Closed listings are hidden.">
-      {all.isLoading || profile.isLoading ? <p className="text-muted-foreground">Loading…</p> : recs.length === 0 ? (
+    <WorkspaceShell title="Recommended for Me" subtitle="Official-source opportunities matched to your interests, major, education and region. Always confirm eligibility and dates with the organizer.">
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+        <label className="flex items-center gap-2 text-sm text-muted-foreground"><Checkbox checked={showDemo} onCheckedChange={v => setShowDemo(v === true)} />Demo records (testing only)</label>
+        <Button variant="outline" disabled={online.isFetching || !profile.data} onClick={() => void online.refetch()}><RefreshCw className={online.isFetching ? "animate-spin" : ""} />Refresh online results</Button>
+      </div>
+      {online.error && !showDemo && <p role="alert" className="mb-4 text-sm text-destructive">{online.error.message}</p>}
+      {(showDemo ? all.isLoading : online.isFetching) || profile.isLoading ? <p role="status" className="text-muted-foreground">Searching official sources and checking opportunity details…</p> : recs.length === 0 ? (
         <p className="text-muted-foreground">No matches yet. <Link to="/profile" className="text-primary hover:underline">Update your profile</Link> or <Link to="/opportunities" className="text-primary hover:underline">browse everything</Link>.</p>
       ) : (
         <div className="grid gap-5 md:grid-cols-2">
