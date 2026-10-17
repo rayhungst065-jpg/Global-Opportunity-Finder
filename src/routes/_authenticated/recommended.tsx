@@ -34,16 +34,19 @@ function Recommended() {
   const toggle = useToggleSave(user?.id);
   const findOnline = useServerFn(onlineRecommendations);
   const [showDemo, setShowDemo] = useState(false);
-  const online = useQuery({ queryKey: ["online-recommendations", user?.id, profile.data?.updated_at], queryFn: () => findOnline(), enabled: !!user && !!profile.data, staleTime: Infinity, retry: false, refetchOnWindowFocus: false });
-  const recs = showDemo ? recommend(profile.data, all.data ?? [], true).filter(r => r.o.is_demo) : online.data ?? [];
+  const online = useQuery({ queryKey: ["online-recommendations", user?.id, profile.data?.updated_at], queryFn: () => findOnline(), enabled: false, staleTime: Infinity, retry: false, refetchOnWindowFocus: false });
+  const stored = recommend(profile.data, all.data ?? [], showDemo);
+  const recs = showDemo ? stored.filter(r => r.o.is_demo) : online.data?.length ? online.data : stored;
   return (
     <WorkspaceShell title="Recommended for Me" subtitle="Official-source opportunities matched to your interests, major, education and region. Always confirm eligibility and dates with the organizer.">
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <label className="flex items-center gap-2 text-sm text-muted-foreground"><Checkbox checked={showDemo} onCheckedChange={v => setShowDemo(v === true)} />Demo records (testing only)</label>
-        <Button variant="outline" disabled={online.isFetching || !profile.data} onClick={() => void online.refetch()}><RefreshCw className={online.isFetching ? "animate-spin" : ""} />Refresh online results</Button>
+        <Button variant="outline" disabled={online.isFetching || !profile.data || showDemo} onClick={() => void online.refetch()}><RefreshCw className={online.isFetching ? "animate-spin" : ""} />Search online (uses credits)</Button>
       </div>
       {online.error && !showDemo && <p role="alert" className="mb-4 text-sm text-destructive">{online.error.message}</p>}
-      {(showDemo ? all.isLoading : online.isFetching) || profile.isLoading ? <p role="status" className="text-muted-foreground">Searching official sources and checking opportunity details…</p> : recs.length === 0 ? (
+      {(profile.error || all.error) && <p role="alert" className="mb-4 text-sm text-destructive">{profile.error?.message ?? all.error?.message}</p>}
+      {online.isFetching && <p role="status" className="mb-4 text-muted-foreground">Searching official sources and checking opportunity details…</p>}
+      {all.isLoading || profile.isLoading ? <p role="status" className="text-muted-foreground">Loading saved catalog matches…</p> : recs.length === 0 ? (
         <p className="text-muted-foreground">No matches yet. <Link to="/profile" className="text-primary hover:underline">Update your profile</Link> or <Link to="/opportunities" className="text-primary hover:underline">browse everything</Link>.</p>
       ) : (
         <div className="grid gap-5 md:grid-cols-2">

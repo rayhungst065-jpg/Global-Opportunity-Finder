@@ -9,3 +9,7 @@ export function safeOfficialUrl(value: string | null | undefined) {
 export function isNormalRecommendation(o: { is_demo: boolean; application_status: string; deadline: string | null }, today = new Date().toISOString().slice(0, 10)) {
   return !o.is_demo && o.application_status !== "closed" && (!o.deadline || o.deadline >= today);
 }
+
+export function visibleCatalog<T extends { is_demo: boolean }>(rows: T[], showDemo = false) {
+  return rows.filter(row => showDemo || !row.is_demo);
+}

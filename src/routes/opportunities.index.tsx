@@ -8,6 +8,9 @@ import { listOpportunities } from "@/lib/opportunities.functions";
 import { categories } from "@/lib/categories";
 import { useUser } from "@/lib/auth";
 import { useSavedIds, useToggleSave } from "@/lib/saved";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { visibleCatalog } from "@/lib/opportunity-source";
 
 const search = z.object({
   q: z.string().optional(),
@@ -44,6 +47,8 @@ function Opportunities() {
   const toggle = useToggleSave(user?.id);
   const [q, setQ] = useState(s.q ?? "");
   const [msg, setMsg] = useState("");
+  const [showDemo, setShowDemo] = useState(false);
+  const listings = visibleCatalog(data, showDemo);
 
   return (
     <SiteShell>
@@ -62,28 +67,30 @@ function Opportunities() {
             aria-label="Search opportunities"
             className="flex-1 rounded-full border border-input bg-background px-5 py-3 outline-none focus:border-ring focus:ring-4 focus:ring-primary-soft"
           />
-          <button className="rounded-full bg-primary px-6 py-3 font-medium text-primary-foreground hover:opacity-90">Search</button>
+          <Button type="submit" className="h-auto rounded-full px-6 py-3">Search</Button>
         </form>
 
         <div className="mt-4 flex flex-wrap gap-2">
           {[{ key: undefined, name: "All" }, ...categories].map((c) => (
-            <button
+            <Button
               key={c.name}
               onClick={() => navigate({ search: (p) => ({ ...p, category: c.key as Search["category"] }) })}
               className={`rounded-full px-4 py-1.5 text-sm ${s.category === c.key ? "bg-foreground text-background" : "border border-border hover:bg-accent"}`}
             >
               {c.name}
-            </button>
+            </Button>
           ))}
         </div>
 
+        <label className="mt-4 flex items-center gap-2 text-sm text-muted-foreground"><Checkbox checked={showDemo} onCheckedChange={value => setShowDemo(value === true)} />Include demo records (testing only)</label>
+
         {msg && <p className="mt-4 text-sm text-destructive">{msg}</p>}
 
-        {data.length === 0 ? (
+        {listings.length === 0 ? (
           <p className="mt-12 text-muted-foreground">No opportunities match your search yet.</p>
         ) : (
           <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {data.map((o) => {
+            {listings.map((o) => {
               const isSaved = saved.data?.has(o.id) ?? false;
               return (
                 <OpportunityCard
