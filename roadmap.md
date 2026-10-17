@@ -1,8 +1,9 @@
 # Roadmap — Brand & Communities Update
 
 ## Focused fixes
-- [ ] Real online recommendations and official assistant sources (requires linked search service)
-- [ ] Original symbol plus readable brand name everywhere; remove Capstone footer sentence
+- [x] Real online recommendation retrieval through connected Parallel; extracted official links and real catalog save verified
+- [x] Original symbol plus readable brand name; Capstone footer sentence removed
+- [ ] Assistant real-search link verification
 - [ ] Provider password recovery and minimal end-to-end verification
 
 ## Done
