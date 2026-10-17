@@ -38,13 +38,19 @@ export async function handleAssistant(request: Request) {
     for (const incoming of body.messages) {
       const existing = messages.find(m => m.id === incoming.id && m.role === "assistant");
       if (!existing) continue;
+      let approvalChanged = false;
       for (const part of existing.parts) {
-        if (!part.type.startsWith("tool-") || !("approval" in part) || !part.approval) continue;
+        if (!part.type.startsWith("tool-") || !("state" in part) || part.state !== "approval-requested" || !("approval" in part) || !part.approval) continue;
         const approved = incoming.parts.find(p => p["type"] === part.type && p["toolCallId"] === ("toolCallId" in part ? part.toolCallId : undefined) && p["state"] === "approval-responded");
         const approval = approved?.["approval"];
         if (approval && typeof approval === "object" && "id" in approval && approval.id === part.approval.id && "approved" in approval && typeof approval.approved === "boolean") {
           Object.assign(part, { state: "approval-responded", approval: { id: part.approval.id, approved: approval.approved } });
+          approvalChanged = true;
         }
+      }
+      if (approvalChanged) {
+        const { error } = await db.from("assistant_messages").update({ parts: existing.parts as Json }).eq("conversation_id", chat.id).eq("user_id", userId).eq("message_id", existing.id);
+        if (error) throw new Error(error.message);
       }
     }
     const { data: profile, error: profileError } = await db.from("profiles").select("*").eq("id", userId).maybeSingle();
