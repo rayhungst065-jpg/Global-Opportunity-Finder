@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { createOpenAI } from "@ai-sdk/openai";
-import { convertToModelMessages, streamText, stepCountIs, tool, type UIMessage } from "ai";
+import { convertToModelMessages, streamText, stepCountIs, tool, generateId, type UIMessage } from "ai";
 import { z } from "zod";
 import type { Database, Json } from "@/integrations/supabase/types";
 import { ASSISTANT_POLICY, isSummaryRequest, permittedProfile } from "@/lib/assistant-policy";
@@ -91,7 +91,7 @@ export async function handleAssistant(request: Request) {
         } }),
       },
     });
-    return withLovableAiGatewayRunIdHeader(result.toUIMessageStreamResponse({ originalMessages: messages, sendReasoning: true, onError: error => error instanceof Error ? error.message : "The AI request failed. Please try again when access is available.", onFinish: async ({ responseMessage, isAborted }) => {
+    return withLovableAiGatewayRunIdHeader(result.toUIMessageStreamResponse({ originalMessages: messages, generateMessageId: generateId, sendReasoning: true, onError: error => error instanceof Error ? error.message : "The AI request failed. Please try again when access is available.", onFinish: async ({ responseMessage, isAborted }) => {
       if (isAborted) return;
       const { data: existingResponse } = await db.from("assistant_messages").select("id").eq("conversation_id", chat.id).eq("user_id", userId).eq("message_id", responseMessage.id).maybeSingle();
       const { error } = existingResponse
