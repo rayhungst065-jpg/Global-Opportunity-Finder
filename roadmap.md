@@ -1,5 +1,10 @@
 # Roadmap — Brand & Communities Update
 
+## Focused fixes
+- [ ] Real online recommendations and official assistant sources (requires linked search service)
+- [ ] Original symbol plus readable brand name everywhere; remove Capstone footer sentence
+- [ ] Provider password recovery and minimal end-to-end verification
+
 ## Done
 - [x] Logo assets (full + symbol) via lovable-assets; favicon from symbol; brand renamed to Global Opportunity Finder
 - [x] Navy/ivory/blue/coral/sage palette in styles.css
