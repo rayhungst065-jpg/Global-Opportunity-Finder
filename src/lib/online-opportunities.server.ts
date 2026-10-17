@@ -28,7 +28,7 @@ async function parallel(path: string, body: unknown, signal?: AbortSignal) {
   const key = process.env["LOVABLE_API_KEY"];
   const connectionKey = process.env["PARALLEL_API_KEY"];
   if (!key || !connectionKey) throw new Error("Online search is not connected. The project owner needs to connect Parallel.");
-  const r = await fetch(`https://connector-gateway.lovable.dev/parallel/v1/${path}`, { method: "POST", signal,
+  const r = await fetch(`https://connector-gateway.lovable.dev/parallel/v1/${path}`, { method: "POST", signal: signal ?? null,
     headers: { Authorization: `Bearer ${key}`, "X-Connection-Api-Key": connectionKey, "Content-Type": "application/json" }, body: JSON.stringify(body) });
   if (!r.ok) { const detail = await r.text(); console.error("Opportunity search failed", r.status, detail); throw new Error(`Online search is unavailable (${r.status}). Please try later or ask the project owner to check Parallel access.`); }
   return r.json();
