@@ -51,7 +51,7 @@ export async function discoverOnlineOpportunities(db: SupabaseClient<Database>, 
   // Extract proves the exact returned source is accessible and provides source text, not just a snippet.
   const extracted = await parallel("extract", { urls: candidates.map(r => r.url), objective: "Official program title, organizer, student eligibility, locations, application status and current deadlines with year.", advanced_settings: { excerpt_settings: { max_chars_per_result: 6000 } } }, signal) as { results?: { url: string; title: string; excerpts: string[] }[]; errors?: unknown[] };
   if (extracted.errors?.length) console.warn("Opportunity sources unavailable", extracted.errors);
-  const sources = (extracted.results ?? []).filter(r => candidates.some(c => safeOfficialUrl(c.url) === safeOfficialUrl(r.url))).slice(0, 5).map(r => ({ ...r, excerpts: [r.excerpts.join("\n").slice(0, 2800)] }));
+  const sources = (extracted.results ?? []).filter(r => candidates.some(c => safeOfficialUrl(c.url) === safeOfficialUrl(r.url))).slice(0, 10).map(r => ({ ...r, excerpts: [r.excerpts.join("\n").slice(0, 1400)] }));
   if (!sources.length) return [];
   const research = await parallel("responses", {
     model: "parallel", reasoning: { effort: "medium" },
@@ -60,7 +60,7 @@ export async function discoverOnlineOpportunities(db: SupabaseClient<Database>, 
   }, signal) as { output?: { content?: { type: string; text?: string }[] }[] };
   const text = research.output?.flatMap(o => o.content ?? []).filter(c => c.type === "output_text").map(c => c.text ?? "").join("");
   const rows = z.object({ rows: z.array(rowSchema).max(5) }).parse(JSON.parse(text ?? ""));
-  console.info("Official discovery sources", sources.map(s => ({ url: s.url, title: s.title })), "returned rows", rows.rows.length);
+  console.info("Official discovery sources", sources.map(s => ({ url: s.url, title: s.title })), "returned rows", rows.rows.map(r => ({ url: r.official_url, official: r.official_organizer_page, status: r.application_status })));
   const results = [];
   // Privileged insertion is limited to these server-sourced public fields; client cannot submit catalog rows.
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
