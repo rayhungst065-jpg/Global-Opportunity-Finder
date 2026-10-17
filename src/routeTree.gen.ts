@@ -29,6 +29,7 @@ import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedRecommendedRouteImport } from './routes/_authenticated/recommended'
 import { Route as AuthenticatedSavedRouteImport } from './routes/_authenticated/saved'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as ApiAssistantRouteImport } from './routes/api/assistant'
 import { Route as OpportunitiesIndexRouteImport } from './routes/opportunities.index'
 import { Route as OpportunitiesIdRouteImport } from './routes/opportunities.$id'
 import { Route as AuthenticatedAdminProposalsRouteImport } from './routes/_authenticated/admin.proposals'
@@ -139,6 +140,11 @@ const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiAssistantRoute = ApiAssistantRouteImport.update({
+  id: '/api/assistant',
+  path: '/api/assistant',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OpportunitiesIndexRoute = OpportunitiesIndexRouteImport.update({
   id: '/opportunities/',
   path: '/opportunities/',
@@ -200,6 +206,7 @@ export interface FileRoutesByFullPath {
   '/recommended': typeof AuthenticatedRecommendedRoute
   '/saved': typeof AuthenticatedSavedRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/api/assistant': typeof ApiAssistantRoute
   '/opportunities/$id': typeof OpportunitiesIdRoute
   '/opportunities/': typeof OpportunitiesIndexRoute
   '/admin/proposals': typeof AuthenticatedAdminProposalsRoute
@@ -228,6 +235,7 @@ export interface FileRoutesByTo {
   '/recommended': typeof AuthenticatedRecommendedRoute
   '/saved': typeof AuthenticatedSavedRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/api/assistant': typeof ApiAssistantRoute
   '/opportunities/$id': typeof OpportunitiesIdRoute
   '/opportunities': typeof OpportunitiesIndexRoute
   '/admin/proposals': typeof AuthenticatedAdminProposalsRoute
@@ -258,6 +266,7 @@ export interface FileRoutesById {
   '/_authenticated/recommended': typeof AuthenticatedRecommendedRoute
   '/_authenticated/saved': typeof AuthenticatedSavedRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/api/assistant': typeof ApiAssistantRoute
   '/opportunities/$id': typeof OpportunitiesIdRoute
   '/opportunities/': typeof OpportunitiesIndexRoute
   '/_authenticated/admin/proposals': typeof AuthenticatedAdminProposalsRoute
@@ -288,6 +297,7 @@ export interface FileRouteTypes {
     | '/recommended'
     | '/saved'
     | '/settings'
+    | '/api/assistant'
     | '/opportunities/$id'
     | '/opportunities/'
     | '/admin/proposals'
@@ -316,6 +326,7 @@ export interface FileRouteTypes {
     | '/recommended'
     | '/saved'
     | '/settings'
+    | '/api/assistant'
     | '/opportunities/$id'
     | '/opportunities'
     | '/admin/proposals'
@@ -345,6 +356,7 @@ export interface FileRouteTypes {
     | '/_authenticated/recommended'
     | '/_authenticated/saved'
     | '/_authenticated/settings'
+    | '/api/assistant'
     | '/opportunities/$id'
     | '/opportunities/'
     | '/_authenticated/admin/proposals'
@@ -366,6 +378,7 @@ export interface RootRouteChildren {
   SignupRoute: typeof SignupRoute
   SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
+  ApiAssistantRoute: typeof ApiAssistantRoute
   OpportunitiesIdRoute: typeof OpportunitiesIdRoute
   OpportunitiesIndexRoute: typeof OpportunitiesIndexRoute
 }
@@ -512,6 +525,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/assistant': {
+      id: '/api/assistant'
+      path: '/api/assistant'
+      fullPath: '/api/assistant'
+      preLoaderRoute: typeof ApiAssistantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/opportunities/': {
       id: '/opportunities/'
       path: '/opportunities'
@@ -613,6 +633,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignupRoute: SignupRoute,
   SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,
+  ApiAssistantRoute: ApiAssistantRoute,
   OpportunitiesIdRoute: OpportunitiesIdRoute,
   OpportunitiesIndexRoute: OpportunitiesIndexRoute,
 }
