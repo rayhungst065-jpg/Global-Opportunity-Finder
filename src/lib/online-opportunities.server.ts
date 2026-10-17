@@ -42,7 +42,7 @@ export async function discoverOnlineOpportunities(db: SupabaseClient<Database>, 
   const topic = query || `${profile?.intended_major ?? ""} ${profile?.interests.slice(0, 3).join(" ") ?? "student"}`;
   const search = await parallel("search", {
     objective: `Find current or upcoming opportunities as of ${today}: volunteering, competitions, research programs, internships, scholarships and awards. Only official organizer/application websites. Prefer matches for these student preferences: ${JSON.stringify(profile)}. Exclude expired rounds, blogs, directories and aggregators. Query: ${topic}`,
-    search_queries: [topic.slice(0, 140) + " student opportunities", topic.slice(0, 140) + " competitions scholarships", topic.slice(0, 140) + " research internships volunteer"],
+    search_queries: [topic.split(/\s+/).slice(0, 2).join(" ") + " student competitions", (profile?.intended_major ?? "student") + " scholarships research programs", (profile?.interests[0] ?? "student") + " internships volunteer opportunities"],
     mode: "advanced", advanced_settings: { max_results: 10, excerpt_settings: { max_chars_per_result: 5000 } },
   }, signal) as { results?: { url: string; title: string; excerpts: string[] }[]; warnings?: unknown[] };
   if (search.warnings?.length) console.warn("Opportunity search warnings", search.warnings);
@@ -60,6 +60,7 @@ export async function discoverOnlineOpportunities(db: SupabaseClient<Database>, 
   }, signal) as { output?: { content?: { type: string; text?: string }[] }[] };
   const text = research.output?.flatMap(o => o.content ?? []).filter(c => c.type === "output_text").map(c => c.text ?? "").join("");
   const rows = z.object({ rows: z.array(rowSchema).max(5) }).parse(JSON.parse(text ?? ""));
+  console.info("Official discovery sources", sources.map(s => ({ url: s.url, title: s.title })), "returned rows", rows.rows.length);
   const results = [];
   // Privileged insertion is limited to these server-sourced public fields; client cannot submit catalog rows.
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
