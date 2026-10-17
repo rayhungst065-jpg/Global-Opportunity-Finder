@@ -64,7 +64,14 @@ export const listCommunities = createServerFn({ method: "GET" })
     }
     const { data: rows, error } = await query;
     if (error) throw new Error(error.message);
-    return rows;
+    const ids = (rows ?? []).map((c) => c.id);
+    const { data: members, error: mErr } = ids.length
+      ? await publicClient().from("community_memberships").select("community_id").in("community_id", ids).eq("status", "approved")
+      : { data: [], error: null };
+    if (mErr) throw new Error(mErr.message);
+    const counts = new Map<string, number>();
+    for (const m of members ?? []) counts.set(m.community_id, (counts.get(m.community_id) ?? 0) + 1);
+    return (rows ?? []).map((c) => ({ ...c, member_count: counts.get(c.id) ?? 0 }));
   });
 
 export const getCommunity = createServerFn({ method: "GET" })
