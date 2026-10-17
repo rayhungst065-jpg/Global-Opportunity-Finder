@@ -33,9 +33,9 @@ function Communities() {
   const [tab, setTab] = useState<"groups" | "posts">("groups");
 
   return (
-    <WorkspaceShell title="Communities" subtitle="Interest-based student spaces — discover approved groups, or post to find teammates.">
+    <WorkspaceShell title="Communities" subtitle="Discover public, interest-based communities and share posts with other students. New communities appear here only after an administrator approves them.">
       <div className="mb-6 flex gap-1 rounded-full border border-border bg-card p-1">
-        {([["groups", "Discover Groups"], ["posts", "Posts"]] as const).map(([key, label]) => (
+        {([["groups", "Discover Communities"], ["posts", "Posts"]] as const).map(([key, label]) => (
           <button key={key} onClick={() => setTab(key)}
             className={`flex-1 rounded-full px-4 py-2 text-sm transition ${tab === key ? "bg-primary font-medium text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}>
             {label}
