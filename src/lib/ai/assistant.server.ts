@@ -28,7 +28,7 @@ export async function handleAssistant(request: Request) {
     const latestUser = [...body.messages].reverse().find(m => m.role === "user");
     if (!latest || !latestUser) return new Response("Enter a message.", { status: 400 });
     const text = latestUser.parts.filter(p => p["type"] === "text").map(p => String(p["text"] ?? "")).join("\n");
-    const { error: writeError } = await db.from("assistant_messages").upsert({ conversation_id: chat.id, user_id: userId, message_id: latestUser.id, role: "user", parts: latestUser.parts as Json }, { onConflict: "conversation_id,message_id" });
+    const { error: writeError } = await db.from("assistant_messages").upsert({ conversation_id: chat.id, user_id: userId, message_id: latestUser.id, role: "user", parts: latestUser.parts as Json }, { onConflict: "conversation_id,message_id", ignoreDuplicates: true });
     if (writeError) throw new Error(writeError.message);
     const { data: stored, error: historyError } = await db.from("assistant_messages").select("message_id, role, parts").eq("conversation_id", chat.id).eq("user_id", userId).order("created_at");
     if (historyError) throw new Error(historyError.message);
@@ -93,7 +93,10 @@ export async function handleAssistant(request: Request) {
     });
     return withLovableAiGatewayRunIdHeader(result.toUIMessageStreamResponse({ originalMessages: messages, sendReasoning: true, onError: error => error instanceof Error ? error.message : "The AI request failed. Please try again when access is available.", onFinish: async ({ responseMessage, isAborted }) => {
       if (isAborted) return;
-      const { error } = await db.from("assistant_messages").upsert({ conversation_id: chat.id, user_id: userId, message_id: responseMessage.id, role: "assistant", parts: responseMessage.parts as Json }, { onConflict: "conversation_id,message_id" });
+      const { data: existingResponse } = await db.from("assistant_messages").select("id").eq("conversation_id", chat.id).eq("user_id", userId).eq("message_id", responseMessage.id).maybeSingle();
+      const { error } = existingResponse
+        ? await db.from("assistant_messages").update({ parts: responseMessage.parts as Json }).eq("id", existingResponse.id).eq("user_id", userId)
+        : await db.from("assistant_messages").insert({ conversation_id: chat.id, user_id: userId, message_id: responseMessage.id, role: "assistant", parts: responseMessage.parts as Json });
       if (error) throw new Error(`Could not save the assistant response: ${error.message}`);
       const summary = responseMessage.parts.filter(p => p.type === "text").map(p => p.text).join("\n");
       const { error: updateError } = await db.from("assistant_conversations").update({ updated_at: new Date().toISOString(), ...(messages.length < 2 ? { title: text.slice(0, 70) } : {}), ...(isSummaryRequest(text) && summary ? { summary } : {}) }).eq("id", chat.id).eq("user_id", userId);
