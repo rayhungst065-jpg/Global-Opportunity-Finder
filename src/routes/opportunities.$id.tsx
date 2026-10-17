@@ -14,7 +14,7 @@ export const Route = createFileRoute("/opportunities/$id")({
   },
   head: ({ loaderData }) => ({
     meta: [
-      { title: `${loaderData?.title ?? "Opportunity"} — Opportunity Finder` },
+      { title: `${loaderData?.title ?? "Opportunity"} — Global Opportunity Finder` },
       { name: "description", content: loaderData?.description?.slice(0, 150) ?? "Student opportunity details." },
       { property: "og:title", content: loaderData?.title ?? "Opportunity" },
       { property: "og:description", content: loaderData?.description?.slice(0, 150) ?? "Student opportunity details." },

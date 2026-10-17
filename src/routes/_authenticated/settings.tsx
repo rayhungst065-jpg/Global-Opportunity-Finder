@@ -14,9 +14,9 @@ import { readVisibility, visibilityFields } from "@/lib/profile-options";
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
     meta: [
-      { title: "Settings — Opportunity Finder" },
+      { title: "Settings — Global Opportunity Finder" },
       { name: "description", content: "Manage your profile, privacy, preferences and account." },
-      { property: "og:title", content: "Settings — Opportunity Finder" },
+      { property: "og:title", content: "Settings — Global Opportunity Finder" },
       { property: "og:description", content: "Account and privacy settings." },
     ],
   }),

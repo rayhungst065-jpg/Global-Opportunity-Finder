@@ -5,9 +5,9 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Design system — Global Student Opportunity Finder.
- * Coffee-inspired palette: espresso text, coffee-brown primary,
- * caramel CTAs, warm cream + latte surfaces, sage + terracotta accents.
+ * Design system — Global Opportunity Finder.
+ * Academic palette: navy primary, ivory background, white cards,
+ * blue interactive highlights, coral + sage accents.
  * All colors live here as oklch tokens; components use semantic classes.
  */
 
@@ -53,43 +53,43 @@
 
 :root {
   --radius: 0.75rem;
-  /* Warm cream canvas, espresso text */
-  --background: oklch(0.955 0.02 85);      /* #F7F0E6 warm cream */
-  --foreground: oklch(0.27 0.03 45);       /* #38251F espresso */
-  --card: oklch(0.975 0.015 85);
-  --card-foreground: oklch(0.27 0.03 45);
-  --popover: oklch(0.975 0.015 85);
-  --popover-foreground: oklch(0.27 0.03 45);
-  /* Coffee brown primary */
-  --primary: oklch(0.44 0.06 55);          /* #6F4E37 coffee */
-  --primary-foreground: oklch(0.97 0.01 85);
-  --primary-soft: oklch(0.915 0.03 70);
-  /* Sage (teal slot) */
-  --teal: oklch(0.58 0.05 140);            /* #87977A muted sage, deepened for text */
-  --teal-soft: oklch(0.92 0.03 130);
-  /* Terracotta (coral slot) */
-  --coral: oklch(0.58 0.11 40);            /* #C87961 soft terracotta, deepened for text */
-  --coral-soft: oklch(0.92 0.035 50);
-  /* Latte + cream surfaces */
-  --lavender: oklch(0.885 0.035 75);       /* #E8D7C3 latte beige */
-  --cream: oklch(0.94 0.025 80);
-  /* Caramel accent for CTAs/highlights */
-  --secondary: oklch(0.66 0.11 60);        /* #C58B55 caramel */
-  --secondary-foreground: oklch(0.27 0.03 45);
-  --surface: oklch(0.93 0.025 78);
-  --ink: oklch(0.27 0.03 45);              /* espresso dark sections */
-  --ink-foreground: oklch(0.955 0.02 85);
-  --muted: oklch(0.92 0.025 78);
-  --muted-foreground: oklch(0.48 0.04 55);
-  --accent: oklch(0.915 0.03 70);
-  --accent-foreground: oklch(0.4 0.07 55);
+  /* Ivory canvas, slate text */
+  --background: oklch(0.965 0.008 90);     /* #F7F5EF ivory */
+  --foreground: oklch(0.32 0.03 240);      /* #293747 main text */
+  --card: oklch(1 0 0);                    /* #FFFFFF white surfaces */
+  --card-foreground: oklch(0.32 0.03 240);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.32 0.03 240);
+  /* Navy primary */
+  --primary: oklch(0.3 0.055 255);         /* #142B4A navy */
+  --primary-foreground: oklch(0.97 0.008 90);
+  --primary-soft: oklch(0.93 0.02 250);
+  /* Sage (teal slot) — positive statuses */
+  --teal: oklch(0.62 0.06 165);            /* #8DB9A5 sage, deepened for text */
+  --teal-soft: oklch(0.93 0.025 160);
+  /* Coral accent — selected/highlight states */
+  --coral: oklch(0.68 0.13 35);            /* #F18B72 coral, deepened for text */
+  --coral-soft: oklch(0.93 0.03 40);
+  /* Soft blue-tinted surfaces */
+  --lavender: oklch(0.93 0.02 250);        /* pale blue surface */
+  --cream: oklch(0.955 0.012 90);
+  /* Secondary blue — interactive highlights */
+  --secondary: oklch(0.6 0.09 255);        /* #5D83C5 blue */
+  --secondary-foreground: oklch(0.98 0.005 250);
+  --surface: oklch(0.945 0.012 250);
+  --ink: oklch(0.3 0.055 255);             /* navy dark sections */
+  --ink-foreground: oklch(0.965 0.008 90);
+  --muted: oklch(0.94 0.012 250);
+  --muted-foreground: oklch(0.52 0.025 240); /* #687587 secondary text */
+  --accent: oklch(0.93 0.02 250);
+  --accent-foreground: oklch(0.35 0.06 255);
   --destructive: oklch(0.55 0.17 30);
-  --destructive-foreground: oklch(0.97 0.01 85);
-  --border: oklch(0.87 0.03 70);
-  --input: oklch(0.85 0.03 70);
-  --ring: oklch(0.44 0.06 55);
-  --shadow-soft: 0 1px 2px oklch(0.27 0.03 45 / 5%), 0 12px 32px -12px oklch(0.27 0.03 45 / 14%);
-  --shadow-lift: 0 2px 4px oklch(0.27 0.03 45 / 6%), 0 30px 60px -20px oklch(0.3 0.05 50 / 28%);
+  --destructive-foreground: oklch(0.97 0.008 90);
+  --border: oklch(0.91 0.008 240);         /* #E1E5EA borders */
+  --input: oklch(0.89 0.01 240);
+  --ring: oklch(0.6 0.09 255);
+  --shadow-soft: 0 1px 2px oklch(0.32 0.03 240 / 5%), 0 12px 32px -12px oklch(0.32 0.03 240 / 12%);
+  --shadow-lift: 0 2px 4px oklch(0.32 0.03 240 / 6%), 0 30px 60px -20px oklch(0.3 0.055 255 / 25%);
 }
 
 @layer base {

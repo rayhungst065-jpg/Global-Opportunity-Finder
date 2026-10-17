@@ -12,10 +12,10 @@ import teammates from "@/assets/teammates.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Global Student Opportunity Finder — Discover What's Next" },
-      { name: "description", content: "Discover volunteer opportunities, competitions, research programs, and awards from around the world — all in one place." },
-      { property: "og:title", content: "Global Student Opportunity Finder" },
-      { property: "og:description", content: "Volunteer, competitions, research, and awards for students worldwide — in one place." },
+      { title: "Global Opportunity Finder — Discover. Connect. Grow." },
+      { name: "description", content: "Discover opportunities, connect with like-minded students, and explore pathways toward your future—all in one place." },
+      { property: "og:title", content: "Global Opportunity Finder" },
+      { property: "og:description", content: "Discover opportunities, connect with like-minded students, and explore pathways toward your future." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -86,14 +86,14 @@ function Landing() {
         </div>
         <div className="relative mx-auto max-w-6xl px-5 pt-20 text-center md:pt-28">
           <Reveal>
-            <Eyebrow>For students aged 15–20, everywhere</Eyebrow>
+            <Eyebrow>Discover. Connect. Grow.</Eyebrow>
             <h1 className="mx-auto mt-4 max-w-4xl text-5xl font-semibold leading-[1.02] md:text-7xl lg:text-8xl">
-              Your Next Opportunity Could Change Everything.
+              Find Your Next Opportunity. Build What Comes Next.
             </h1>
           </Reveal>
           <Reveal delay={150}>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
-              Discover competitions, research programs, internships, volunteering, and awards that move your goals forward—all in one place.
+              Discover opportunities, connect with like-minded students, and explore pathways toward your future—all in one place.
             </p>
             <div className="mt-9 flex flex-wrap justify-center gap-3">
               <Link to="/opportunities" className={btnPrimary}>Explore Opportunities</Link>

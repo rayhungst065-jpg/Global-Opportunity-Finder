@@ -4,9 +4,9 @@ import { SimplePage } from "@/components/site/SiteLayout";
 export const Route = createFileRoute("/how-it-works")({
   head: () => ({
     meta: [
-      { title: "How It Works — Opportunity Finder" },
+      { title: "How It Works — Global Opportunity Finder" },
       { name: "description", content: "Create a profile, discover matching opportunities, and track deadlines." },
-      { property: "og:title", content: "How It Works — Opportunity Finder" },
+      { property: "og:title", content: "How It Works — Global Opportunity Finder" },
       { property: "og:description", content: "Three simple steps to find student opportunities." },
     ],
   }),

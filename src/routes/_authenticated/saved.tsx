@@ -10,9 +10,9 @@ import { useSavedList } from "@/lib/saved-list";
 export const Route = createFileRoute("/_authenticated/saved")({
   head: () => ({
     meta: [
-      { title: "Saved Opportunities — Opportunity Finder" },
+      { title: "Saved Opportunities — Global Opportunity Finder" },
       { name: "description", content: "Opportunities you saved, with your application progress." },
-      { property: "og:title", content: "Saved Opportunities — Opportunity Finder" },
+      { property: "og:title", content: "Saved Opportunities — Global Opportunity Finder" },
       { property: "og:description", content: "Track your saved opportunities." },
     ],
   }),

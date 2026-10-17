@@ -9,7 +9,7 @@ import type { Database } from "@/integrations/supabase/types";
 export const Route = createFileRoute("/_authenticated/communities/my")({
   head: () => ({
     meta: [
-      { title: "My Community Proposals — Opportunity Finder" },
+      { title: "My Community Proposals — Global Opportunity Finder" },
       { name: "description", content: "Track, edit, or withdraw your community proposals." },
     ],
   }),

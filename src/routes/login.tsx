@@ -6,9 +6,9 @@ import { AuthCard, Field, submitBtn } from "@/components/site/AuthCard";
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
-      { title: "Log In — Opportunity Finder" },
+      { title: "Log In — Global Opportunity Finder" },
       { name: "description", content: "Log in to your student account." },
-      { property: "og:title", content: "Log In — Opportunity Finder" },
+      { property: "og:title", content: "Log In — Global Opportunity Finder" },
       { property: "og:description", content: "Sign in to see your saved opportunities and deadlines." },
     ],
   }),

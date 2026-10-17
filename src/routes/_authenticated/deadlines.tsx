@@ -7,9 +7,9 @@ import { upcomingOf, useSavedList } from "@/lib/saved-list";
 export const Route = createFileRoute("/_authenticated/deadlines")({
   head: () => ({
     meta: [
-      { title: "Deadlines — Opportunity Finder" },
+      { title: "Deadlines — Global Opportunity Finder" },
       { name: "description", content: "Upcoming deadlines for your saved opportunities." },
-      { property: "og:title", content: "Deadlines — Opportunity Finder" },
+      { property: "og:title", content: "Deadlines — Global Opportunity Finder" },
       { property: "og:description", content: "Never miss an application deadline." },
     ],
   }),

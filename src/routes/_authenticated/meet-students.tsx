@@ -1,21 +1,22 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Search, UserPlus, Check, X, Trash2 } from "lucide-react";
+import { Check, X, Trash2, MessageSquare, Plus } from "lucide-react";
 import { WorkspaceShell, Panel } from "@/components/site/WorkspaceShell";
 import { Avatar } from "@/components/site/Avatar";
 import { useUser } from "@/lib/auth";
 import { useProfile } from "@/lib/profile";
 import {
-  discoverStudents, listMyConnections, sendRequest, respondRequest, removeConnection,
+  listMyConnections, respondRequest, removeConnection,
   type StudentCard, type ConnectionRow,
 } from "@/lib/connections.functions";
+import { listMyGroups, createGroup, inviteToGroup, updateMembership } from "@/lib/groups.functions";
 
 export const Route = createFileRoute("/_authenticated/meet-students")({
   head: () => ({
     meta: [
-      { title: "Meet Students — Opportunity Finder" },
-      { name: "description", content: "Discover students in other countries who share your interests and goals." },
+      { title: "Meet Students — Global Opportunity Finder" },
+      { name: "description", content: "Your connections, messages, and private collaboration groups." },
     ],
   }),
   component: MeetStudents,
@@ -23,6 +24,7 @@ export const Route = createFileRoute("/_authenticated/meet-students")({
 
 const chip = "rounded-full bg-primary-soft px-2.5 py-0.5 text-xs text-accent-foreground";
 const input = "w-full rounded-xl border border-input bg-background px-4 py-2.5 text-sm outline-none transition focus:border-ring focus:ring-4 focus:ring-primary-soft";
+const smallBtn = "inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition";
 
 function StudentCardView({ s, action }: { s: StudentCard; action?: React.ReactNode }) {
   return (
@@ -51,57 +53,30 @@ function StudentCardView({ s, action }: { s: StudentCard; action?: React.ReactNo
 function MeetStudents() {
   const { user } = useUser();
   const profile = useProfile(user?.id).data;
-  const qc = useQueryClient();
-  const [tab, setTab] = useState<"discover" | "requests" | "connections">("discover");
-  const [q, setQ] = useState("");
-  const [major, setMajor] = useState("");
-  const [interest, setInterest] = useState("");
-  const [notice, setNotice] = useState("");
+  const [tab, setTab] = useState<"messages" | "friends" | "groups">("friends");
 
-  const students = useQuery({
-    queryKey: ["discover-students", q, major, interest],
-    queryFn: () => discoverStudents({ data: { q: q || undefined, major: major || undefined, interest: interest || undefined } }),
-    enabled: !!user,
-  });
   const connections = useQuery({
     queryKey: ["my-connections"],
     queryFn: () => listMyConnections({}),
     enabled: !!user,
   });
-  const refresh = () => {
-    qc.invalidateQueries({ queryKey: ["my-connections"] });
-    qc.invalidateQueries({ queryKey: ["discover-students"] });
-  };
-  const onErr = (e: unknown) => setNotice(e instanceof Error ? e.message : "Something went wrong.");
-
-  const send = useMutation({ mutationFn: (to: string) => sendRequest({ data: { to } }), onSuccess: () => { setNotice(""); refresh(); }, onError: onErr });
-  const respond = useMutation({ mutationFn: (v: { id: string; accept: boolean }) => respondRequest({ data: v }), onSuccess: () => { setNotice(""); refresh(); }, onError: onErr });
-  const remove = useMutation({ mutationFn: (id: string) => removeConnection({ data: { id } }), onSuccess: () => { setNotice(""); refresh(); }, onError: onErr });
-
   const rows: ConnectionRow[] = connections.data ?? [];
   const incoming = rows.filter((r) => !r.outgoing && r.status === "pending");
-  const outgoing = rows.filter((r) => r.outgoing && r.status === "pending");
-  const accepted = rows.filter((r) => r.status === "accepted");
-  const pendingWith = new Set(rows.filter((r) => r.status === "pending").map((r) => (r.outgoing ? r.addressee_id : r.requester_id)));
-  const connectedWith = new Set(accepted.map((r) => (r.outgoing ? r.addressee_id : r.requester_id)));
 
   const tabs = [
-    { key: "discover", label: "Discover" },
-    { key: "requests", label: `Requests${incoming.length ? ` (${incoming.length})` : ""}` },
-    { key: "connections", label: `My Connections${accepted.length ? ` (${accepted.length})` : ""}` },
+    { key: "messages", label: "Messages" },
+    { key: "friends", label: `Friends${incoming.length ? ` (${incoming.length})` : ""}` },
+    { key: "groups", label: "Groups" },
   ] as const;
 
-  const smallBtn = "inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition";
-
   return (
-    <WorkspaceShell title="Meet Students" subtitle="Find teammates and study partners who share your interests and goals.">
+    <WorkspaceShell title="Meet Students" subtitle="Your direct connections and private collaboration groups.">
       {!profile?.discoverable && (
         <p className="mb-5 rounded-xl bg-coral-soft p-3 text-sm text-coral">
-          You're not discoverable yet, so other students can't find or request you. You can still browse.{" "}
+          You're not discoverable yet, so other students can't find or request you.{" "}
           <Link to="/settings" className="font-medium underline">Turn on discovery in Settings</Link>.
         </p>
       )}
-      {notice && <p className="mb-5 rounded-xl bg-destructive/10 p-3 text-sm text-destructive">{notice}</p>}
 
       <div className="mb-6 flex gap-1 rounded-full border border-border bg-card p-1">
         {tabs.map((t) => (
@@ -112,86 +87,92 @@ function MeetStudents() {
         ))}
       </div>
 
-      {tab === "discover" && (
-        <>
-          <div className="mb-6 grid gap-3 sm:grid-cols-[1fr_1fr_1fr]">
-            <label className="relative">
-              <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <input className={`${input} pl-10`} placeholder="Search name, bio, goals…" value={q} onChange={(e) => setQ(e.target.value)} />
-            </label>
-            <input className={input} placeholder="Filter by intended major" value={major} onChange={(e) => setMajor(e.target.value)} />
-            <input className={input} placeholder="Filter by interest or skill" value={interest} onChange={(e) => setInterest(e.target.value)} />
-          </div>
-          {students.isLoading ? <p className="text-sm text-muted-foreground">Loading…</p>
-          : students.isError ? <p className="text-sm text-destructive">Couldn't load students. Please refresh.</p>
-          : (students.data ?? []).length === 0 ? (
-            <p className="rounded-2xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
-              No discoverable students match yet. Discovery is opt-in, so the directory grows as more students turn it on.
-            </p>
-          ) : (
-            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {(students.data ?? []).map((s) => (
-                <StudentCardView key={s.id} s={s} action={
-                  connectedWith.has(s.id) ? <span className="text-xs font-medium text-teal">Connected</span>
-                  : pendingWith.has(s.id) ? <span className="text-xs text-muted-foreground">Request pending</span>
-                  : (
-                    <button disabled={send.isPending} onClick={() => send.mutate(s.id)}
-                      className={`${smallBtn} bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-50`}>
-                      <UserPlus className="h-3.5 w-3.5" /> Send request
-                    </button>
-                  )
-                } />
+      {tab === "messages" && <MessagesTab />}
+      {tab === "friends" && <FriendsTab userId={user?.id} rows={rows} />}
+      {tab === "groups" && <GroupsTab userId={user?.id} connections={rows} />}
+    </WorkspaceShell>
+  );
+}
+
+/* ---------------- Messages (honest placeholder) ---------------- */
+
+function MessagesTab() {
+  return (
+    <div className="rounded-3xl border border-dashed border-border bg-card p-12 text-center">
+      <MessageSquare className="mx-auto h-8 w-8 text-muted-foreground" />
+      <h2 className="mt-4 font-display text-xl font-semibold">Messaging isn't available yet</h2>
+      <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
+        Direct messages are still in development. They'll launch together with blocking and reporting controls,
+        so conversations stay safe. For now, use connection requests and collaboration groups to reach out.
+      </p>
+    </div>
+  );
+}
+
+/* ---------------- Friends ---------------- */
+
+function FriendsTab({ userId, rows }: { userId: string | undefined; rows: ConnectionRow[] }) {
+  const qc = useQueryClient();
+  const [notice, setNotice] = useState("");
+  const refresh = () => qc.invalidateQueries({ queryKey: ["my-connections"] });
+  const onErr = (e: unknown) => setNotice(e instanceof Error ? e.message : "Something went wrong.");
+
+  const respond = useMutation({ mutationFn: (v: { id: string; accept: boolean }) => respondRequest({ data: v }), onSuccess: () => { setNotice(""); refresh(); }, onError: onErr });
+  const remove = useMutation({ mutationFn: (id: string) => removeConnection({ data: { id } }), onSuccess: () => { setNotice(""); refresh(); }, onError: onErr });
+
+  const incoming = rows.filter((r) => !r.outgoing && r.status === "pending");
+  const outgoing = rows.filter((r) => r.outgoing && r.status === "pending");
+  const accepted = rows.filter((r) => r.status === "accepted");
+
+  return (
+    <>
+      {notice && <p className="mb-5 rounded-xl bg-destructive/10 p-3 text-sm text-destructive">{notice}</p>}
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Panel title={`Incoming requests (${incoming.length})`}>
+          {incoming.length === 0 ? <p className="text-sm text-muted-foreground">No incoming requests.</p> : (
+            <ul className="space-y-3">
+              {incoming.map((r) => r.other && (
+                <li key={r.id} className="flex items-center gap-3 rounded-xl border border-border p-3">
+                  <Avatar path={r.other.avatar_path} name={r.other.display_name} size="sm" />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{r.other.display_name}</p>
+                    <p className="truncate text-xs text-muted-foreground">{r.other.intended_major ?? "Student"}</p>
+                  </div>
+                  <button disabled={respond.isPending} onClick={() => respond.mutate({ id: r.id, accept: true })} className={`${smallBtn} bg-primary text-primary-foreground`}><Check className="h-3.5 w-3.5" /> Accept</button>
+                  <button disabled={respond.isPending} onClick={() => respond.mutate({ id: r.id, accept: false })} className={`${smallBtn} border border-border hover:bg-accent`}><X className="h-3.5 w-3.5" /> Decline</button>
+                </li>
               ))}
             </ul>
           )}
-        </>
-      )}
+        </Panel>
+        <Panel title={`Outgoing requests (${outgoing.length})`}>
+          {outgoing.length === 0 ? <p className="text-sm text-muted-foreground">No outgoing requests.</p> : (
+            <ul className="space-y-3">
+              {outgoing.map((r) => r.other && (
+                <li key={r.id} className="flex items-center gap-3 rounded-xl border border-border p-3">
+                  <Avatar path={r.other.avatar_path} name={r.other.display_name} size="sm" />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{r.other.display_name}</p>
+                    <p className="text-xs text-muted-foreground">Waiting for a response</p>
+                  </div>
+                  <button disabled={remove.isPending} onClick={() => remove.mutate(r.id)} className={`${smallBtn} border border-border hover:bg-accent`}>Cancel</button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Panel>
+      </div>
 
-      {tab === "requests" && (
-        <div className="grid gap-6 lg:grid-cols-2">
-          <Panel title="Incoming">
-            {incoming.length === 0 ? <p className="text-sm text-muted-foreground">No incoming requests.</p> : (
-              <ul className="space-y-3">
-                {incoming.map((r) => r.other && (
-                  <li key={r.id} className="flex items-center gap-3 rounded-xl border border-border p-3">
-                    <Avatar path={r.other.avatar_path} name={r.other.display_name} size="sm" />
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium">{r.other.display_name}</p>
-                      <p className="truncate text-xs text-muted-foreground">{r.other.intended_major ?? "Student"}</p>
-                    </div>
-                    <button disabled={respond.isPending} onClick={() => respond.mutate({ id: r.id, accept: true })} className={`${smallBtn} bg-primary text-primary-foreground`}><Check className="h-3.5 w-3.5" /> Accept</button>
-                    <button disabled={respond.isPending} onClick={() => respond.mutate({ id: r.id, accept: false })} className={`${smallBtn} border border-border hover:bg-accent`}><X className="h-3.5 w-3.5" /> Decline</button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Panel>
-          <Panel title="Outgoing">
-            {outgoing.length === 0 ? <p className="text-sm text-muted-foreground">No outgoing requests.</p> : (
-              <ul className="space-y-3">
-                {outgoing.map((r) => r.other && (
-                  <li key={r.id} className="flex items-center gap-3 rounded-xl border border-border p-3">
-                    <Avatar path={r.other.avatar_path} name={r.other.display_name} size="sm" />
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium">{r.other.display_name}</p>
-                      <p className="text-xs text-muted-foreground">Waiting for a response</p>
-                    </div>
-                    <button disabled={remove.isPending} onClick={() => remove.mutate(r.id)} className={`${smallBtn} border border-border hover:bg-accent`}>Cancel</button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Panel>
-        </div>
-      )}
-
-      {tab === "connections" && (
-        accepted.length === 0 ? (
-          <p className="rounded-2xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
-            No connections yet. Send a request from the Discover tab to get started.
+      <div className="mt-8">
+        <h2 className="font-display text-lg font-semibold">My friends ({accepted.length})</h2>
+        {accepted.length === 0 ? (
+          <p className="mt-3 rounded-2xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
+            No connections yet. Find students under{" "}
+            <Link to="/communities" className="text-primary hover:underline">Communities → Discover Groups → Find Students</Link>.
           </p>
         ) : (
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {accepted.map((r) => r.other && (
               <StudentCardView key={r.id} s={r.other} action={
                 <button disabled={remove.isPending} onClick={() => remove.mutate(r.id)} className={`${smallBtn} border border-border text-muted-foreground hover:bg-accent`}>
@@ -200,12 +181,171 @@ function MeetStudents() {
               } />
             ))}
           </ul>
-        )
+        )}
+      </div>
+    </>
+  );
+}
+
+/* ---------------- Groups (private collaboration) ---------------- */
+
+function GroupsTab({ userId, connections }: { userId: string | undefined; connections: ConnectionRow[] }) {
+  const qc = useQueryClient();
+  const [composing, setComposing] = useState(false);
+  const [notice, setNotice] = useState("");
+  const [invitePick, setInvitePick] = useState<Record<string, string>>({});
+
+  const groups = useQuery({
+    queryKey: ["my-groups"],
+    queryFn: () => listMyGroups({}),
+    enabled: !!userId,
+  });
+  const refresh = () => qc.invalidateQueries({ queryKey: ["my-groups"] });
+  const onErr = (e: unknown) => setNotice(e instanceof Error ? e.message : "Something went wrong.");
+
+  const create = useMutation({
+    mutationFn: (v: { name: string; description: string; goal: string }) => createGroup({ data: v }),
+    onSuccess: () => { setNotice(""); setComposing(false); refresh(); },
+    onError: onErr,
+  });
+  const invite = useMutation({
+    mutationFn: (v: { group_id: string; user_id: string }) => inviteToGroup({ data: v }),
+    onSuccess: () => { setNotice(""); refresh(); },
+    onError: onErr,
+  });
+  const membership = useMutation({
+    mutationFn: (v: { group_id: string; user_id: string; action: "accept" | "leave" | "remove" }) => updateMembership({ data: v }),
+    onSuccess: () => { setNotice(""); refresh(); },
+    onError: onErr,
+  });
+
+  const friends = connections.filter((r) => r.status === "accepted" && r.other);
+
+  return (
+    <>
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-sm text-muted-foreground">
+          Private spaces for competition teams, research projects, and shared goals. Groups never appear in the public community directory.
+        </p>
+        <button onClick={() => setComposing((v) => !v)} className={`${smallBtn} shrink-0 bg-primary px-4 py-2 text-primary-foreground hover:opacity-90`}>
+          <Plus className="h-4 w-4" /> New group
+        </button>
+      </div>
+      {notice && <p className="mt-4 rounded-xl bg-destructive/10 p-3 text-sm text-destructive">{notice}</p>}
+
+      {composing && (
+        <form
+          className="mt-5 space-y-3 rounded-2xl border border-border bg-card p-5 shadow-soft"
+          onSubmit={(e) => {
+            e.preventDefault();
+            const f = new FormData(e.currentTarget);
+            create.mutate({
+              name: String(f.get("name") ?? ""),
+              description: String(f.get("description") ?? ""),
+              goal: String(f.get("goal") ?? ""),
+            });
+          }}
+        >
+          <input name="name" required minLength={3} maxLength={120} className={input} placeholder="Group name — e.g. Robotics Nationals Team" />
+          <textarea name="description" maxLength={1000} rows={3} className={input} placeholder="What is this group for?" />
+          <input name="goal" maxLength={300} className={input} placeholder="Shared goal (optional)" />
+          <div className="flex gap-2">
+            <button disabled={create.isPending} className="rounded-full bg-primary px-5 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:opacity-50">
+              {create.isPending ? "Creating…" : "Create group"}
+            </button>
+            <button type="button" onClick={() => setComposing(false)} className="rounded-full border border-border px-5 py-2 text-sm hover:bg-accent">Cancel</button>
+          </div>
+        </form>
       )}
 
-      <p className="mt-8 text-xs text-muted-foreground">
-        Only students who opted in to discovery appear here, and each card shows only the fields they chose to share. Messaging isn't available yet — it will arrive with blocking and reporting controls.
-      </p>
-    </WorkspaceShell>
+      <div className="mt-6">
+        {groups.isLoading ? <p className="text-sm text-muted-foreground">Loading…</p>
+        : groups.isError ? <p className="text-sm text-destructive">Couldn't load groups. Please refresh.</p>
+        : (groups.data ?? []).length === 0 ? (
+          <p className="rounded-2xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
+            No groups yet. Create one and invite students you're connected with.
+          </p>
+        ) : (
+          <ul className="space-y-4">
+            {(groups.data ?? []).map((g) => {
+              const myMembership = g.members.find((m) => m.user_id === userId);
+              const activeMembers = g.members.filter((m) => m.status === "active");
+              const invited = g.members.filter((m) => m.status === "invited");
+              const invitable = friends.filter((f) => !g.members.some((m) => m.user_id === (f.outgoing ? f.addressee_id : f.requester_id)));
+              return (
+                <li key={g.id} className="rounded-2xl border border-border bg-card p-5 shadow-soft">
+                  <div className="flex items-center justify-between gap-3">
+                    <h3 className="font-display text-lg font-medium">{g.name}</h3>
+                    {g.mine ? (
+                      <span className="rounded-full bg-primary-soft px-3 py-1 text-xs font-medium text-accent-foreground">Owner</span>
+                    ) : myMembership?.status === "invited" ? (
+                      <span className="rounded-full bg-coral-soft px-3 py-1 text-xs font-medium text-coral">Invited</span>
+                    ) : (
+                      <span className="rounded-full bg-teal-soft px-3 py-1 text-xs font-medium text-teal">Member</span>
+                    )}
+                  </div>
+                  {g.description && <p className="mt-1.5 text-sm text-muted-foreground">{g.description}</p>}
+                  {g.goal && <p className="mt-2 text-sm"><span className="font-medium">Goal:</span> {g.goal}</p>}
+
+                  <div className="mt-4">
+                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Members ({activeMembers.length})</p>
+                    <ul className="mt-2 space-y-2">
+                      {g.members.map((m) => (
+                        <li key={m.user_id} className="flex items-center gap-2.5 text-sm">
+                          <Avatar path={m.profile?.avatar_path ?? null} name={m.profile?.display_name ?? "Student"} size="sm" />
+                          <span className="min-w-0 flex-1 truncate">{m.profile?.display_name ?? "Student"}</span>
+                          {m.role === "owner" && <span className="text-xs text-muted-foreground">Owner</span>}
+                          {m.status === "invited" && <span className="text-xs text-coral">Invited</span>}
+                          {m.user_id === userId && m.status === "invited" && (
+                            <button onClick={() => membership.mutate({ group_id: g.id, user_id: m.user_id, action: "accept" })}
+                              className={`${smallBtn} bg-primary text-primary-foreground`}>Accept invite</button>
+                          )}
+                          {g.mine && m.user_id !== userId && (
+                            <button onClick={() => membership.mutate({ group_id: g.id, user_id: m.user_id, action: "remove" })}
+                              className="text-xs text-muted-foreground hover:text-destructive">Remove</button>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {g.mine && (
+                    <div className="mt-4 flex items-center gap-2">
+                      <select
+                        className="rounded-xl border border-input bg-background px-3 py-2 text-sm"
+                        value={invitePick[g.id] ?? ""}
+                        onChange={(e) => setInvitePick((p) => ({ ...p, [g.id]: e.target.value }))}
+                      >
+                        <option value="">Invite a connection…</option>
+                        {invitable.map((f) => {
+                          const oid = f.outgoing ? f.addressee_id : f.requester_id;
+                          return <option key={oid} value={oid}>{f.other!.display_name}</option>;
+                        })}
+                      </select>
+                      <button
+                        disabled={!invitePick[g.id] || invite.isPending}
+                        onClick={() => invite.mutate({ group_id: g.id, user_id: invitePick[g.id]! })}
+                        className={`${smallBtn} bg-primary text-primary-foreground disabled:opacity-50`}
+                      >
+                        Invite
+                      </button>
+                    </div>
+                  )}
+                  {invited.length > 0 && g.mine && (
+                    <p className="mt-2 text-xs text-muted-foreground">{invited.length} invitation{invited.length > 1 ? "s" : ""} pending.</p>
+                  )}
+
+                  {!g.mine && myMembership && (
+                    <button onClick={() => membership.mutate({ group_id: g.id, user_id: userId!, action: "leave" })}
+                      className="mt-4 text-xs text-muted-foreground hover:text-destructive">Leave group</button>
+                  )}
+                  <p className="mt-3 text-xs text-muted-foreground">Group messaging isn't available yet — coordinate via connection requests for now.</p>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </div>
+    </>
   );
 }

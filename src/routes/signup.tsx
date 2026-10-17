@@ -6,9 +6,9 @@ import { AuthCard, Field, submitBtn } from "@/components/site/AuthCard";
 export const Route = createFileRoute("/signup")({
   head: () => ({
     meta: [
-      { title: "Sign Up — Opportunity Finder" },
+      { title: "Sign Up — Global Opportunity Finder" },
       { name: "description", content: "Create your student account." },
-      { property: "og:title", content: "Sign Up — Opportunity Finder" },
+      { property: "og:title", content: "Sign Up — Global Opportunity Finder" },
       { property: "og:description", content: "Create your free student account." },
     ],
   }),

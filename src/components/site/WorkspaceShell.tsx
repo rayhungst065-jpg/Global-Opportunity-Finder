@@ -6,7 +6,7 @@ import {
   Users, Handshake, GraduationCap, Settings, ChevronDown,
   UserRound, Pencil, LogOut, Home,
 } from "lucide-react";
-import { Logo } from "./SiteLayout";
+import { LogoSymbol } from "./SiteLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { Avatar } from "./Avatar";
 import { useUser } from "@/lib/auth";
@@ -85,7 +85,7 @@ export function WorkspaceShell({ title, subtitle, children }: { title: string; s
   return (
     <div className="min-h-screen bg-surface md:flex">
       <aside className="hidden w-64 shrink-0 flex-col border-r border-border bg-background px-4 py-6 md:sticky md:top-0 md:flex md:h-screen">
-        <div className="px-2"><Logo /></div>
+        <div className="px-2"><LogoSymbol /></div>
         <SidebarUser />
         <nav className="mt-6 space-y-0.5" aria-label="Student workspace">
           {items.map((i) => (
@@ -103,7 +103,7 @@ export function WorkspaceShell({ title, subtitle, children }: { title: string; s
       <div className="flex-1">
         <div className="border-b border-border bg-background md:hidden">
           <div className="flex items-center justify-between px-5 py-4">
-            <Logo />
+            <LogoSymbol className="h-8" />
             <div className="flex items-center gap-3 text-sm">
               <Link to="/profile" className="text-muted-foreground">Profile</Link>
               <Link to="/" className="text-muted-foreground">Home</Link>

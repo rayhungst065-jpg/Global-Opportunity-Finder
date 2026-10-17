@@ -1,21 +1,38 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { Logo } from "./SiteLayout";
+import campus from "@/assets/college-campus.jpg";
 
-/** Shared layout for the sign-up and log-in pages. */
+/** Split-screen layout for the sign-up and log-in pages. */
 export function AuthCard({ title, subtitle, children, footer }: { title: string; subtitle: string; children: ReactNode; footer: ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col bg-surface">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-5">
-        <Logo />
-        <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">← Back to home</Link>
+    <div className="flex min-h-screen bg-background">
+      {/* Visual side */}
+      <div className="relative hidden w-1/2 lg:block">
+        <img src={campus} alt="Students walking across a university campus at golden hour" className="absolute inset-0 h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-ink/45" />
+        <div className="relative flex h-full flex-col justify-between p-10 text-ink-foreground">
+          <Link to="/" className="text-sm opacity-80 hover:opacity-100">← Back to home</Link>
+          <div>
+            <p className="font-display text-3xl font-semibold leading-snug md:text-4xl">Discover. Connect. Grow.</p>
+            <p className="mt-3 max-w-md opacity-80">Opportunities, teammates, and pathways toward your future — in one place.</p>
+          </div>
+        </div>
       </div>
-      <div className="flex flex-1 items-center justify-center px-5 pb-20">
-        <div className="w-full max-w-md rounded-3xl border border-border bg-card p-8 shadow-lift">
-          <h1 className="text-3xl font-semibold">{title}</h1>
-          <p className="mt-2 text-muted-foreground">{subtitle}</p>
-          <div className="mt-8">{children}</div>
-          <div className="mt-6 text-center text-sm text-muted-foreground">{footer}</div>
+
+      {/* Form side */}
+      <div className="flex flex-1 flex-col">
+        <div className="flex items-center justify-between px-5 py-5 md:px-10">
+          <Logo className="h-11" />
+          <Link to="/" className="text-sm text-muted-foreground hover:text-foreground lg:hidden">← Home</Link>
+        </div>
+        <div className="flex flex-1 items-center justify-center px-5 pb-20">
+          <div className="w-full max-w-md rounded-3xl border border-border bg-card p-8 shadow-lift">
+            <h1 className="text-3xl font-semibold">{title}</h1>
+            <p className="mt-2 text-muted-foreground">{subtitle}</p>
+            <div className="mt-8">{children}</div>
+            <div className="mt-6 text-center text-sm text-muted-foreground">{footer}</div>
+          </div>
         </div>
       </div>
     </div>

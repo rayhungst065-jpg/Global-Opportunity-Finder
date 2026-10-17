@@ -12,9 +12,9 @@ export const Route = createFileRoute("/_authenticated/profile")({
   validateSearch: (s: Record<string, unknown>) => (s["edit"] === true ? { edit: true as const } : {}),
   head: () => ({
     meta: [
-      { title: "My Profile — Opportunity Finder" },
+      { title: "My Profile — Global Opportunity Finder" },
       { name: "description", content: "View and edit your student profile, interests and opportunity preferences." },
-      { property: "og:title", content: "My Profile — Opportunity Finder" },
+      { property: "og:title", content: "My Profile — Global Opportunity Finder" },
       { property: "og:description", content: "Your student profile and preferences." },
     ],
   }),

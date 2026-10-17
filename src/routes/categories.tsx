@@ -6,9 +6,9 @@ import { categories } from "@/lib/categories";
 export const Route = createFileRoute("/categories")({
   head: () => ({
     meta: [
-      { title: "Explore Categories — Opportunity Finder" },
+      { title: "Explore Categories — Global Opportunity Finder" },
       { name: "description", content: "Volunteer, competitions, research, and awards & scholarships for students." },
-      { property: "og:title", content: "Explore Categories — Opportunity Finder" },
+      { property: "og:title", content: "Explore Categories — Global Opportunity Finder" },
       { property: "og:description", content: "Four kinds of student opportunities, all in one place." },
     ],
   }),

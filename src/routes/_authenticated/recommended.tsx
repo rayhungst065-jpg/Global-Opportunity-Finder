@@ -8,9 +8,9 @@ import { useSavedIds, useToggleSave } from "@/lib/saved";
 export const Route = createFileRoute("/_authenticated/recommended")({
   head: () => ({
     meta: [
-      { title: "Recommended for Me — Opportunity Finder" },
+      { title: "Recommended for Me — Global Opportunity Finder" },
       { name: "description", content: "Opportunities matched to your profile and interests." },
-      { property: "og:title", content: "Recommended for Me — Opportunity Finder" },
+      { property: "og:title", content: "Recommended for Me — Global Opportunity Finder" },
       { property: "og:description", content: "Personal opportunity suggestions." },
     ],
   }),

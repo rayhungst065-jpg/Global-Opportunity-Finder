@@ -4,9 +4,9 @@ import { SimplePage } from "@/components/site/SiteLayout";
 export const Route = createFileRoute("/privacy")({
   head: () => ({
     meta: [
-      { title: "Privacy Policy — Opportunity Finder" },
+      { title: "Privacy Policy — Global Opportunity Finder" },
       { name: "description", content: "Draft privacy information for the Opportunity Finder." },
-      { property: "og:title", content: "Privacy Policy — Opportunity Finder" },
+      { property: "og:title", content: "Privacy Policy — Global Opportunity Finder" },
       { property: "og:description", content: "Draft privacy information." },
     ],
   }),
