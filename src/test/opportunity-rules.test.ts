@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { safeOfficialUrl, isNormalRecommendation } from "@/lib/opportunity-source";
+import { safeOfficialUrl, isNormalRecommendation, visibleCatalog } from "@/lib/opportunity-source";
 import { validateNewPassword } from "@/lib/password-rules";
 describe("focused opportunity and recovery rules", () => {
+  it("shows real browse listings by default and demos only when requested", () => {
+    const rows = [{ id: "real", is_demo: false }, { id: "demo", is_demo: true }];
+    expect(visibleCatalog(rows).map(row => row.id)).toEqual(["real"]);
+    expect(visibleCatalog(rows, true).map(row => row.id)).toEqual(["real", "demo"]);
+  });
   it("excludes demo records from normal recommendations", () => {
     expect(isNormalRecommendation({ is_demo: true, application_status: "open", deadline: null })).toBe(false);
     expect(isNormalRecommendation({ is_demo: false, application_status: "open", deadline: null })).toBe(true);
