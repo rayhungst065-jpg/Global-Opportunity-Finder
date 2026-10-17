@@ -50,6 +50,13 @@
       "when": 1792194157100,
       "tag": "0006_college_preferences",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792198025386,
+      "tag": "0007_posts_and_collab_groups",
+      "breakpoints": true
     }
   ]
 }
