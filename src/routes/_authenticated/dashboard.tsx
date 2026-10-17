@@ -10,9 +10,9 @@ import { useSavedIds, useToggleSave } from "@/lib/saved";
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
-      { title: "My Dashboard — Opportunity Finder" },
+      { title: "My Dashboard — Global Opportunity Finder" },
       { name: "description", content: "Your recommendations, saved opportunities and upcoming deadlines." },
-      { property: "og:title", content: "My Dashboard — Opportunity Finder" },
+      { property: "og:title", content: "My Dashboard — Global Opportunity Finder" },
       { property: "og:description", content: "Your personal opportunity workspace." },
     ],
   }),

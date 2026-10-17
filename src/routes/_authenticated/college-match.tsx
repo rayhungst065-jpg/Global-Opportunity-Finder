@@ -10,7 +10,7 @@ import { useProfile } from "@/lib/profile";
 export const Route = createFileRoute("/_authenticated/college-match")({
   head: () => ({
     meta: [
-      { title: "College Match — Opportunity Finder" },
+      { title: "College Match — Global Opportunity Finder" },
       { name: "description", content: "Explore colleges that fit your intended major, preferences, and goals." },
     ],
   }),

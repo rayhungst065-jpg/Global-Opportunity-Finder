@@ -4,9 +4,9 @@ import { SimplePage } from "@/components/site/SiteLayout";
 export const Route = createFileRoute("/terms")({
   head: () => ({
     meta: [
-      { title: "Terms of Use — Opportunity Finder" },
+      { title: "Terms of Use — Global Opportunity Finder" },
       { name: "description", content: "Draft terms of use for the Opportunity Finder." },
-      { property: "og:title", content: "Terms of Use — Opportunity Finder" },
+      { property: "og:title", content: "Terms of Use — Global Opportunity Finder" },
       { property: "og:description", content: "Draft terms of use." },
     ],
   }),

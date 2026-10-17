@@ -24,9 +24,9 @@ export const Route = createFileRoute("/opportunities/")({
   loader: ({ context, deps }) => context.queryClient.ensureQueryData(listQuery(deps)),
   head: () => ({
     meta: [
-      { title: "Browse Opportunities — Opportunity Finder" },
+      { title: "Browse Opportunities — Global Opportunity Finder" },
       { name: "description", content: "Search volunteer programs, competitions, research and scholarships for students." },
-      { property: "og:title", content: "Browse Opportunities — Opportunity Finder" },
+      { property: "og:title", content: "Browse Opportunities — Global Opportunity Finder" },
       { property: "og:description", content: "Search and save student opportunities by category." },
     ],
   }),

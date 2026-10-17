@@ -7,7 +7,7 @@ import { submitProposal } from "@/lib/communities.functions";
 export const Route = createFileRoute("/_authenticated/communities/new")({
   head: () => ({
     meta: [
-      { title: "Start a Community — Opportunity Finder" },
+      { title: "Start a Community — Global Opportunity Finder" },
       { name: "description", content: "Propose a new student community. An administrator reviews every proposal before it goes live." },
     ],
   }),

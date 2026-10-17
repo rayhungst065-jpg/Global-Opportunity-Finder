@@ -8,7 +8,7 @@ import { useJoinRequests, useMemberCount, useMembershipActions, useMyMemberships
 export const Route = createFileRoute("/_authenticated/communities/$id")({
   head: () => ({
     meta: [
-      { title: "Community — Opportunity Finder" },
+      { title: "Community — Global Opportunity Finder" },
       { name: "description", content: "Community goals, activities, rules, and membership." },
     ],
   }),
