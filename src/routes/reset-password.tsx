@@ -46,7 +46,7 @@ function ResetPassword() {
       const validation = validateNewPassword(password, String(f.get("confirmation") ?? ""));
       if (validation) { setError(validation); return; }
       setBusy(true); setError("");
-      try { const r = await supabase.auth.updateUser({ password }); if (r.error) setError(r.error.message); else { await supabase.auth.signOut(); setDone(true); } }
+      try { const r = await supabase.auth.updateUser({ password }); if (r.error) setError("Your password could not be updated. Check your password requirements or request a new recovery link."); else { await supabase.auth.signOut(); setDone(true); } }
       catch { setError("Your password could not be updated. Please request a new recovery link."); }
       finally { setBusy(false); }
     }}><Field label="New password" name="password" type="password" autoComplete="new-password" minLength={8} required /><Field label="Confirm new password" name="confirmation" type="password" autoComplete="new-password" minLength={8} required /><Button className="w-full" type="submit" disabled={busy}>{busy ? "Updating…" : "Reset password"}</Button>{error && <p role="alert" className="text-sm text-destructive">{error}</p>}</form>}

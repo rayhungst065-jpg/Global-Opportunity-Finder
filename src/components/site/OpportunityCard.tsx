@@ -33,7 +33,7 @@ export function OpportunityCard({ o, action }: { o: Opportunity; action?: React.
     <article className="flex flex-col rounded-3xl border border-border bg-card p-6 shadow-lift">
       <div className="flex flex-wrap items-center gap-2 text-xs">
         <span className="rounded-full bg-primary-soft px-2.5 py-1 font-medium text-accent-foreground">{categoryName(o.category)}</span>
-        <span className="rounded-full border border-border px-2.5 py-1 text-muted-foreground">{statusLabel[o.application_status]}</span>
+        <span className="rounded-full border border-border px-2.5 py-1 text-muted-foreground">{o.description.includes("Application status unverified") ? "Availability unverified" : statusLabel[o.application_status]}</span>
         {o.is_demo && <span className="rounded-full bg-destructive/10 px-2.5 py-1 font-medium text-destructive">Demo data</span>}
       </div>
       <h3 className="mt-4 text-lg font-semibold">
