@@ -71,6 +71,13 @@
       "when": 1792198336969,
       "tag": "0009_fix_group_member_insert_policy",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1792209128900,
+      "tag": "0010_private_opportunity_assistant",
+      "breakpoints": true
     }
   ]
 }
