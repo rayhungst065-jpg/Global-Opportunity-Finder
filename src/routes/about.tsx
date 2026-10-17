@@ -4,16 +4,39 @@ import { SimplePage } from "@/components/site/SiteLayout";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About — Opportunity Finder" },
-      { name: "description", content: "About the Global Student Opportunity Finder, a student Capstone project." },
-      { property: "og:title", content: "About — Opportunity Finder" },
-      { property: "og:description", content: "Why this platform exists and who it's for." },
+      { title: "About — Global Opportunity Finder" },
+      { name: "description", content: "Why Global Opportunity Finder exists and who it's for." },
+      { property: "og:title", content: "About — Global Opportunity Finder" },
+      { property: "og:description", content: "More access. More possibilities." },
     ],
   }),
   component: () => (
-    <SimplePage eyebrow="About the Platform" title="Built by a student, for students.">
-      <p>Global Student Opportunity Finder is a Capstone project that gathers volunteer work, competitions, research programs, and awards into one organized place for students aged roughly 15–20.</p>
-      <p>Listings are labeled clearly. Sample data is marked as sample data, and we never invent deadlines, eligibility rules, or application links. Always confirm details with the official organizer.</p>
+    <SimplePage eyebrow="About the Platform" title="More Access. More Possibilities.">
+      <p>
+        Global Opportunity Finder is a student-focused platform designed to make meaningful opportunities easier to
+        discover. Students can explore volunteering, competitions, research programs, internships, and awards in one
+        organized place.
+      </p>
+      <p>
+        The platform also aims to help students connect with peers who share their interests, discover collaboration
+        opportunities, and explore potential college pathways.
+      </p>
+      <p>
+        The project was created in response to a common challenge: opportunities are often scattered across different
+        websites, making them difficult for students to discover and compare. Global Opportunity Finder aims to make
+        that process more accessible, organized, and connected.
+      </p>
+      <p>
+        Our goal is to help students take the next step toward their interests, goals, and future ambitions.
+      </p>
+      <blockquote className="rounded-2xl border-l-4 border-primary bg-primary-soft p-5 font-display text-xl text-accent-foreground">
+        “To make opportunities more accessible and help students turn curiosity into meaningful action.”
+      </blockquote>
+      <p className="text-base">
+        A note on honesty: listings marked as demo are samples, not real opportunities. Some features — like student
+        messaging and college matching — are still in development and are labeled as such. Always confirm details with
+        the official organizer.
+      </p>
     </SimplePage>
   ),
 });
