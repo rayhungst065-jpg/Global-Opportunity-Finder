@@ -47,7 +47,7 @@ function Communities() {
 
 /* ---------------- Discover Groups ---------------- */
 
-function DiscoverGroups({ userId }: { userId?: string }) {
+function DiscoverGroups({ userId }: { userId: string | undefined }) {
   const [q, setQ] = useState("");
   const [category, setCategory] = useState<string>("");
   const memberships = useMyMemberships(userId);
@@ -132,7 +132,7 @@ function DiscoverGroups({ userId }: { userId?: string }) {
 }
 
 /** Student discovery lives here — opted-in students only, privacy-filtered server-side. */
-function StudentDiscovery({ userId }: { userId?: string }) {
+function StudentDiscovery({ userId }: { userId: string | undefined }) {
   const qc = useQueryClient();
   const [q, setQ] = useState("");
   const [major, setMajor] = useState("");
@@ -219,7 +219,7 @@ function StudentDiscovery({ userId }: { userId?: string }) {
 
 /* ---------------- Posts ---------------- */
 
-function Posts({ userId }: { userId?: string }) {
+function Posts({ userId }: { userId: string | undefined }) {
   const qc = useQueryClient();
   const [q, setQ] = useState("");
   const [composing, setComposing] = useState(false);
