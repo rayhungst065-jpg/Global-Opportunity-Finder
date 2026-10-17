@@ -1,6 +1,7 @@
 # Roadmap — Brand & Communities Update
 
 ## Focused fixes
+- [ ] Limit repair to Recommended for Me and Browse Opportunities; use stored listings first and verify without paid searches
 - [x] Real online recommendation retrieval through connected Parallel; extracted official links and real catalog save verified
 - [x] Original symbol plus readable brand name; Capstone footer sentence removed
 - [x] Assistant real search returned FRC/FTC organizer links inline; both official URLs returned HTTP 200
