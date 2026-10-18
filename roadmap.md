@@ -1,7 +1,7 @@
 # Roadmap — Brand & Communities Update
 
 ## Focused fixes
-- [ ] New request: replace College Research with database-only College Search using the user's Excel college data; locate dataset before importing
+- [ ] New request: import attached college_research_database.xlsx, omit blank rows, preserve original values including N/A; replace College Research with database-only search/filter/sort
 - [ ] New request: save original Gemini chat recommendations privately into Recommend with removal, without a second AI call
 - [ ] New request: remove feature-level Parallel calls, preserve unrelated connections, and test the three affected flows only
 - [x] Checked official Gemini pricing without AI/Parallel requests: gemini-3.8-flash Search grounding is unavailable on Free Tier; no grounding test or billing change
