@@ -807,6 +807,17 @@ export type Database = {
         Args: { p_criteria: Json; p_key: string }
         Returns: Json
       }
+      search_colleges: {
+        Args: {
+          p_country?: string
+          p_page?: number
+          p_query?: string
+          p_region?: string
+          p_sort?: string
+          p_type?: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
       app_role: "admin" | "user"
