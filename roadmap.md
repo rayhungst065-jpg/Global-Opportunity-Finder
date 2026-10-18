@@ -1,7 +1,7 @@
 # Roadmap — Brand & Communities Update
 
 ## Focused fixes
-- [ ] Switch only assistant provider to direct Gemini using existing secret; test one real response without Parallel searches
+- [x] Assistant switched to direct Gemini gemini-3.8-flash using existing secret; real signed-in reply and persistence verified without Parallel searches (2.5 Flash returned retirement 404)
 - [x] Limited repair to Recommended for Me and Browse Opportunities; stored matches survive reload, Browse search/category filters verified, demos opt-in, no paid searches run
 - [x] Real online recommendation retrieval through connected Parallel; extracted official links and real catalog save verified
 - [x] Original symbol plus readable brand name; Capstone footer sentence removed
@@ -23,7 +23,7 @@
 ## Remaining
 - [x] Exact new homepage/auth messaging; original logos retained; desktop/mobile pages inspected
 - [x] Substantive Privacy and Terms based on actual implementation; outstanding legal/privacy requirements disclosed
-- [x] Authenticated streaming Lovable AI/OpenAI assistant with stored history, summaries, retained older chats and profile/catalog tools
+- [x] Authenticated streaming Gemini assistant with stored history, summaries, retained older chats and profile/catalog tools
 - [x] Real AI requests verified: profile-aware plans, multi-turn history after refresh, summary persistence and previous-chat selection
 - [x] Approved catalog save verified through the assistant and existing Saved Opportunities screen (labeled DEMO test record)
 - [x] Desktop/mobile overflow checks and routing/privacy-helper regression tests passed; preview build OK
