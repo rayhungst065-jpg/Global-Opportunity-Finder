@@ -21,9 +21,9 @@
 - Assistant catalog saves require AI SDK tool approval and use the user's RLS client; why: restrict writes to explicit student-owned saves, never shared opportunity mutations.
 - Assistant provider access blocks persist in server-owned access state; why: prevent reloads from retrying terminal provider denials.
 - Assistant streams through the Google AI SDK in the existing authenticated handler, with provider-tagged access denials; why: preserve chat/tool persistence while preventing old-provider denials from blocking a provider change.
-- Parallel requests exist only in the server-only College Research workflow reached by an explicit authenticated action; why: prevent paid search in chat, catalog pages and background activity.
-- College research reservations and cache are owner-scoped and atomically enforced by a restricted database function; only server-owned result writes are privileged; why: enforce concurrency/usage limits across tabs without trusting clients.
+- College Search reads imported colleges through an authenticated database search function, preserving source rows and notes; why: database-side filtering/sorting without external API calls or inferred spreadsheet values.
+- Historical college research is retained but has no active provider workflow; why: preserve user data while removing premium search access.
 - AI responses use the shared direct Gemini provider with keys read inside authenticated handlers; why: preserve one model configuration without exposing credentials.
-- Recommended for Me uses deterministic matching of stored catalog records; why: avoid AI calls when application logic suffices.
+- Recommend stores owner-selected snapshots from persisted assistant recommendation tool outputs with RLS validation; why: preserve the original Gemini recommendation and reason without another model call or shared catalog mutation.
 - Opportunity verification timestamps are separate from update timestamps and never backfilled from AI or ordinary edits; why: label unknown/stale evidence without silently changing deadlines.
 - Password recovery uses Cloud Auth verification and updateUser on a public reset page; why: preserve provider token expiry and avoid a separate password system.

@@ -265,6 +265,84 @@ export type Database = {
           },
         ]
       }
+      college_source_notes: {
+        Row: {
+          id: string
+          original_values: Json
+          source_file: string
+          source_row: number
+          source_sheet: string
+        }
+        Insert: {
+          id?: string
+          original_values: Json
+          source_file: string
+          source_row: number
+          source_sheet: string
+        }
+        Update: {
+          id?: string
+          original_values?: Json
+          source_file?: string
+          source_row?: number
+          source_sheet?: string
+        }
+        Relationships: []
+      }
+      colleges: {
+        Row: {
+          acceptance_rate: string | null
+          campus_size: string | null
+          country: string | null
+          enrollment: string | null
+          gpa_requirement: string | null
+          id: string
+          institution_type: string | null
+          official_website: string | null
+          original_values: Json
+          qs_rank: string | null
+          region: string | null
+          source_file: string
+          source_row: number
+          tuition: string | null
+          university: string
+        }
+        Insert: {
+          acceptance_rate?: string | null
+          campus_size?: string | null
+          country?: string | null
+          enrollment?: string | null
+          gpa_requirement?: string | null
+          id?: string
+          institution_type?: string | null
+          official_website?: string | null
+          original_values?: Json
+          qs_rank?: string | null
+          region?: string | null
+          source_file: string
+          source_row: number
+          tuition?: string | null
+          university: string
+        }
+        Update: {
+          acceptance_rate?: string | null
+          campus_size?: string | null
+          country?: string | null
+          enrollment?: string | null
+          gpa_requirement?: string | null
+          id?: string
+          institution_type?: string | null
+          official_website?: string | null
+          original_values?: Json
+          qs_rank?: string | null
+          region?: string | null
+          source_file?: string
+          source_row?: number
+          tuition?: string | null
+          university?: string
+        }
+        Relationships: []
+      }
       communities: {
         Row: {
           activities: string | null
@@ -626,6 +704,41 @@ export type Database = {
         }
         Relationships: []
       }
+      saved_chat_recommendations: {
+        Row: {
+          assistant_message_id: string
+          created_at: string
+          id: string
+          recommendation: Json
+          tool_call_id: string
+          user_id: string
+        }
+        Insert: {
+          assistant_message_id: string
+          created_at?: string
+          id?: string
+          recommendation: Json
+          tool_call_id: string
+          user_id: string
+        }
+        Update: {
+          assistant_message_id?: string
+          created_at?: string
+          id?: string
+          recommendation?: Json
+          tool_call_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_chat_recommendations_assistant_message_id_fkey"
+            columns: ["assistant_message_id"]
+            isOneToOne: false
+            referencedRelation: "assistant_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       saved_opportunities: {
         Row: {
           created_at: string
@@ -692,6 +805,17 @@ export type Database = {
       is_group_member: { Args: { _group_id: string }; Returns: boolean }
       reserve_college_research: {
         Args: { p_criteria: Json; p_key: string }
+        Returns: Json
+      }
+      search_colleges: {
+        Args: {
+          p_country?: string
+          p_page?: number
+          p_query?: string
+          p_region?: string
+          p_sort?: string
+          p_type?: string
+        }
         Returns: Json
       }
     }

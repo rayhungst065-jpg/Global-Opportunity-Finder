@@ -1,14 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { GraduationCap, Search, ExternalLink } from "lucide-react";
+import { GraduationCap, Search, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { researchColleges } from "@/lib/college-research.functions";
-import { collegeCriteriaSchema, collegeResultSchema, type CollegeResult } from "@/lib/college-research-policy";
-import { verificationState } from "@/lib/opportunity-source";
-import { useRef } from "react";
+import { searchColleges } from "@/lib/colleges.functions";
+import { safeOfficialUrl } from "@/lib/opportunity-source";
 import { WorkspaceShell, Panel } from "@/components/site/WorkspaceShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useUser } from "@/lib/auth";
@@ -17,10 +14,10 @@ import { useProfile } from "@/lib/profile";
 export const Route = createFileRoute("/_authenticated/college-match")({
   head: () => ({
     meta: [
-      { title: "College Research — Global Opportunity Finder" },
-      { name: "description", content: "Research official college sources using selected criteria and reuse your saved results." },
-          { property: "og:title", content: "College Research — Global Opportunity Finder" },
-      { property: "og:description", content: "Research official college sources using selected criteria and reuse your saved results." },
+      { title: "College Search — Global Opportunity Finder" },
+      { name: "description", content: "Search, filter and sort the saved university spreadsheet database." },
+          { property: "og:title", content: "College Search — Global Opportunity Finder" },
+      { property: "og:description", content: "Search, filter and sort the saved university spreadsheet database." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -65,37 +62,11 @@ function CollegeMatch() {
   });
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [saving, setSaving] = useState(false);
-  const [researching, setResearching] = useState(false);
-  const [consent, setConsent] = useState(false);
-  const [selectedResearch, setSelectedResearch] = useState<string>();
-  const researchLock = useRef(false);
-  const runResearch = useServerFn(researchColleges);
-  const history = useQuery({
-    queryKey: ["college-research", user?.id], enabled: !!user, retry: false,
-    queryFn: async () => {
-      if (!user) return [];
-      const { data, error } = await supabase.from("college_research").select("*").eq("user_id", user.id).order("created_at", { ascending: false }).limit(30);
-      if (error) throw error;
-      return data;
-    },
-  });
-  const activeResearch = history.data?.find(r => r.id === selectedResearch) ?? history.data?.find(r => r.status === "ready");
-  const parsedResults = collegeResultSchema.array().safeParse(activeResearch?.results);
-  const results: CollegeResult[] = parsedResults.success ? parsedResults.data : [];
-
-  async function research() {
-    if (!user || !consent || researchLock.current) return;
-    const parsed = collegeCriteriaSchema.safeParse(d);
-    if (!parsed.success) { setMsg({ ok: false, text: parsed.error.issues[0]?.message ?? "Select criteria first." }); return; }
-    researchLock.current = true; setResearching(true); setMsg(null);
-    try {
-      const result = await runResearch({ data: { criteria: parsed.data, confirmPremiumSearch: true } });
-      if (result.id) setSelectedResearch(result.id);
-      await qc.invalidateQueries({ queryKey: ["college-research", user.id] });
-      setMsg({ ok: true, text: result.message });
-    } catch (e) { setMsg({ ok: false, text: e instanceof Error ? e.message : "Research failed; no retry was made." }); }
-    finally { researchLock.current = false; setResearching(false); setConsent(false); }
-  }
+  const [filters, setFilters] = useState({ query: "", region: "", country: "", type: "", sort: "name" as "name" | "rank" | "country" | "enrollment", page: 0 });
+  const [searchText, setSearchText] = useState("");
+  const searchFn = useServerFn(searchColleges);
+  const catalog = useQuery({ queryKey: ["college-catalog", filters], queryFn: () => searchFn({ data: filters }), retry: false });
+  const changeFilter = (key: "region" | "country" | "type", value: string) => setFilters(f => ({ ...f, [key]: value, page: 0 }));
 
   useEffect(() => {
     if (saved.data) {
@@ -134,10 +105,8 @@ function CollegeMatch() {
     setMsg({ ok: true, text: "Preferences saved." });
   }
 
-  const filled = [d.intended_major, d.campus_size, d.budget_range].filter(Boolean).length + (d.preferred_regions.length ? 1 : 0) + (d.institution_types.length ? 1 : 0);
-
   return (
-    <WorkspaceShell title="College Research" subtitle="Official college sources and saved research. Premium search uses credits; matching never guarantees admission, affordability or financial aid.">
+    <WorkspaceShell title="College Search" subtitle="Universities from your saved spreadsheet. Figures may be approximate or out of date; confirm details with each institution.">
       <div className="grid gap-6 lg:grid-cols-[1fr_22rem]">
         <Panel title="Your college preferences">
           <div className="space-y-6">
@@ -176,7 +145,7 @@ function CollegeMatch() {
             <label className="flex items-start gap-3">
               <input type="checkbox" className="mt-1 h-4 w-4 accent-primary" checked={d.financial_aid_interest} onChange={(e) => setD({ ...d, financial_aid_interest: e.target.checked })} />
               <span><span className="text-sm font-medium">I'm interested in financial aid or scholarships</span>
-                <span className="block text-sm text-muted-foreground">Research will note aid only when supported by source evidence. Nothing here guarantees eligibility.</span></span>
+                <span className="block text-sm text-muted-foreground">Your preference is saved; the spreadsheet does not provide verified scholarship or financial-aid eligibility.</span></span>
             </label>
 
             <div className="flex items-center gap-4">
@@ -189,33 +158,35 @@ function CollegeMatch() {
         </Panel>
 
         <div className="space-y-6">
-          <Panel title="Research action">
-            <p className="text-sm text-muted-foreground">Up to 2 new searches per student per UTC day. Each uses one Parallel search, at most one extraction of 3 pages, and at most one Gemini comparison. Failures count; no automatic retries. Previously saved criteria reuse their results without new requests.</p>
-            <label className="mt-4 flex items-start gap-2 text-sm"><Checkbox checked={consent} onCheckedChange={v => setConsent(v === true)} /><span>I confirm premium College Research for my selected criteria. Charges may apply.</span></label>
-            <Button className="mt-4 w-full whitespace-normal" disabled={!consent || researching || filled === 0 && !d.financial_aid_interest} onClick={research}><Search className={researching ? "animate-pulse" : ""} />{researching ? "Researching…" : "Research colleges (premium)"}</Button>
-            {researching && <p role="status" className="mt-3 text-sm text-muted-foreground">Checking source pages and preparing a comparison…</p>}
+          <Panel title="Search universities">
+            <form onSubmit={e => { e.preventDefault(); setFilters(f => ({ ...f, query: searchText.trim(), page: 0 })); }}>
+              <label className="block text-sm font-medium">University or country<input aria-label="University or country" className={input} value={searchText} onChange={e => setSearchText(e.target.value)} placeholder="Search universities" /></label>
+              <Button type="submit" className="mt-3 w-full"><Search />Search</Button>
+            </form>
+            <div className="mt-4 space-y-4">
+              {([['region', 'Region', catalog.data?.regions], ['country', 'Country', catalog.data?.countries], ['type', 'Institution type', catalog.data?.types]] as const).map(([key,label,values]) => <label key={key} className="block text-sm font-medium">{label}<select aria-label={label} className={input} value={filters[key]} onChange={e => changeFilter(key,e.target.value)}><option value="">All</option>{values?.map(v => <option key={v} value={v}>{v}</option>)}</select></label>)}
+              <label className="block text-sm font-medium">Sort by<select aria-label="Sort by" className={input} value={filters.sort} onChange={e => setFilters(f => ({ ...f, sort: e.target.value as typeof f.sort, page: 0 }))}><option value="name">University name</option><option value="rank">QS rank (exact ranks first)</option><option value="country">Country</option><option value="enrollment">Enrollment (largest first)</option></select></label>
+              <Button variant="ghost" onClick={() => { setSearchText(""); setFilters({ query: "", region: "", country: "", type: "", sort: "name", page: 0 }); }}>Clear filters</Button>
+            </div>
           </Panel>
-          <Panel title="Saved research">
-            {history.error && <p role="alert" className="text-sm text-destructive">{history.error.message}</p>}
-            {!history.data?.length && <div className="py-4 text-center"><GraduationCap className="mx-auto h-8 w-8 text-muted-foreground" /><p className="mt-3 text-sm text-muted-foreground">No saved research yet. No search has started.</p></div>}
-            <div className="space-y-2">{history.data?.map(r => <Button key={r.id} variant={r.id === activeResearch?.id ? "secondary" : "ghost"} className="h-auto w-full justify-start whitespace-normal text-left" onClick={() => setSelectedResearch(r.id)}>{new Date(r.created_at).toLocaleDateString()} · {r.status === "ready" ? "Saved results" : r.status === "pending" ? "Pending — not automatically resumed" : "Failed attempt"}</Button>)}</div>
-            {activeResearch?.error_message && <p className="mt-3 text-sm text-muted-foreground">{activeResearch.error_message}</p>}
-          </Panel>
+          <div className="border-l-2 border-coral pl-4 text-sm text-muted-foreground"><GraduationCap className="mb-2 h-6 w-6" />Source: college_research_database.xlsx. Ranking bands and other approximate values are shown exactly as supplied. Blank cells are shown as “Not provided”; N/A values are preserved.</div>
         </div>
       </div>
       <section className="mt-8 border-t border-border pt-6">
-        <h2 className="text-xl font-semibold">College comparisons</h2>
-        {activeResearch && <p className="mt-2 text-sm text-muted-foreground">Saved source evidence, not a comprehensive college dataset. Confirm all costs, dates and eligibility with the institution. Opening these results does not recheck sources.</p>}
-        <div className="mt-5 grid gap-5 md:grid-cols-2">{results.map(r => <article key={r.source_url} className="rounded-lg border border-border bg-card p-5">
-          <h3 className="text-lg font-semibold">{r.institution}</h3>
-          <p className="mt-2 text-xs text-muted-foreground">{verificationState(r.checked_at, null)}</p>
-          <p className="mt-3 text-sm">{r.fit}</p>
-          <dl className="mt-4 space-y-3">{r.facts.map((f, i) => <div key={i}><dt className="text-sm font-medium">{f.label}</dt><dd className="text-sm text-muted-foreground">{f.value}</dd><dd className="mt-1 text-xs text-muted-foreground">Source excerpt: “{f.evidence}”</dd></div>)}</dl>
-          {!!r.missing_information.length && <p className="mt-4 text-sm text-muted-foreground">Not verified: {r.missing_information.join(" · ")}</p>}
-          <Button asChild variant="link" className="mt-4 h-auto whitespace-normal p-0"><a href={r.source_url} target="_blank" rel="noopener noreferrer"><ExternalLink />Official institution source</a></Button>
-        </article>)}</div>
-        {activeResearch?.status === "ready" && !results.length && <p className="mt-4 text-sm text-muted-foreground">No candidates passed the evidence checks. No college facts were invented.</p>}
-        <p className="mt-5 text-sm text-muted-foreground">Your <Link to="/profile" className="text-primary hover:underline">profile</Link> continues to power stored opportunity recommendations.</p>
+        <h2 className="text-xl font-semibold">University results</h2>
+        {catalog.error && <p role="alert" className="mt-3 text-sm text-destructive">{catalog.error.message}</p>}
+        {catalog.isPending ? <p role="status" className="mt-4 text-muted-foreground">Loading universities…</p> : <p role="status" className="mt-2 text-sm text-muted-foreground">{catalog.data?.total ?? 0} universities · Page {filters.page + 1}</p>}
+        <div className="mt-5 grid gap-5 md:grid-cols-2">{catalog.data?.rows.map(r => {
+          const url = safeOfficialUrl(r.official_website);
+          return <article key={r.id} className="rounded-lg border border-border bg-card p-5">
+            <h3 className="text-lg font-semibold break-words">{r.university}</h3><p className="mt-1 text-sm text-muted-foreground">{r.country || "Not provided"} · {r.region || "Not provided"}</p>
+            <dl className="mt-4 space-y-3">{[["QS Rank (2027)",r.qs_rank],["Type",r.institution_type],["Tuition (approx., per year, undergrad)",r.tuition],["Campus size",r.campus_size],["GPA requirement",r.gpa_requirement],["Acceptance rate (approx.)",r.acceptance_rate],["Enrollment (approx. total)",r.enrollment]].map(([label,value]) => <div key={label}><dt className="text-sm font-medium">{label}</dt><dd className="text-sm text-muted-foreground break-words">{value ?? "Not provided"}</dd></div>)}</dl>
+            {url ? <Button asChild variant="link" className="mt-4 h-auto whitespace-normal p-0"><a href={url} target="_blank" rel="noopener noreferrer"><ExternalLink />Official website</a></Button> : <p className="mt-4 text-sm text-muted-foreground">Official website: {r.official_website ?? "Not provided"}</p>}
+          </article>;
+        })}</div>
+        {catalog.data && !catalog.data.rows.length && <p className="mt-4 text-muted-foreground">No universities match these filters.</p>}
+        <div className="mt-6 flex items-center justify-between gap-3"><Button variant="outline" disabled={filters.page === 0 || catalog.isFetching} onClick={() => setFilters(f => ({ ...f, page: f.page-1 }))}><ChevronLeft />Previous</Button><Button variant="outline" disabled={!catalog.data || (filters.page+1)*24 >= catalog.data.total || catalog.isFetching} onClick={() => setFilters(f => ({ ...f, page: f.page+1 }))}>Next<ChevronRight /></Button></div>
+        <p className="mt-5 text-sm text-muted-foreground"><Link to="/assistant" className="text-primary hover:underline">AI Opportunity Assistant</Link> · <Link to="/recommended" className="text-primary hover:underline">Your saved chat recommendations</Link></p>
       </section>
     </WorkspaceShell>
   );

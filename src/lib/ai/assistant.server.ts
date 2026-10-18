@@ -6,6 +6,7 @@ import type { Database, Json } from "@/integrations/supabase/types";
 import { ASSISTANT_POLICY, isSummaryRequest, permittedProfile } from "@/lib/assistant-policy";
 import { generalLiveSearchUnavailable } from "@/lib/college-research-policy";
 import { isNormalRecommendation, verificationState } from "@/lib/opportunity-source";
+import { chatRecommendationSchema, normalizeChatRecommendation } from "@/lib/chat-recommendation";
 
 export async function handleAssistant(request: Request) {
   const token = request.headers.get("Authorization");
@@ -72,13 +73,19 @@ export async function handleAssistant(request: Request) {
       messages: await convertToModelMessages(messages), abortSignal: request.signal, maxRetries: 0,
       maxOutputTokens: 2048, stopWhen: stepCountIs(5),
       tools: {
+        recommendOpportunity: tool({ description: "Present one original opportunity recommendation as a chat card with an Add to Recommend option. This only records the recommendation in the chat; it does not save it or call another AI. Use an existing catalogId and accurate catalog facts; use null for unknown dates/links. Preserve your personalized reason.", inputSchema: chatRecommendationSchema, execute: async (input) => {
+          if (!input.catalogId) throw new Error("Use a real opportunity from searchCatalog before recommending it.");
+          const { data: row, error } = await db.from("opportunities").select("*").eq("id", input.catalogId).single();
+          if (error || !row || !isNormalRecommendation(row)) throw new Error("This catalog opportunity is unavailable for recommendation.");
+          return normalizeChatRecommendation({ ...input, name: row.title, description: row.description, deadline: row.deadline, officialUrl: row.official_url });
+        } }),
         searchCatalog: tool({ description: "Read shared opportunity records. Demo records are not actual opportunities. Returns eligibility, deadline and official link if recorded.", inputSchema: z.object({ query: z.string() }), execute: async ({ query }) => {
           const { data: rows, error } = await db.from("opportunities").select("*");
           if (error) throw new Error(error.message);
           const words = query.toLowerCase().split(/\s+/).filter(Boolean);
           return (rows ?? []).filter(r => isNormalRecommendation(r) && words.some(w => `${r.title} ${r.description} ${r.category} ${r.eligibility}`.toLowerCase().includes(w))).slice(0, 8).map(r => ({ ...r, verification: verificationState(r.last_verified_at, r.deadline) }));
         } }),
-        liveSearch: tool({ description: "Live opportunity search is disabled; returns a no-network explanation. Never invokes premium College Research.", inputSchema: z.object({ query: z.string().min(1).max(500) }), execute: async () => generalLiveSearchUnavailable() }),
+        liveSearch: tool({ description: "Live opportunity search is disabled; returns a no-network explanation.", inputSchema: z.object({ query: z.string().min(1).max(500) }), execute: async () => generalLiveSearchUnavailable() }),
         saveCatalogOpportunity: tool({ description: "Save an existing shared catalog opportunity to this student's dashboard. Requires student approval. Never inserts or edits shared opportunity records.", inputSchema: z.object({ opportunityId: z.string() }), needsApproval: true, execute: async ({ opportunityId }) => {
           const id = z.string().uuid().parse(opportunityId);
           const { data: row, error: rowError } = await db.from("opportunities").select("id, title, is_demo, deadline").eq("id", id).single();

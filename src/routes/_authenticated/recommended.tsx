@@ -1,56 +1,36 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Trash2 } from "lucide-react";
 import { WorkspaceShell } from "@/components/site/WorkspaceShell";
-import { OpportunityCard, SaveButton } from "@/components/site/OpportunityCard";
+import { Button } from "@/components/ui/button";
+import { ChatRecommendation } from "@/components/site/ChatRecommendation";
+import { chatRecommendationSchema } from "@/lib/chat-recommendation";
+import { savedChatRecommendations, removeChatRecommendation } from "@/lib/chat-recommendations.functions";
 import { useUser } from "@/lib/auth";
-import { recommend, useAllOpportunities, useProfile } from "@/lib/profile";
-import { useSavedIds, useToggleSave } from "@/lib/saved";
-import { useState } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
 
 export const Route = createFileRoute("/_authenticated/recommended")({
-  head: () => ({
-    meta: [
-      { title: "Recommended for Me — Global Opportunity Finder" },
-      { name: "description", content: "Opportunities matched to your profile and interests." },
-      { property: "og:title", content: "Recommended for Me — Global Opportunity Finder" },
-      { property: "og:description", content: "Personal opportunity suggestions." },
-          { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: Recommended,
+  head: () => ({ meta: [
+    { title: "Recommended for Me — Global Opportunity Finder" },
+    { name: "description", content: "Your saved original Gemini chat opportunity recommendations." },
+    { property: "og:title", content: "Recommended for Me — Global Opportunity Finder" },
+    { property: "og:description", content: "Revisit the opportunities you saved from your private Gemini chat." },
+    { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" },
+  ] }), component: Recommended,
 });
-
 function Recommended() {
   const { user } = useUser();
-  const profile = useProfile(user?.id);
-  const all = useAllOpportunities();
-  const saved = useSavedIds(user?.id);
-  const toggle = useToggleSave(user?.id);
-  const [showDemo, setShowDemo] = useState(false);
-  const stored = recommend(profile.data, all.data ?? [], showDemo);
-  const recs = showDemo ? stored.filter(r => r.o.is_demo) : stored;
-  return (
-    <WorkspaceShell title="Recommended for Me" subtitle="Stored opportunities matched to your profile. Live opportunity search is off. Always confirm eligibility and dates with the organizer.">
-      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-        <label className="flex items-center gap-2 text-sm text-muted-foreground"><Checkbox checked={showDemo} onCheckedChange={v => setShowDemo(v === true)} />Demo records (testing only)</label>
-      </div>
-      {(profile.error || all.error) && <p role="alert" className="mb-4 text-sm text-destructive">{profile.error?.message ?? all.error?.message}</p>}
-      {all.isLoading || profile.isLoading ? <p role="status" className="text-muted-foreground">Loading saved catalog matches…</p> : recs.length === 0 ? (
-        <p className="text-muted-foreground">No matches yet. <Link to="/profile" className="text-primary hover:underline">Update your profile</Link> or <Link to="/opportunities" className="text-primary hover:underline">browse everything</Link>.</p>
-      ) : (
-        <div className="grid gap-5 md:grid-cols-2">
-          {recs.map(({ o, reasons }) => {
-            const isSaved = saved.data?.has(o.id) ?? false;
-            return (
-              <div key={o.id}>
-                <OpportunityCard o={o} action={<SaveButton saved={isSaved} disabled={toggle.isPending} onClick={() => toggle.mutate({ id: o.id, saved: isSaved })} />} />
-                <p className="mt-2 px-2 text-xs text-muted-foreground">Why: {reasons.join(" · ")}</p>
-              </div>
-            );
-          })}
-        </div>
-      )}
-    </WorkspaceShell>
-  );
+  const listFn = useServerFn(savedChatRecommendations);
+  const removeFn = useServerFn(removeChatRecommendation);
+  const qc = useQueryClient();
+  const saved = useQuery({ queryKey: ["chat-recommendations", user?.id], queryFn: () => listFn(), enabled: !!user, retry: false });
+  const remove = useMutation({ mutationFn: (id: string) => removeFn({ data: { id } }), onSuccess: () => qc.invalidateQueries({ queryKey: ["chat-recommendations"] }) });
+  return <WorkspaceShell title="Recommended for Me" subtitle="The original opportunities you chose to save from your Gemini conversations.">
+    {(saved.error || remove.error) && <p role="alert" className="mb-4 text-sm text-destructive">{saved.error?.message || remove.error?.message}</p>}
+    {saved.isPending ? <p role="status" className="text-muted-foreground">Loading your recommendations…</p> : !saved.data?.length ? <p className="text-muted-foreground">No saved chat recommendations yet. <Link to="/assistant" className="text-primary hover:underline">Open AI Chat</Link></p> : <div className="grid gap-5 md:grid-cols-2">{saved.data.map(row => {
+      const parsed = chatRecommendationSchema.safeParse(row.recommendation);
+      if (!parsed.success) return null;
+      return <ChatRecommendation key={row.id} recommendation={parsed.data} action={<Button variant="outline" size="sm" disabled={remove.isPending} onClick={() => remove.mutate(row.id)}><Trash2 />Remove</Button>} />;
+    })}</div>}
+  </WorkspaceShell>;
 }

@@ -27,7 +27,7 @@ const quickLinks = [
   { to: "/assistant", label: "Opportunity Assistant", desc: "Your opportunities and action plans", icon: MessageCircle, classes: "bg-primary-soft text-accent-foreground" },
   { to: "/communities", label: "Communities", desc: "Browse and join student groups", icon: Users, classes: "bg-primary-soft text-accent-foreground" },
   { to: "/meet-students", label: "Meet Students", desc: "Find teammates — in development", icon: Handshake, classes: "bg-teal-soft text-teal" },
-  { to: "/college-match", label: "College Research", desc: "Saved research · explicit premium search", icon: GraduationCap, classes: "bg-coral-soft text-coral" },
+  { to: "/college-match", label: "College Search", desc: "Explore the saved university database", icon: GraduationCap, classes: "bg-coral-soft text-coral" },
 ] as const;
 
 function Dashboard() {
