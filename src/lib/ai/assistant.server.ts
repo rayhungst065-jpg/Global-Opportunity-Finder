@@ -1,18 +1,17 @@
 import { createClient } from "@supabase/supabase-js";
-import { createOpenAI } from "@ai-sdk/openai";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { convertToModelMessages, streamText, stepCountIs, tool, generateId, type UIMessage } from "ai";
 import { z } from "zod";
 import type { Database, Json } from "@/integrations/supabase/types";
 import { ASSISTANT_POLICY, isSummaryRequest, permittedProfile } from "@/lib/assistant-policy";
 import { discoverOnlineOpportunities } from "@/lib/online-opportunities.server";
-import { createLovableAiGatewayRunIdFetch, getLovableAiGatewayRunId, withLovableAiGatewayRunIdHeader } from "./run-id.ts";
 
 export async function handleAssistant(request: Request) {
   const token = request.headers.get("Authorization");
   if (!token?.startsWith("Bearer ")) return new Response("Please sign in to use the assistant.", { status: 401 });
   const key = process.env["SUPABASE_PUBLISHABLE_KEY"];
   const url = process.env["SUPABASE_URL"];
-  const aiKey = process.env["LOVABLE_API_KEY"];
+  const aiKey = process.env["GEMINI_API_KEY"];
   if (!key || !url || !aiKey) return new Response("The assistant's AI connection is not configured.", { status: 503 });
   const db = createClient<Database>(url, key, { auth: { persistSession: false, autoRefreshToken: false }, global: { headers: { Authorization: token } } });
   const { data: auth, error: authError } = await db.auth.getUser(token.slice(7));
@@ -24,7 +23,8 @@ export async function handleAssistant(request: Request) {
     if (chatError || !chat) return new Response("This conversation is unavailable.", { status: 403 });
     const { data: block, error: blockError } = await db.from("assistant_access_state").select("*").eq("user_id", userId).maybeSingle();
     if (blockError) throw new Error(blockError.message);
-    if (block) return new Response(block.blocked_message, { status: block.status });
+    // Old Lovable access denials must not block the newly selected Gemini provider.
+    if (block?.blocked_message.startsWith("Gemini:")) return new Response(block.blocked_message, { status: block.status });
     const latest = body.messages.at(-1);
     const latestUser = [...body.messages].reverse().find(m => m.role === "user");
     if (!latest || !latestUser) return new Response("Enter a message.", { status: 400 });
@@ -56,13 +56,10 @@ export async function handleAssistant(request: Request) {
     }
     const { data: profile, error: profileError } = await db.from("profiles").select("*").eq("id", userId).maybeSingle();
     if (profileError) throw new Error(profileError.message);
-    const run = createLovableAiGatewayRunIdFetch(getLovableAiGatewayRunId(request));
-    const provider = createOpenAI({ baseURL: "https://ai.gateway.lovable.dev/v1", apiKey: aiKey, headers: { "Lovable-API-Key": aiKey, "X-Lovable-AIG-SDK": "vercel-ai-sdk" }, fetch: async (input, init) => {
-      const response = await run.fetch(input, init);
-      if ([402, 403].includes(response.status)) {
-        const raw = await response.clone().text();
-        let safe = "AI access is paused. The project owner must review AI billing or access settings.";
-        try { const parsed = JSON.parse(raw); safe = parsed.message ?? parsed.error?.message ?? safe; } catch { /* keep safe fallback */ }
+    const provider = createGoogleGenerativeAI({ apiKey: aiKey, fetch: async (input, init) => {
+      const response = await fetch(input, init);
+      if ([401, 402, 403].includes(response.status)) {
+        const safe = `Gemini: access denied (HTTP ${response.status}). Check the API key and Google AI Studio API permissions; no paid billing is required by this app.`;
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { error } = await supabaseAdmin.from("assistant_access_state").upsert({ user_id: userId, status: response.status, blocked_message: safe });
         if (error) console.error("Unable to save assistant pause state", error.message);
@@ -70,9 +67,8 @@ export async function handleAssistant(request: Request) {
       return response;
     } });
     const result = streamText({
-      model: provider.responses("openai/gpt-6-astra"), instructions: `${ASSISTANT_POLICY}\nToday's UTC date: ${new Date().toISOString().slice(0, 10)}\nPermitted profile: ${JSON.stringify(permittedProfile(profile))}`,
+      model: provider("gemini-2.5-flash"), instructions: `${ASSISTANT_POLICY}\nToday's UTC date: ${new Date().toISOString().slice(0, 10)}\nPermitted profile: ${JSON.stringify(permittedProfile(profile))}`,
       messages: await convertToModelMessages(messages), abortSignal: request.signal, maxRetries: 0,
-      providerOptions: { openai: { forceReasoning: true, reasoningEffort: "low", reasoningSummary: "auto", store: false, include: ["reasoning.encrypted_content"] } },
       stopWhen: stepCountIs(50),
       tools: {
         searchCatalog: tool({ description: "Read shared opportunity records. Demo records are not actual opportunities. Returns eligibility, deadline and official link if recorded.", inputSchema: z.object({ query: z.string() }), execute: async ({ query }) => {
@@ -92,7 +88,7 @@ export async function handleAssistant(request: Request) {
         } }),
       },
     });
-    return withLovableAiGatewayRunIdHeader(result.toUIMessageStreamResponse({ originalMessages: messages, generateMessageId: generateId, sendReasoning: true, onError: error => error instanceof Error ? error.message : "The AI request failed. Please try again when access is available.", onFinish: async ({ responseMessage, isAborted }) => {
+    return result.toUIMessageStreamResponse({ originalMessages: messages, generateMessageId: generateId, sendReasoning: true, onError: error => error instanceof Error ? error.message.replaceAll(aiKey, "[redacted]") : "The AI request failed. Please try again when access is available.", onFinish: async ({ responseMessage, isAborted }) => {
       if (isAborted) return;
       const { data: existingResponse } = await db.from("assistant_messages").select("id").eq("conversation_id", chat.id).eq("user_id", userId).eq("message_id", responseMessage.id).maybeSingle();
       const { error } = existingResponse
@@ -102,9 +98,9 @@ export async function handleAssistant(request: Request) {
       const summary = responseMessage.parts.filter(p => p.type === "text").map(p => p.text).join("\n");
       const { error: updateError } = await db.from("assistant_conversations").update({ updated_at: new Date().toISOString(), ...(messages.length < 2 ? { title: text.slice(0, 70) } : {}), ...(isSummaryRequest(text) && summary ? { summary } : {}) }).eq("id", chat.id).eq("user_id", userId);
       if (updateError) throw new Error(updateError.message);
-    } }), run);
+    } });
   } catch (error) {
     if (request.signal.aborted) return new Response("Stopped", { status: 499 });
-    return new Response(error instanceof Error ? error.message : "The assistant could not complete this request.", { status: error instanceof z.ZodError ? 400 : 500 });
+    return new Response(error instanceof Error ? error.message.replaceAll(aiKey, "[redacted]") : "The assistant could not complete this request.", { status: error instanceof z.ZodError ? 400 : 500 });
   }
 }
