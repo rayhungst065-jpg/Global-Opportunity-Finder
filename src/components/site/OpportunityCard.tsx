@@ -3,7 +3,7 @@ import { categories } from "@/lib/categories";
 import { statusLabel, type Opportunity } from "@/lib/saved";
 import { Button } from "@/components/ui/button";
 import { ExternalLink } from "lucide-react";
-import { safeOfficialUrl } from "@/lib/opportunity-source";
+import { safeOfficialUrl, verificationState } from "@/lib/opportunity-source";
 
 export function categoryName(key: string) {
   return categories.find((c) => c.key === key)?.name ?? key;
@@ -42,6 +42,7 @@ export function OpportunityCard({ o, action }: { o: Opportunity; action?: React.
       <p className="mt-1 text-sm text-muted-foreground">{o.organizer} · {o.location}</p>
       <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">{o.description}</p>
       {!o.is_demo && <p className="mt-3 text-sm"><span className="font-medium">Eligibility: </span>{o.eligibility}</p>}
+      {!o.is_demo && <p className="mt-2 text-xs text-muted-foreground">{verificationState(o.last_verified_at, o.deadline)}</p>}
       {safeOfficialUrl(o.official_url) && <Button asChild variant="link" className="mt-3 h-auto justify-start whitespace-normal p-0 text-left"><a href={safeOfficialUrl(o.official_url) ?? undefined} target="_blank" rel="noopener noreferrer"><ExternalLink className="h-4 w-4 shrink-0" />View Official Opportunity</a></Button>}
       <div className="mt-auto flex items-center justify-between pt-5 text-sm">
         <span className="text-muted-foreground">{formatDeadline(o.deadline)}</span>

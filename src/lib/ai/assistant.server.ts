@@ -1,10 +1,11 @@
 import { createClient } from "@supabase/supabase-js";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { geminiProvider, GEMINI_MODEL } from "@/lib/ai/gemini.server";
 import { convertToModelMessages, streamText, stepCountIs, tool, generateId, type UIMessage } from "ai";
 import { z } from "zod";
 import type { Database, Json } from "@/integrations/supabase/types";
 import { ASSISTANT_POLICY, isSummaryRequest, permittedProfile } from "@/lib/assistant-policy";
-import { discoverOnlineOpportunities } from "@/lib/online-opportunities.server";
+import { generalLiveSearchUnavailable } from "@/lib/college-research-policy";
+import { isNormalRecommendation, verificationState } from "@/lib/opportunity-source";
 
 export async function handleAssistant(request: Request) {
   const token = request.headers.get("Authorization");
@@ -56,7 +57,7 @@ export async function handleAssistant(request: Request) {
     }
     const { data: profile, error: profileError } = await db.from("profiles").select("*").eq("id", userId).maybeSingle();
     if (profileError) throw new Error(profileError.message);
-    const provider = createGoogleGenerativeAI({ apiKey: aiKey, fetch: async (input, init) => {
+    const provider = geminiProvider(aiKey, async (input, init) => {
       const response = await fetch(input, init);
       if ([401, 402, 403].includes(response.status)) {
         const safe = `Gemini: access denied (HTTP ${response.status}). Check the API key and Google AI Studio API permissions; no paid billing is required by this app.`;
@@ -65,19 +66,19 @@ export async function handleAssistant(request: Request) {
         if (error) console.error("Unable to save assistant pause state", error.message);
       }
       return response;
-    } });
+    });
     const result = streamText({
-      model: provider("gemini-3.8-flash"), instructions: `${ASSISTANT_POLICY}\nToday's UTC date: ${new Date().toISOString().slice(0, 10)}\nPermitted profile: ${JSON.stringify(permittedProfile(profile))}`,
+      model: provider(GEMINI_MODEL), instructions: `${ASSISTANT_POLICY}\nToday's UTC date: ${new Date().toISOString().slice(0, 10)}\nPermitted profile: ${JSON.stringify(permittedProfile(profile))}`,
       messages: await convertToModelMessages(messages), abortSignal: request.signal, maxRetries: 0,
-      stopWhen: stepCountIs(50),
+      maxOutputTokens: 2048, stopWhen: stepCountIs(5),
       tools: {
         searchCatalog: tool({ description: "Read shared opportunity records. Demo records are not actual opportunities. Returns eligibility, deadline and official link if recorded.", inputSchema: z.object({ query: z.string() }), execute: async ({ query }) => {
           const { data: rows, error } = await db.from("opportunities").select("*");
           if (error) throw new Error(error.message);
           const words = query.toLowerCase().split(/\s+/).filter(Boolean);
-          return (rows ?? []).filter(r => words.some(w => `${r.title} ${r.description} ${r.category} ${r.eligibility}`.toLowerCase().includes(w))).map(r => ({ ...r, verification: r.is_demo ? "DEMO — not real" : "Catalog record; details require official confirmation" }));
+          return (rows ?? []).filter(r => isNormalRecommendation(r) && words.some(w => `${r.title} ${r.description} ${r.category} ${r.eligibility}`.toLowerCase().includes(w))).slice(0, 8).map(r => ({ ...r, verification: verificationState(r.last_verified_at, r.deadline) }));
         } }),
-        liveSearch: tool({ description: "Find current student opportunities from official online sources, extract accessible source pages, and return catalog IDs, exact official URLs, organizer, eligibility, dates and fit. No rows means no reliable results. Use for every current online opportunity request.", inputSchema: z.object({ query: z.string().min(1).max(500) }), execute: async ({ query }) => ({ available: true, results: await discoverOnlineOpportunities(db, userId, query, request.signal) }) }),
+        liveSearch: tool({ description: "Live opportunity search is disabled; returns a no-network explanation. Never invokes premium College Research.", inputSchema: z.object({ query: z.string().min(1).max(500) }), execute: async () => generalLiveSearchUnavailable() }),
         saveCatalogOpportunity: tool({ description: "Save an existing shared catalog opportunity to this student's dashboard. Requires student approval. Never inserts or edits shared opportunity records.", inputSchema: z.object({ opportunityId: z.string() }), needsApproval: true, execute: async ({ opportunityId }) => {
           const id = z.string().uuid().parse(opportunityId);
           const { data: row, error: rowError } = await db.from("opportunities").select("id, title, is_demo, deadline").eq("id", id).single();

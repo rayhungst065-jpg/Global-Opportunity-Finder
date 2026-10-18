@@ -5,6 +5,7 @@ import { categoryName, formatDeadline, SaveButton } from "@/components/site/Oppo
 import { getOpportunity } from "@/lib/opportunities.functions";
 import { useUser } from "@/lib/auth";
 import { statusLabel, useSavedIds, useToggleSave } from "@/lib/saved";
+import { verificationState } from "@/lib/opportunity-source";
 
 export const Route = createFileRoute("/opportunities/$id")({
   loader: async ({ params }) => {
@@ -46,6 +47,7 @@ function Detail() {
         <p className="mt-6 text-sm font-medium text-primary">{categoryName(o.category)} · {statusLabel[o.application_status]}</p>
         <h1 className="mt-2 text-4xl font-semibold">{o.title}</h1>
         <p className="mt-2 text-muted-foreground">{o.organizer} · {o.location}</p>
+        {!o.is_demo && <p className="mt-3 text-sm text-muted-foreground">{verificationState(o.last_verified_at, o.deadline)}. Stored dates are not automatically refreshed.</p>}
         <dl className="mt-8 grid gap-6 text-sm sm:grid-cols-2">
           <div><dt className="font-medium">Deadline</dt><dd className="text-muted-foreground">{formatDeadline(o.deadline)}</dd></div>
           <div><dt className="font-medium">Eligibility</dt><dd className="text-muted-foreground">{o.eligibility || "Not listed"}</dd></div>

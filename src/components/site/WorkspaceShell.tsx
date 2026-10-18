@@ -75,7 +75,7 @@ const items = [
   { to: "/deadlines", label: "Deadlines", icon: CalendarClock },
   { to: "/communities", label: "Communities", icon: Users },
   { to: "/meet-students", label: "Meet Students", icon: Handshake },
-  { to: "/college-match", label: "College Match", icon: GraduationCap },
+  { to: "/college-match", label: "College Research", icon: GraduationCap },
   { to: "/settings", label: "Settings", icon: Settings },
 ] as const;
 

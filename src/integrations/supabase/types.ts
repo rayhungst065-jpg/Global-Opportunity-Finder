@@ -218,6 +218,53 @@ export type Database = {
           },
         ]
       }
+      college_research: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          criteria: Json
+          criteria_key: string
+          error_message: string | null
+          id: string
+          results: Json
+          sources: Json
+          status: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          criteria?: Json
+          criteria_key: string
+          error_message?: string | null
+          id?: string
+          results?: Json
+          sources?: Json
+          status?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          criteria?: Json
+          criteria_key?: string
+          error_message?: string | null
+          id?: string
+          results?: Json
+          sources?: Json
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "college_research_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       communities: {
         Row: {
           activities: string | null
@@ -463,6 +510,7 @@ export type Database = {
           eligibility: string
           id: string
           is_demo: boolean
+          last_verified_at: string | null
           location: string
           official_url: string | null
           organizer: string
@@ -478,6 +526,7 @@ export type Database = {
           eligibility?: string
           id?: string
           is_demo?: boolean
+          last_verified_at?: string | null
           location?: string
           official_url?: string | null
           organizer: string
@@ -493,6 +542,7 @@ export type Database = {
           eligibility?: string
           id?: string
           is_demo?: boolean
+          last_verified_at?: string | null
           location?: string
           official_url?: string | null
           organizer?: string
@@ -640,6 +690,10 @@ export type Database = {
       }
       is_group_creator: { Args: { _group_id: string }; Returns: boolean }
       is_group_member: { Args: { _group_id: string }; Returns: boolean }
+      reserve_college_research: {
+        Args: { p_criteria: Json; p_key: string }
+        Returns: Json
+      }
     }
     Enums: {
       app_role: "admin" | "user"
