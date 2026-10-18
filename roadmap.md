@@ -1,6 +1,7 @@
 # Roadmap — Brand & Communities Update
 
 ## Focused fixes
+- [ ] Verify existing Google project billing and no-charge Gemini grounding eligibility without inference requests — awaiting accessible billing/allowance evidence; keep chat, no Parallel requests or database changes
 - [ ] Cost-standardization proposal: keep Gemini, disable Parallel without deleting configuration, verify free grounding and college data — implementation awaiting user approval
 - [x] Assistant switched to direct Gemini gemini-3.8-flash using existing secret; real signed-in reply and persistence verified without Parallel searches (2.5 Flash returned retirement 404)
 - [x] Limited repair to Recommended for Me and Browse Opportunities; stored matches survive reload, Browse search/category filters verified, demos opt-in, no paid searches run
