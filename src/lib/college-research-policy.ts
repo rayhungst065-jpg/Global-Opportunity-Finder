@@ -35,4 +35,4 @@ export function validateCollegeEvidence(rows: CollegeResult[], sources: CollegeS
   }).slice(0, COLLEGE_RESULT_LIMIT);
 }
 
-export const generalLiveSearchUnavailable = () => ({ available: false as const, results: [], message: "Live opportunity search is disabled. Use saved catalog records and confirm their official sources. Premium search is available only through the explicit College Research action." });
+export const generalLiveSearchUnavailable = () => ({ available: false as const, results: [], message: "Live opportunity search is disabled. Use saved catalog records and confirm their official sources. College Search uses the imported spreadsheet database only." });
