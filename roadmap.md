@@ -1,6 +1,7 @@
 # Roadmap — Brand & Communities Update
 
 ## Focused fixes
+- [ ] Switch only assistant provider to direct Gemini using existing secret; test one real response without Parallel searches
 - [x] Limited repair to Recommended for Me and Browse Opportunities; stored matches survive reload, Browse search/category filters verified, demos opt-in, no paid searches run
 - [x] Real online recommendation retrieval through connected Parallel; extracted official links and real catalog save verified
 - [x] Original symbol plus readable brand name; Capstone footer sentence removed
