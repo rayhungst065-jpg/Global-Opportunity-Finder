@@ -1,6 +1,9 @@
 # Roadmap — Brand & Communities Update
 
 ## Focused fixes
+- [x] Checked official Gemini pricing without AI/Parallel requests: gemini-3.8-flash Search grounding is unavailable on Free Tier; no grounding test or billing change
+- [ ] Existing Google project billing status — cannot inspect without accessible Google billing metadata; previous successful chat does not prove Free Tier
+- [ ] Disable existing Parallel live-search paths without deleting configuration — pending approval; Gemini grounding remains off
 - [ ] Cost-standardization proposal: keep Gemini, disable Parallel without deleting configuration, verify free grounding and college data — implementation awaiting user approval
 - [x] Assistant switched to direct Gemini gemini-3.8-flash using existing secret; real signed-in reply and persistence verified without Parallel searches (2.5 Flash returned retirement 404)
 - [x] Limited repair to Recommended for Me and Browse Opportunities; stored matches survive reload, Browse search/category filters verified, demos opt-in, no paid searches run

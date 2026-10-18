@@ -7,12 +7,19 @@
 - College Match reads and saves student preferences only. The live database contains `college_preferences`, but no college/institution dataset table; no college API or institution matching implementation was found. Its “No verified college data connected yet” message is accurate.
 - The Privacy Policy still incorrectly describes OpenAI/Lovable AI and old retention guarantees. Those specific disclosures need correcting, not a legal-page rewrite.
 
-## Gemini live research: supported tool, unverified free access
+## Gemini live research: supported tool, unavailable on this model's free API tier
 Google documents Google Search grounding for **`gemini-3.8-flash`**. The current assistant does **not** enable it: normal Gemini generation is not live research.
 
-I could not verify a free-tier grounding allowance, its exact price/quota, or this Google project's eligibility without billing from the accessible official documentation. Model support alone is not proof of free access. No live grounding request was made, and no paid service or billing change was enabled.
+Google's current pricing table explicitly lists Google Search grounding for `gemini-3.8-flash` as **Not available** on the Free Tier. The Paid Tier lists 5,000 free search requests per month shared across Gemini 3 and newer models, then $14 per 1,000 requests. This paid-tier allowance is not no-billing access: model tokens can still be charged, and one prompt can trigger multiple search queries. No live grounding request was made, and no paid service or billing change was enabled.
 
-**Recommendation:** do not enable Gemini grounding in this change. There is no verified zero-cost live-search replacement yet. If you later confirm this project's no-billing grounding access and allowance, a separately approved, single test can establish actual access before enabling it for students.
+The existing Google project's actual billing setting remains **unverified**: no accessible Google Cloud connection is available to read it, and the private Gemini API key/previous successful chat does not establish billing status. There is no reason to probe grounding to learn this; the published Free Tier limitation already rules out enabling it under the requested no-billing condition.
+
+**Recommendation:** keep the working Gemini chat unchanged and do not enable or test Gemini grounding. No limited test is proposed because no-charge access has not been confirmed. A Google AI Studio playground trial is not proof that this app's API calls are free.
+
+## Latest request: immediate scope is investigation only
+No application code, database or billing setting has been changed. No Parallel or Gemini inference/grounding request was made during this investigation. The proposed implementation below is still unapproved and must not start automatically. In particular, College Match assistance and request-limit changes are deferred; they are not part of this investigation.
+
+**Important current-state distinction:** Gemini grounding is not enabled, but the existing Parallel-backed `liveSearch` and recommendations button remain callable in the unchanged app. To make *all* live search disabled while retaining chat and stored catalog features, approve only the shared no-network Parallel guard, the honest unavailable tool response and disabling the manual button. This is a small follow-up, not a rebuild or database change.
 
 Official references:
 - [Model and supported capabilities](https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash)
