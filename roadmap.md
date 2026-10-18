@@ -3,9 +3,11 @@
 ## Focused fixes
 - [x] Checked official Gemini pricing without AI/Parallel requests: gemini-3.8-flash Search grounding is unavailable on Free Tier; no grounding test or billing change
 - [ ] Existing Google project billing status — cannot inspect without accessible Google billing metadata; previous successful chat does not prove Free Tier
-- [ ] Gemini-first implementation: remove general opportunity Parallel access; preserve catalog recommendations/saves and deadlines
-- [ ] Isolate premium Parallel to explicit College Research; reuse owner-saved results, enforce concurrency/daily limits, interpret official sources with Gemini
-- [ ] Verify focused isolation/deadline/cache tests and signed-in pages without development premium-search requests
+- [x] Gemini-first implementation: removed general opportunity Parallel access; preserved stored recommendations/saves and deadlines
+- [x] Isolated premium Parallel to explicit College Research; added owner-saved results and atomic concurrency/daily reservations; Gemini interprets source excerpts
+- [x] 23 focused tests passed for no-network discovery, bounded mocked research, cache reuse/denials and deadline evidence; signed-in page reload/preference save and mobile layout checked without premium calls; preview build OK
+- [ ] Real College Research provider response and saved-result round trip — requires an explicitly approved premium test; no development Parallel/Gemini requests made
+- [ ] New assistant recommendation-save round trip — existing approval/save path retained, not retested with paid Gemini inference
 - [x] Assistant switched to direct Gemini gemini-3.8-flash using existing secret; real signed-in reply and persistence verified without Parallel searches (2.5 Flash returned retirement 404)
 - [x] Limited repair to Recommended for Me and Browse Opportunities; stored matches survive reload, Browse search/category filters verified, demos opt-in, no paid searches run
 - [x] Real online recommendation retrieval through connected Parallel; extracted official links and real catalog save verified
