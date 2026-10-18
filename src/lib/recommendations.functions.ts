@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { discoverOnlineOpportunities } from "@/lib/online-opportunities.server";
+import { generalLiveSearchUnavailable } from "@/lib/college-research-policy";
 
-export const onlineRecommendations = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth]).handler(async ({ context }) => discoverOnlineOpportunities(context.supabase, context.userId));
+export const onlineRecommendations = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth]).handler(async () => generalLiveSearchUnavailable());
