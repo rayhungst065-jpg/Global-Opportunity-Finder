@@ -20,6 +20,7 @@
 - Assistant history is stored in owner-scoped conversations/messages and replayed from storage through an authenticated streaming route; why: preserve private history without trusting a client-provided transcript.
 - Assistant catalog saves require AI SDK tool approval and use the user's RLS client; why: restrict writes to explicit student-owned saves, never shared opportunity mutations.
 - Assistant provider access blocks persist in server-owned access state; why: prevent reloads from retrying terminal provider denials.
+- Assistant streams through the Google AI SDK in the existing authenticated handler, with provider-tagged access denials; why: preserve chat/tool persistence while preventing old-provider denials from blocking a provider change.
 - Online discovery is shared by recommendations and the assistant through a server-only Parallel search/extract/research helper; why: expose the same exact accessible sources and catalog IDs without duplicating search logic or exposing keys.
 - Recommended for Me loads profile-matched catalog records first and invokes online discovery only on explicit user action; why: page visits and reloads must not automatically start paid searches.
 - Password recovery uses Cloud Auth verification and updateUser on a public reset page; why: preserve provider token expiry and avoid a separate password system.
