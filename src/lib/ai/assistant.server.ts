@@ -67,7 +67,7 @@ export async function handleAssistant(request: Request) {
       return response;
     } });
     const result = streamText({
-      model: provider("gemini-2.5-flash"), instructions: `${ASSISTANT_POLICY}\nToday's UTC date: ${new Date().toISOString().slice(0, 10)}\nPermitted profile: ${JSON.stringify(permittedProfile(profile))}`,
+      model: provider("gemini-3.8-flash"), instructions: `${ASSISTANT_POLICY}\nToday's UTC date: ${new Date().toISOString().slice(0, 10)}\nPermitted profile: ${JSON.stringify(permittedProfile(profile))}`,
       messages: await convertToModelMessages(messages), abortSignal: request.signal, maxRetries: 0,
       stopWhen: stepCountIs(50),
       tools: {
