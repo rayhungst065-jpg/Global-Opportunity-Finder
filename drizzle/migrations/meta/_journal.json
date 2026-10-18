@@ -85,6 +85,13 @@
       "when": 1792303021224,
       "tag": "0011_college_research_cache_and_source_dates",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1792361917110,
+      "tag": "0012_college_catalog_and_chat_recommendations",
+      "breakpoints": true
     }
   ]
 }
