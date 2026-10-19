@@ -106,6 +106,13 @@
       "when": 1792378128311,
       "tag": "0014_add_opportunity_deadline_estimate",
       "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1792383307485,
+      "tag": "0015_protect_student_profile_visibility",
+      "breakpoints": true
     }
   ]
 }

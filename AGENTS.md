@@ -15,6 +15,8 @@
 - Shared opportunity edits are admin-only via `public.has_role`; the assistant may insert NEW catalog rows only through `recommendOpportunity` (admin client, title dedupe, unverified, labeled estimates), and saves stay owner-scoped; why: auto-collect chat recommendations without duplicates while preserving verified deadlines and source integrity.
 - Demo rows carry `is_demo = true` and must be labeled in the UI; why: never present fake opportunities as real.
 - Profile pictures live in the private `avatars` bucket under `<user_id>/…`, shown via signed URLs; why: storage RLS limits access to the owner folder.
+- Peer profile reads use the authenticated `student_profile_cards` RPC; direct profile reads are owner-only and avatar access follows shared-field visibility, so hidden fields cannot leak through direct database requests.
+- Homepage feature login destinations use an explicit path allowlist; why: return students to the selected existing page without permitting external redirects.
 - Group membership RLS uses security-definer `is_group_member`/`is_group_creator` functions, never self-referencing policies; why: a policy querying its own table causes infinite recursion, and insert policies can't read rows the read policy hides.
 - Group creation generates the id in the server function and inserts without `.select()`; why: the read policy requires membership, which doesn't exist until after the owner row is inserted.
 - Assistant history is stored in owner-scoped conversations/messages and replayed from storage through an authenticated streaming route; why: preserve private history without trusting a client-provided transcript.

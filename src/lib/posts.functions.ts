@@ -33,7 +33,7 @@ export const listPosts = createServerFn({ method: "GET" })
     if (error) throw new Error(error.message);
     const ids = [...new Set((rows ?? []).map((r) => r.author_id))];
     const { data: profiles } = ids.length
-      ? await context.supabase.from("profiles").select("id, display_name, avatar_path").in("id", ids)
+      ? await context.supabase.rpc("student_profile_cards", { p_ids: ids })
       : { data: [] };
     const names = new Map((profiles ?? []).map((p) => [p.id, p]));
     return (rows ?? []).map((r) => ({ ...r, author: names.get(r.author_id) ?? null }));

@@ -2,8 +2,13 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 import { AuthCard, Field, submitBtn } from "@/components/site/AuthCard";
+import { readFeatureDestination, type FeatureDestination } from "@/lib/auth-destination";
 
 export const Route = createFileRoute("/login")({
+  validateSearch: (search: Record<string, unknown>): { next?: FeatureDestination } => {
+    const next = readFeatureDestination(search['next']);
+    return next ? { next } : {};
+  },
   head: () => ({
     meta: [
       { title: "Log In — Global Opportunity Finder" },
@@ -18,6 +23,7 @@ export const Route = createFileRoute("/login")({
 });
 
 function Login() {
+  const { next } = Route.useSearch();
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
@@ -32,7 +38,7 @@ function Login() {
     if (error) { setBusy(false); return setError(error.message); }
     const { data: prof } = await supabase.from("profiles").select("onboarded").eq("id", data.user.id).maybeSingle();
     setBusy(false);
-    navigate({ to: prof?.onboarded ? "/dashboard" : "/onboarding" });
+    navigate({ to: next ?? (prof?.onboarded ? "/dashboard" : "/onboarding") });
   }
   return (
     <AuthCard title="Welcome back" subtitle="Log in to continue." footer={<>New here? <Link to="/signup" className="text-primary hover:underline">Create an account</Link></>}>

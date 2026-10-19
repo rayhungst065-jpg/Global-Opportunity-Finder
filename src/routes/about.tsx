@@ -34,11 +34,6 @@ export const Route = createFileRoute("/about")({
       <blockquote className="rounded-2xl border-l-4 border-primary bg-primary-soft p-5 font-display text-xl text-accent-foreground">
         “To make opportunities more accessible and help students turn curiosity into meaningful action.”
       </blockquote>
-      <p className="text-base">
-        A note on honesty: listings marked as demo are samples, not real opportunities. Some features — like student
-        messaging and college matching — are still in development and are labeled as such. Always confirm details with
-        the official organizer.
-      </p>
     </SimplePage>
   ),
 });
