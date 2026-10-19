@@ -8,6 +8,7 @@ import globalStudents from "@/assets/global-students.jpg";
 import collegeCampus from "@/assets/college-campus.jpg";
 import nextChapter from "@/assets/next-chapter.jpg";
 import teammates from "@/assets/teammates.jpg";
+import { useUser } from "@/lib/auth";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -75,6 +76,7 @@ const categoryAccent: Record<string, string> = {
 };
 
 function Landing() {
+  const { user } = useUser();
   return (
     <SiteShell>
       {/* 1 — Hero */}
@@ -195,19 +197,21 @@ function Landing() {
       </section>
 
       {/* 5 — Find your team (parallax) */}
-      <section className="relative">
+      <section className="relative" aria-labelledby="student-connections-heading">
         <Parallax src={teammates} alt="Two students building a small robot together at a desk" />
         <div className="absolute inset-0 bg-ink/55" />
         <div className="relative mx-auto max-w-4xl px-5 py-40 text-center text-ink-foreground">
           <Reveal>
-            <Eyebrow dark>Find your team</Eyebrow>
-            <h2 className="mt-3 text-4xl font-semibold md:text-6xl">Great Projects Need Great Teammates.</h2>
+            <Eyebrow dark>Meet New Students</Eyebrow>
+            <h2 id="student-connections-heading" className="mt-3 text-4xl font-semibold md:text-6xl">Great Projects Need Great Teammates.</h2>
             <p className="mx-auto mt-6 max-w-2xl text-lg opacity-80">
-              Soon you'll be able to discover students in other countries who share your interests and intended major — for competitions, research, and projects. Connection requests, privacy controls, and blocking are being built first, so it stays safe.
+              Find students who share your interests and intended major, send connection requests, and build your project network. Direct messaging, blocking, and reporting are not available yet.
             </p>
             <p className="mt-6 inline-block rounded-full border border-ink-foreground/30 px-4 py-1.5 text-xs font-medium uppercase tracking-wider opacity-80">In development</p>
+            <div className="mt-9"><Link to={user ? "/meet-students" : "/login"} search={user ? {} : { next: "/meet-students" }} className={btnLight}>Meet Students</Link></div>
           </Reveal>
         </div>
+        <Link to={user ? "/meet-students" : "/login"} search={user ? {} : { next: "/meet-students" }} aria-label="Meet New Students" className="absolute inset-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring" />
       </section>
 
       {/* 6 — Global communities (parallax, live feature) */}
@@ -229,20 +233,21 @@ function Landing() {
       </section>
 
       {/* 7 — College discovery */}
-      <section className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-32 md:grid-cols-2">
+      <section className="relative mx-auto grid max-w-6xl items-center gap-12 px-5 py-32 md:grid-cols-2" aria-labelledby="college-discovery-heading">
         <Reveal className="md:order-2">
           <div className="overflow-hidden rounded-3xl shadow-soft">
             <img src={collegeCampus} alt="Students walking across a historic university campus at golden hour" loading="lazy" width={1920} height={1088} className="reveal-zoom aspect-[4/3] w-full object-cover" />
           </div>
         </Reveal>
         <Reveal delay={150}>
-          <Eyebrow tone="coral">College discovery</Eyebrow>
-          <h2 className="mt-3 text-4xl font-semibold md:text-5xl">Find Colleges That Fit Your Goals.</h2>
+          <Eyebrow tone="coral">Find Your Match</Eyebrow>
+          <h2 id="college-discovery-heading" className="mt-3 text-4xl font-semibold md:text-5xl">Find Colleges That Fit Your Goals.</h2>
           <p className="mt-6 text-lg text-muted-foreground">
-            College Match will compare colleges by your intended major, preferred regions, campus size, and budget — with honest explanations of why each might fit. No prestige rankings, no invented statistics, and never a promise of admission.
+            Explore universities by region, country, and institution type, and sort by QS ranking or enrollment. Confirm current details with each university’s official website.
           </p>
-          <p className="mt-4 inline-block rounded-full border border-border px-4 py-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground">In development</p>
+          <div className="mt-9"><Link to={user ? "/college-match" : "/login"} search={user ? {} : { next: "/college-match" }} className={btnPrimary}>Explore Colleges</Link></div>
         </Reveal>
+        <Link to={user ? "/college-match" : "/login"} search={user ? {} : { next: "/college-match" }} aria-label="Find Your Match" className="absolute inset-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring" />
       </section>
 
       {/* 8 — How it works */}
