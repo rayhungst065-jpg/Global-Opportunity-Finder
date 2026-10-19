@@ -5,7 +5,10 @@ import { AuthCard, Field, submitBtn } from "@/components/site/AuthCard";
 import { readFeatureDestination, type FeatureDestination } from "@/lib/auth-destination";
 
 export const Route = createFileRoute("/login")({
-  validateSearch: (search: Record<string, unknown>): { next?: FeatureDestination } => ({ next: readFeatureDestination(search['next']) }),
+  validateSearch: (search: Record<string, unknown>): { next?: FeatureDestination } => {
+    const next = readFeatureDestination(search['next']);
+    return next ? { next } : {};
+  },
   head: () => ({
     meta: [
       { title: "Log In — Global Opportunity Finder" },
