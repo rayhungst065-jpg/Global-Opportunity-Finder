@@ -1,8 +1,9 @@
 # Roadmap — Brand & Communities Update
 
 ## Focused fixes
-- [ ] Targeted About/homepage labels and whole-section links with post-login return
-- [ ] Two test-account discovery/request/accept/profile/privacy checks; retain development badge if messaging remains unavailable
+- [x] Targeted About/homepage labels and whole-section/CTA links with post-login return; both signed-out returns and signed-in CTAs verified
+- [x] Two isolated test accounts: two-way discovery/search, request/accept, friend cards, refresh/re-sign-in persistence, discovery opt-out, hidden raw profile fields and avatar denial verified; 6 focused tests passed
+- [ ] Peer messaging, delivery and persistence cannot be verified: no peer-message implementation/storage exists; development badge retained, no unrelated assistant tables repurposed or new tables added
 - [x] Targeted College Search cleanup: removed preferences/text input, preserved database filters/cards and existing numeric QS sort with missing ranks last, replaced notice; 6 focused tests and signed-in filters/sort/pagination/clear/cards checks passed with no AI/premium requests
 - [x] Imported all 617 university rows and 17 spreadsheet notes, omitted blank rows, retained original values; signed-in database search, Canada filter and exact-rank sorting verified
 - [x] Original Gemini chat recommendation saved privately to Recommend, survived reload, and removed without deleting chat or another Gemini generation; real signed-in flow verified
@@ -48,4 +49,4 @@
 - [ ] Two-account handshake test (connection request → accept → group invite) — needs a second account
 - [ ] Blocking/reporting users, notifications, self-serve account deletion
 - [x] Real extracted official-source records added without changing existing demo records or accounts
-- [ ] Privacy remediation — discoverable profile rows expose more fields than the UI; authenticated avatar read policy broader than owner-folder design
+- [x] Privacy remediation — direct profiles owner-only, peer cards use visibility-safe authenticated RPC, avatar sharing follows visibility; two-test-account checks passed
