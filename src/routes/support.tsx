@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SimplePage } from "@/components/site/SiteLayout";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/support")({
   head: () => ({
@@ -65,9 +66,18 @@ export const Route = createFileRoute("/support")({
 
       <h2 className="font-display text-2xl font-semibold text-foreground">Contact Support</h2>
       <p>
-        A support email and contact form are not configured yet, so there is no direct contact channel at this time.
-        This section will be updated when one is available.
+        Have a question, an idea, or feedback about Global Opportunity Finder? I'd love to hear from you!
       </p>
+      <p>
+        If you have suggestions, notice something that isn't working, or think of a feature that could make the website more useful, please fill out the feedback form below. Your thoughts help me understand what students need and how I can make the platform better.
+      </p>
+      <p>
+        Have a question? You can also email me directly at <a href="mailto:rayhung.st065@gmail.com" className="text-primary hover:underline">rayhung.st065@gmail.com</a>.
+      </p>
+      <p>Thanks for taking the time to help Global Opportunity Finder grow!</p>
+      <Button asChild className="h-auto whitespace-normal rounded-full px-6 py-3">
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfy3uApWLq08xozFrzsD8XIsAoGr5t-4s9p5UZgAGV279iV9w/viewform" target="_blank" rel="noopener noreferrer">Share Your Feedback</a>
+      </Button>
     </SimplePage>
   ),
 });

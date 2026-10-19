@@ -1,5 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { SimplePage } from "@/components/site/SiteLayout";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { SiteShell } from "@/components/site/SiteLayout";
+import { CreatorIntroduction } from "@/components/site/CreatorIntroduction";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -13,7 +15,11 @@ export const Route = createFileRoute("/about")({
     ],
   }),
   component: () => (
-    <SimplePage eyebrow="About the Platform" title="More Access. More Possibilities.">
+    <SiteShell>
+      <section className="mx-auto max-w-3xl px-5 pt-24">
+        <p className="text-sm font-medium text-primary">About the Platform</p>
+        <h1 className="mt-3 text-4xl font-semibold md:text-6xl">More Access. More Possibilities.</h1>
+        <div className="mt-8 space-y-5 text-lg leading-relaxed text-muted-foreground">
       <p>
         Global Opportunity Finder is a student-focused platform designed to make meaningful opportunities easier to
         discover. Students can explore volunteering, competitions, research programs, internships, and awards in one
@@ -31,9 +37,19 @@ export const Route = createFileRoute("/about")({
       <p>
         Our goal is to help students take the next step toward their interests, goals, and future ambitions.
       </p>
+        </div>
+      </section>
+      <CreatorIntroduction full />
+      <div className="mx-auto max-w-3xl px-5 pb-24">
       <blockquote className="rounded-2xl border-l-4 border-primary bg-primary-soft p-5 font-display text-xl text-accent-foreground">
         “To make opportunities more accessible and help students turn curiosity into meaningful action.”
       </blockquote>
-    </SimplePage>
+        <section aria-labelledby="learn-about-creator-heading" className="mt-10">
+          <h2 id="learn-about-creator-heading" className="font-display text-2xl font-semibold">Learn About the Creator</h2>
+          <p className="mt-4 text-lg leading-relaxed text-muted-foreground">Curious about why I created Global Opportunity Finder? Learn more about the story behind this project and my goal of helping students discover more opportunities.</p>
+          <Button asChild className="mt-6 h-auto whitespace-normal rounded-full px-6 py-3"><Link to="/about" hash="creator">Meet the Creator</Link></Button>
+        </section>
+      </div>
+    </SiteShell>
   ),
 });

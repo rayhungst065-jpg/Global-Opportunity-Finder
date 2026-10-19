@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import {
   LayoutDashboard, Compass, Bookmark, CalendarClock,
   Users, Handshake, GraduationCap, Settings, ChevronDown,
-  UserRound, Pencil, LogOut, Home, MessageCircle,
+  UserRound, Pencil, LogOut, Home, MessageCircle, LifeBuoy,
 } from "lucide-react";
 import { LogoSymbol } from "./SiteLayout";
 import { supabase } from "@/integrations/supabase/client";
@@ -76,6 +76,7 @@ const items = [
   { to: "/meet-students", label: "Meet Students", icon: Handshake },
   { to: "/college-match", label: "College Search", icon: GraduationCap },
   { to: "/settings", label: "Settings", icon: Settings },
+  { to: "/support", label: "Feedback & Support", icon: LifeBuoy },
 ] as const;
 
 /** Logged-in student workspace: left sidebar on desktop, scrollable tab bar on mobile. */

@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, type ReactNode } from "react";
 import { SiteShell } from "@/components/site/SiteLayout";
+import { CreatorIntroduction } from "@/components/site/CreatorIntroduction";
 import { Reveal } from "@/components/site/Reveal";
 import { categories } from "@/lib/categories";
 import hero from "@/assets/hero.jpg";
@@ -290,6 +291,7 @@ function Landing() {
           </Reveal>
         </div>
       </section>
+      <CreatorIntroduction />
     </SiteShell>
   );
 }
