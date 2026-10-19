@@ -67,7 +67,7 @@ function Dashboard() {
               {upcoming.map((s) => (
                 <li key={s.id} className="flex justify-between gap-4 py-2.5 text-sm">
                   <Link to="/opportunities/$id" params={{ id: s.opportunity!.id }} className="truncate hover:underline">{s.opportunity!.title}</Link>
-                  <span className="shrink-0 text-muted-foreground">{formatDeadline(s.opportunity!.deadline)}</span>
+                  <span className="shrink-0 text-muted-foreground">{formatDeadline(s.opportunity!.deadline, s.opportunity!.deadline_estimate)}</span>
                 </li>
               ))}
             </ul>
@@ -90,7 +90,7 @@ function Dashboard() {
       </div>
 
       <div className="mt-5">
-        <Panel title="Recommended for you" action={<Link to="/recommended" className={more}>See all</Link>}>
+        <Panel title="Explore Opportunities" action={<Link to="/opportunities" className={more}>See all</Link>}>
           {all.isLoading ? <p className="text-sm text-muted-foreground">Loading…</p> : all.isError ? <p className="text-sm text-destructive">Couldn't load opportunities.</p> : recs.length === 0 ? (
             <p className="text-sm text-muted-foreground">No matches yet. Add categories or interests to your profile, or <Link to="/opportunities" className="text-primary hover:underline">browse all opportunities</Link>.</p>
           ) : (
