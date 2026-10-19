@@ -1,6 +1,7 @@
 # Roadmap — Brand & Communities Update
 
 ## Focused fixes
+- [ ] Targeted College Search cleanup: remove preferences/text input, preserve database filters/cards, expose numeric QS sorting and replace notice; check without AI/premium calls
 - [x] Imported all 617 university rows and 17 spreadsheet notes, omitted blank rows, retained original values; signed-in database search, Canada filter and exact-rank sorting verified
 - [x] Original Gemini chat recommendation saved privately to Recommend, survived reload, and removed without deleting chat or another Gemini generation; real signed-in flow verified
 - [x] Removed all executable Parallel calls; linked connection retained for optional manual disconnection; 21 focused tests passed and preview build OK
