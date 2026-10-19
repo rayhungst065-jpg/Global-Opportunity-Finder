@@ -34,7 +34,7 @@ function Deadlines() {
           {upcoming.map((s) => (
             <li key={s.id} className="flex items-center justify-between gap-4 px-6 py-4">
               <Link to="/opportunities/$id" params={{ id: s.opportunity!.id }} className="font-medium hover:underline">{s.opportunity!.title}</Link>
-              <span className="text-right text-sm text-muted-foreground">{formatDeadline(s.opportunity!.deadline)}<br />{day(s.opportunity!.deadline!)} days left</span>
+              <span className="text-right text-sm text-muted-foreground">{formatDeadline(s.opportunity!.deadline, s.opportunity!.deadline_estimate)}{s.opportunity!.deadline && <><br />{day(s.opportunity!.deadline)} days left</>}</span>
             </li>
           ))}
         </ul>

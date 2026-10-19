@@ -584,6 +584,7 @@ export type Database = {
           category: Database["public"]["Enums"]["opportunity_category"]
           created_at: string
           deadline: string | null
+          deadline_estimate: string | null
           description: string
           eligibility: string
           id: string
@@ -600,6 +601,7 @@ export type Database = {
           category: Database["public"]["Enums"]["opportunity_category"]
           created_at?: string
           deadline?: string | null
+          deadline_estimate?: string | null
           description?: string
           eligibility?: string
           id?: string
@@ -616,6 +618,7 @@ export type Database = {
           category?: Database["public"]["Enums"]["opportunity_category"]
           created_at?: string
           deadline?: string | null
+          deadline_estimate?: string | null
           description?: string
           eligibility?: string
           id?: string

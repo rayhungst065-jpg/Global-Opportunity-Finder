@@ -31,6 +31,8 @@
 - [x] RLS fixed for groups (is_group_member / is_group_creator security-definer functions)
 - [x] Verified: logo placements, palette, auth pages, tabs, post + group creation, mobile homepage — no page errors
 
+- [x] Removed Recommended for Me page/nav; chat recommendations auto-collect into Explore Opportunities (title-deduped); one Save rule via saved_opportunities; estimated-deadline labels; dashboard section renamed Explore Opportunities
+
 ## Remaining
 - [x] Exact new homepage/auth messaging; original logos retained; desktop/mobile pages inspected
 - [x] Substantive Privacy and Terms based on actual implementation; outstanding legal/privacy requirements disclosed

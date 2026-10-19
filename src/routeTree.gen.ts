@@ -29,7 +29,6 @@ import { Route as AuthenticatedDeadlinesRouteImport } from './routes/_authentica
 import { Route as AuthenticatedMeetStudentsRouteImport } from './routes/_authenticated/meet-students'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
-import { Route as AuthenticatedRecommendedRouteImport } from './routes/_authenticated/recommended'
 import { Route as AuthenticatedSavedRouteImport } from './routes/_authenticated/saved'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as ApiAssistantRouteImport } from './routes/api/assistant'
@@ -142,12 +141,6 @@ const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedRecommendedRoute =
-  AuthenticatedRecommendedRouteImport.update({
-    id: '/recommended',
-    path: '/recommended',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 const AuthenticatedSavedRoute = AuthenticatedSavedRouteImport.update({
   id: '/saved',
   path: '/saved',
@@ -224,7 +217,6 @@ export interface FileRoutesByFullPath {
   '/meet-students': typeof AuthenticatedMeetStudentsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/profile': typeof AuthenticatedProfileRoute
-  '/recommended': typeof AuthenticatedRecommendedRoute
   '/saved': typeof AuthenticatedSavedRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/api/assistant': typeof ApiAssistantRoute
@@ -256,7 +248,6 @@ export interface FileRoutesByTo {
   '/meet-students': typeof AuthenticatedMeetStudentsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/profile': typeof AuthenticatedProfileRoute
-  '/recommended': typeof AuthenticatedRecommendedRoute
   '/saved': typeof AuthenticatedSavedRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/api/assistant': typeof ApiAssistantRoute
@@ -290,7 +281,6 @@ export interface FileRoutesById {
   '/_authenticated/meet-students': typeof AuthenticatedMeetStudentsRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
-  '/_authenticated/recommended': typeof AuthenticatedRecommendedRoute
   '/_authenticated/saved': typeof AuthenticatedSavedRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/api/assistant': typeof ApiAssistantRoute
@@ -324,7 +314,6 @@ export interface FileRouteTypes {
     | '/meet-students'
     | '/onboarding'
     | '/profile'
-    | '/recommended'
     | '/saved'
     | '/settings'
     | '/api/assistant'
@@ -356,7 +345,6 @@ export interface FileRouteTypes {
     | '/meet-students'
     | '/onboarding'
     | '/profile'
-    | '/recommended'
     | '/saved'
     | '/settings'
     | '/api/assistant'
@@ -389,7 +377,6 @@ export interface FileRouteTypes {
     | '/_authenticated/meet-students'
     | '/_authenticated/onboarding'
     | '/_authenticated/profile'
-    | '/_authenticated/recommended'
     | '/_authenticated/saved'
     | '/_authenticated/settings'
     | '/api/assistant'
@@ -563,13 +550,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/recommended': {
-      id: '/_authenticated/recommended'
-      path: '/recommended'
-      fullPath: '/recommended'
-      preLoaderRoute: typeof AuthenticatedRecommendedRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/saved': {
       id: '/_authenticated/saved'
       path: '/saved'
@@ -651,7 +631,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMeetStudentsRoute: typeof AuthenticatedMeetStudentsRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
-  AuthenticatedRecommendedRoute: typeof AuthenticatedRecommendedRoute
   AuthenticatedSavedRoute: typeof AuthenticatedSavedRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedAdminProposalsRoute: typeof AuthenticatedAdminProposalsRoute
@@ -669,7 +648,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedMeetStudentsRoute: AuthenticatedMeetStudentsRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
-  AuthenticatedRecommendedRoute: AuthenticatedRecommendedRoute,
   AuthenticatedSavedRoute: AuthenticatedSavedRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedAdminProposalsRoute: AuthenticatedAdminProposalsRoute,

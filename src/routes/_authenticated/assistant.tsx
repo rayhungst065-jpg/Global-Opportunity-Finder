@@ -24,7 +24,8 @@ import { OpportunityCard } from "@/components/site/OpportunityCard";
 import type { Opportunity } from "@/lib/saved";
 import { ChatRecommendation } from "@/components/site/ChatRecommendation";
 import { chatRecommendationSchema } from "@/lib/chat-recommendation";
-import { saveChatRecommendation, savedChatRecommendations } from "@/lib/chat-recommendations.functions";
+import { SaveButton } from "@/components/site/OpportunityCard";
+import { useSavedIds, useToggleSave } from "@/lib/saved";
 
 export const Route = createFileRoute("/_authenticated/assistant")({ head: () => ({ meta: [
   { title: "AI Opportunity Assistant — Global Opportunity Finder" },
@@ -69,16 +70,8 @@ function ChatWindow({ id, initialMessages, summary }: { id: string; initialMessa
   const input = useRef<HTMLTextAreaElement>(null);
   const [text, setText] = useState("");
   const [saveError, setSaveError] = useState("");
-  const saveRecommendation = useServerFn(saveChatRecommendation);
-  const listRecommendations = useServerFn(savedChatRecommendations);
-  const recommendationList = useQuery({ queryKey: ["chat-recommendations", user?.id], enabled: !!user, queryFn: () => listRecommendations(), retry: false });
-  const [savingRecommendation, setSavingRecommendation] = useState<string>();
-  async function addRecommendation(messageId: string, toolCallId: string) {
-    setSavingRecommendation(toolCallId); setSaveError("");
-    try { await saveRecommendation({ data: { conversationId: id, messageId, toolCallId } }); await qc.invalidateQueries({ queryKey: ["chat-recommendations"] }); }
-    catch (e) { setSaveError(e instanceof Error ? e.message : "Could not save this recommendation."); }
-    finally { setSavingRecommendation(undefined); }
-  }
+  const savedIds = useSavedIds(user?.id);
+  const toggleSave = useToggleSave(user?.id);
   const transport = useMemo(() => new DefaultChatTransport({ api: "/api/assistant", body: { conversationId: id }, headers: async () => { const { data } = await supabase.auth.getSession(); return data.session ? { Authorization: `Bearer ${data.session.access_token}` } : {}; } }), [id]);
   const { messages, sendMessage, status, error, stop, addToolApprovalResponse } = useChat({ id, messages: initialMessages, transport, sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithApprovalResponses, onFinish: async ({ message, isAbort }) => {
     if (isAbort && user) {
@@ -106,10 +99,10 @@ function ChatWindow({ id, initialMessages, summary }: { id: string; initialMessa
         if (p.type === "reasoning") return <Reasoning key={i} defaultOpen={false}><ReasoningTrigger /><ReasoningContent>{p.text}</ReasoningContent></Reasoning>;
         if (p.type === "tool-recommendOpportunity" && "state" in p && p.state === "output-available" && "output" in p && "toolCallId" in p) {
           const parsed = chatRecommendationSchema.safeParse(p.output);
-          if (!parsed.success || typeof p.toolCallId !== "string") return null;
-          const toolCallId = p.toolCallId;
-          const saved = recommendationList.data?.some(r => r.tool_call_id === toolCallId);
-          return <div key={i} className="my-3 w-full"><Tool defaultOpen={false}><ToolHeader type="tool-recommendOpportunity" state="output-available" /><ToolContent><ToolInput input={"input" in p ? p.input : undefined} /><ToolOutput output={p.output} errorText={undefined} /></ToolContent></Tool><ChatRecommendation recommendation={parsed.data} action={<Button size="sm" disabled={busy || saved || !!savingRecommendation} onClick={() => addRecommendation(m.id, toolCallId)}><Bookmark />{saved ? "Added to Recommend" : savingRecommendation === toolCallId ? "Saving…" : "Add to Recommend"}</Button>} /></div>;
+          if (!parsed.success) return null;
+          const catalogId = parsed.data.catalogId;
+          const isSaved = catalogId ? (savedIds.data?.has(catalogId) ?? false) : false;
+          return <div key={i} className="my-3 w-full"><Tool defaultOpen={false}><ToolHeader type="tool-recommendOpportunity" state="output-available" /><ToolContent><ToolInput input={"input" in p ? p.input : undefined} /><ToolOutput output={p.output} errorText={undefined} /></ToolContent></Tool><ChatRecommendation recommendation={parsed.data} action={catalogId ? <SaveButton saved={isSaved} disabled={busy || toggleSave.isPending} onClick={() => toggleSave.mutate({ id: catalogId, saved: isSaved })} /> : undefined} /></div>;
         }
         if (p.type.startsWith("tool-")) { const part = p as ToolUIPart; const output = part.state === "output-available" && part.type === "tool-liveSearch" ? part.output as { results?: { o: Opportunity; reasons: string[] }[] } : undefined; return <div key={i} className="w-full"><Tool defaultOpen={false}><ToolHeader type={part.type} state={part.state} /><ToolContent><ToolInput input={part.input} /><ToolOutput output={part.state === "output-available" ? part.output : undefined} errorText={part.state === "output-error" ? part.errorText : undefined} /></ToolContent></Tool>{output?.results?.map(r => <div key={r.o.id} className="my-3"><OpportunityCard o={r.o} /><p className="mt-2 text-sm text-muted-foreground">{r.reasons.join(" · ")}</p></div>)}{part.state === "approval-requested" && <div className="mt-2 flex gap-2"><Button size="sm" onClick={() => addToolApprovalResponse({ id: part.approval.id, approved: true })}><Bookmark />Approve save</Button><Button size="sm" variant="outline" onClick={() => addToolApprovalResponse({ id: part.approval.id, approved: false })}>Decline</Button></div>}</div>; }
         return null;

@@ -56,7 +56,7 @@ function CollegeMatch() {
         })}</div>
         {catalog.data && !catalog.data.rows.length && <p className="mt-4 text-muted-foreground">No universities match these filters.</p>}
         <div className="mt-6 flex items-center justify-between gap-3"><Button variant="outline" disabled={filters.page === 0 || catalog.isFetching} onClick={() => setFilters(f => ({ ...f, page: f.page-1 }))}><ChevronLeft />Previous</Button><Button variant="outline" disabled={!catalog.data || (filters.page+1)*24 >= catalog.data.total || catalog.isFetching} onClick={() => setFilters(f => ({ ...f, page: f.page+1 }))}>Next<ChevronRight /></Button></div>
-        <p className="mt-5 text-sm text-muted-foreground"><Link to="/assistant" className="text-primary hover:underline">AI Opportunity Assistant</Link> · <Link to="/recommended" className="text-primary hover:underline">Your saved chat recommendations</Link></p>
+        <p className="mt-5 text-sm text-muted-foreground"><Link to="/assistant" className="text-primary hover:underline">AI Opportunity Assistant</Link></p>
       </section>
     </WorkspaceShell>
   );

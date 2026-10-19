@@ -2,7 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import {
-  LayoutDashboard, Compass, Sparkles, Bookmark, CalendarClock,
+  LayoutDashboard, Compass, Bookmark, CalendarClock,
   Users, Handshake, GraduationCap, Settings, ChevronDown,
   UserRound, Pencil, LogOut, Home, MessageCircle,
 } from "lucide-react";
@@ -70,7 +70,6 @@ const items = [
   { to: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { to: "/assistant", label: "AI Opportunity Assistant", icon: MessageCircle },
   { to: "/opportunities", label: "Explore Opportunities", icon: Compass },
-  { to: "/recommended", label: "Recommended for Me", icon: Sparkles },
   { to: "/saved", label: "Saved Opportunities", icon: Bookmark },
   { to: "/deadlines", label: "Deadlines", icon: CalendarClock },
   { to: "/communities", label: "Communities", icon: Users },
