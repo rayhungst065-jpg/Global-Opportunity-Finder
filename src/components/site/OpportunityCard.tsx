@@ -9,9 +9,10 @@ export function categoryName(key: string) {
   return categories.find((c) => c.key === key)?.name ?? key;
 }
 
-export function formatDeadline(d: string | null) {
-  if (!d) return "Deadline not listed";
-  return new Date(d + "T00:00:00").toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+export function formatDeadline(d: string | null, estimate?: string | null) {
+  if (d) return new Date(d + "T00:00:00").toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+  if (estimate) return `Estimated: ${estimate}`;
+  return "Deadline not available";
 }
 
 export function SaveButton({ saved, onClick, disabled }: { saved: boolean; onClick: () => void; disabled?: boolean }) {
@@ -45,7 +46,7 @@ export function OpportunityCard({ o, action }: { o: Opportunity; action?: React.
       {!o.is_demo && <p className="mt-2 text-xs text-muted-foreground">{verificationState(o.last_verified_at, o.deadline)}</p>}
       {safeOfficialUrl(o.official_url) && <Button asChild variant="link" className="mt-3 h-auto justify-start whitespace-normal p-0 text-left"><a href={safeOfficialUrl(o.official_url) ?? undefined} target="_blank" rel="noopener noreferrer"><ExternalLink className="h-4 w-4 shrink-0" />View Official Opportunity</a></Button>}
       <div className="mt-auto flex items-center justify-between pt-5 text-sm">
-        <span className="text-muted-foreground">{formatDeadline(o.deadline)}</span>
+        <span className="text-muted-foreground">{formatDeadline(o.deadline, o.deadline_estimate)}</span>
         {action}
       </div>
     </article>

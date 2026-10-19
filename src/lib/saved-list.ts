@@ -17,9 +17,11 @@ export function useSavedList(userId: string | undefined) {
   });
 }
 
-export function upcomingOf<T extends { opportunity: { deadline: string | null } | null }>(items: T[]) {
+export function upcomingOf<T extends { opportunity: { deadline: string | null; deadline_estimate?: string | null } | null }>(items: T[]) {
   const today = new Date().toISOString().slice(0, 10);
-  return items
+  const confirmed = items
     .filter((s) => s.opportunity?.deadline && s.opportunity.deadline >= today)
     .sort((a, b) => a.opportunity!.deadline!.localeCompare(b.opportunity!.deadline!));
+  const estimated = items.filter((s) => !s.opportunity?.deadline && s.opportunity?.deadline_estimate);
+  return [...confirmed, ...estimated];
 }
