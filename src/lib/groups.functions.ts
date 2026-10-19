@@ -23,7 +23,7 @@ export const listMyGroups = createServerFn({ method: "GET" })
     if (mErr) throw new Error(mErr.message);
     const userIds = [...new Set((members ?? []).map((m) => m.user_id))];
     const { data: profiles } = userIds.length
-      ? await context.supabase.from("profiles").select("id, display_name, avatar_path").in("id", userIds)
+      ? await context.supabase.rpc("student_profile_cards", { p_ids: userIds })
       : { data: [] };
     const names = new Map((profiles ?? []).map((p) => [p.id, p]));
     return (groups ?? []).map((g) => ({

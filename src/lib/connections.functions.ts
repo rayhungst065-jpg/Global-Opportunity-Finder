@@ -37,17 +37,13 @@ export const discoverStudents = createServerFn({ method: "GET" })
   )
   .middleware([requireSupabaseAuth])
   .handler(async ({ context, data }) => {
-    let query = context.supabase
-      .from("profiles")
-      .select("*")
-      .eq("discoverable", true)
-      .neq("id", context.userId)
-      .order("created_at", { ascending: false })
-      .limit(60);
-    if (data.major) query = query.ilike("intended_major", `%${data.major.replace(/[%,()*]/g, " ")}%`);
-    const { data: rows, error } = await query;
+    const { data: rows, error } = await context.supabase.rpc("student_profile_cards", { p_discovery: true });
     if (error) throw new Error(error.message);
     let cards = (rows ?? []).map(toCard);
+    if (data.major) {
+      const term = data.major.toLowerCase();
+      cards = cards.filter((c) => c.intended_major?.toLowerCase().includes(term));
+    }
     if (data.interest) {
       const term = data.interest.toLowerCase();
       cards = cards.filter((c) => c.interests.some((i) => i.toLowerCase().includes(term)) || c.skills.some((s) => s.toLowerCase().includes(term)));
@@ -72,7 +68,7 @@ export const listMyConnections = createServerFn({ method: "GET" })
     if (error) throw new Error(error.message);
     const ids = [...new Set((rows ?? []).flatMap((r) => [r.requester_id, r.addressee_id]))].filter((i) => i !== context.userId);
     const { data: profiles } = ids.length
-      ? await context.supabase.from("profiles").select("*").in("id", ids)
+      ? await context.supabase.rpc("student_profile_cards", { p_ids: ids })
       : { data: [] };
     const cards = new Map((profiles ?? []).map((p) => [p.id, toCard(p)]));
     return (rows ?? []).map((r) => ({
