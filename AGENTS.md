@@ -12,7 +12,7 @@
 ## Architecture rules
 - Public opportunity reads go through `src/lib/opportunities.functions.ts` (publishable-key server client) so listing pages SSR; why: anon RLS read policy, no session on server.
 - Student-owned data (profiles, saved_opportunities) is read/written from the browser client under RLS; why: RLS scopes rows to auth.uid().
-- Shared opportunity writes are admin-only via `public.has_role`; assistants reuse existing IDs and save owner-scoped references, never AI-generated catalog fields; why: avoid duplicates and preserve verified deadlines and source integrity.
+- Shared opportunity edits are admin-only via `public.has_role`; the assistant may insert NEW catalog rows only through `recommendOpportunity` (admin client, title dedupe, unverified, labeled estimates), and saves stay owner-scoped; why: auto-collect chat recommendations without duplicates while preserving verified deadlines and source integrity.
 - Demo rows carry `is_demo = true` and must be labeled in the UI; why: never present fake opportunities as real.
 - Profile pictures live in the private `avatars` bucket under `<user_id>/…`, shown via signed URLs; why: storage RLS limits access to the owner folder.
 - Group membership RLS uses security-definer `is_group_member`/`is_group_creator` functions, never self-referencing policies; why: a policy querying its own table causes infinite recursion, and insert policies can't read rows the read policy hides.
