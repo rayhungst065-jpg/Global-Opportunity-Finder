@@ -1,6 +1,7 @@
 # Roadmap — Brand & Communities Update
 
 ## Focused fixes
+- [ ] Add exact homepage/About creator introductions and original photo, existing-page anchor links, and Feedback & Support navigation/contact links; verify desktop/mobile without AI or premium calls
 - [x] Targeted About/homepage labels and whole-section/CTA links with post-login return; both signed-out returns and signed-in CTAs verified
 - [x] Two isolated test accounts: two-way discovery/search, request/accept, friend cards, refresh/re-sign-in persistence, discovery opt-out, hidden raw profile fields and avatar denial verified; 6 focused tests passed
 - [ ] Peer messaging, delivery and persistence cannot be verified: no peer-message implementation/storage exists; development badge retained, no unrelated assistant tables repurposed or new tables added
