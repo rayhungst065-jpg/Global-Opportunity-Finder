@@ -49,7 +49,7 @@ function Detail() {
         <p className="mt-2 text-muted-foreground">{o.organizer} · {o.location}</p>
         {!o.is_demo && <p className="mt-3 text-sm text-muted-foreground">{verificationState(o.last_verified_at, o.deadline)}. Stored dates are not automatically refreshed.</p>}
         <dl className="mt-8 grid gap-6 text-sm sm:grid-cols-2">
-          <div><dt className="font-medium">Deadline</dt><dd className="text-muted-foreground">{formatDeadline(o.deadline)}</dd></div>
+          <div><dt className="font-medium">Deadline</dt><dd className="text-muted-foreground">{formatDeadline(o.deadline, o.deadline_estimate)}</dd></div>
           <div><dt className="font-medium">Eligibility</dt><dd className="text-muted-foreground">{o.eligibility || "Not listed"}</dd></div>
         </dl>
         <p className="mt-8 leading-relaxed text-muted-foreground">{o.description}</p>
