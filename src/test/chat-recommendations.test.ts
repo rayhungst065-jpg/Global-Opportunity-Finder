@@ -7,6 +7,7 @@ vi.mock("@tanstack/react-start", () => ({ createServerFn: () => {
 } }));
 import { saveChatRecommendation, removeChatRecommendation } from "@/lib/chat-recommendations.functions";
 const recommendation = { name: "Original opportunity", description: "Original description", deadline: null, officialUrl: null, reason: "Original Gemini reason", catalogId: null };
+const storedRecommendation = { ...recommendation, category: "awards", organizer: null, deadlineEstimate: null };
 describe("original chat recommendation saves", () => {
   it("saves the stored original recommendation and ignores caller-supplied replacements", async () => {
     const messageQuery = { select: vi.fn().mockReturnThis(), eq: vi.fn().mockReturnThis(), single: vi.fn().mockResolvedValue({ data: { id: "22222222-2222-4222-8222-222222222222", parts: [{ type: "tool-recommendOpportunity", state: "output-available", toolCallId: "call-1", output: recommendation }] }, error: null }) };
