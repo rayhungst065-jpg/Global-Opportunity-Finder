@@ -5,7 +5,7 @@ import { z } from "zod";
 import type { Database, Json } from "@/integrations/supabase/types";
 import { ASSISTANT_POLICY, isSummaryRequest, permittedProfile } from "@/lib/assistant-policy";
 import { generalLiveSearchUnavailable } from "@/lib/college-research-policy";
-import { isNormalRecommendation, verificationState } from "@/lib/opportunity-source";
+import { isNormalRecommendation, safeOfficialUrl, verificationState } from "@/lib/opportunity-source";
 import { chatRecommendationSchema, normalizeChatRecommendation } from "@/lib/chat-recommendation";
 
 export async function handleAssistant(request: Request) {
