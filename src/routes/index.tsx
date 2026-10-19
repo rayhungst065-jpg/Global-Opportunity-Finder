@@ -208,7 +208,7 @@ function Landing() {
               Find students who share your interests and intended major, send connection requests, and build your project network. Direct messaging, blocking, and reporting are not available yet.
             </p>
             <p className="mt-6 inline-block rounded-full border border-ink-foreground/30 px-4 py-1.5 text-xs font-medium uppercase tracking-wider opacity-80">In development</p>
-            <div className="mt-9"><Link to={user ? "/meet-students" : "/login"} search={user ? {} : { next: "/meet-students" }} className={btnLight}>Meet Students</Link></div>
+            <div className="mt-9"><Link to={user ? "/meet-students" : "/login"} search={user ? {} : { next: "/meet-students" }} className={`relative z-10 ${btnLight}`}>Meet Students</Link></div>
           </Reveal>
         </div>
         <Link to={user ? "/meet-students" : "/login"} search={user ? {} : { next: "/meet-students" }} aria-label="Meet New Students" className="absolute inset-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring" />
@@ -245,7 +245,7 @@ function Landing() {
           <p className="mt-6 text-lg text-muted-foreground">
             Explore universities by region, country, and institution type, and sort by QS ranking or enrollment. Confirm current details with each university’s official website.
           </p>
-          <div className="mt-9"><Link to={user ? "/college-match" : "/login"} search={user ? {} : { next: "/college-match" }} className={btnPrimary}>Explore Colleges</Link></div>
+          <div className="mt-9"><Link to={user ? "/college-match" : "/login"} search={user ? {} : { next: "/college-match" }} className={`relative z-10 ${btnPrimary}`}>Explore Colleges</Link></div>
         </Reveal>
         <Link to={user ? "/college-match" : "/login"} search={user ? {} : { next: "/college-match" }} aria-label="Find Your Match" className="absolute inset-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring" />
       </section>

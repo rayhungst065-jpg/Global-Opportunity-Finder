@@ -2,10 +2,10 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 import { AuthCard, Field, submitBtn } from "@/components/site/AuthCard";
-import { readFeatureDestination } from "@/lib/auth-destination";
+import { readFeatureDestination, type FeatureDestination } from "@/lib/auth-destination";
 
 export const Route = createFileRoute("/login")({
-  validateSearch: (search: Record<string, unknown>) => ({ next: readFeatureDestination(search.next) }),
+  validateSearch: (search: Record<string, unknown>): { next?: FeatureDestination } => ({ next: readFeatureDestination(search['next']) }),
   head: () => ({
     meta: [
       { title: "Log In — Global Opportunity Finder" },

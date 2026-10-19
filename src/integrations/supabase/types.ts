@@ -821,6 +821,40 @@ export type Database = {
         }
         Returns: Json
       }
+      student_is_discoverable: { Args: { p_id: string }; Returns: boolean }
+      student_profile_cards: {
+        Args: { p_discovery?: boolean; p_ids?: string[] }
+        Returns: {
+          avatar_path: string | null
+          bio: string | null
+          country_region: string | null
+          created_at: string
+          discoverable: boolean
+          display_name: string | null
+          education_level: string | null
+          first_name: string | null
+          format_preference: string
+          goals: string[]
+          grade: string | null
+          id: string
+          intended_major: string | null
+          interests: string[]
+          languages: string[]
+          onboarded: boolean
+          preferences: Json
+          preferred_categories: Database["public"]["Enums"]["opportunity_category"][]
+          preferred_regions: string[]
+          skills: string[]
+          updated_at: string
+          visibility: Json
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
     }
     Enums: {
       app_role: "admin" | "user"
