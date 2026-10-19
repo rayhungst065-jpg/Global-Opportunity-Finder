@@ -14,7 +14,7 @@ describe("original chat recommendation saves", () => {
     const upsert = vi.fn().mockResolvedValue({ error: null });
     db.from.mockImplementation(table => table === "assistant_messages" ? messageQuery : { upsert });
     await saveChatRecommendation({ data: { conversationId: "33333333-3333-4333-8333-333333333333", messageId: "message-1", toolCallId: "call-1", recommendation: { reason: "Changed" }, userId: "other" } } as Parameters<typeof saveChatRecommendation>[0]);
-    expect(upsert).toHaveBeenCalledWith({ user_id: userId, assistant_message_id: "22222222-2222-4222-8222-222222222222", tool_call_id: "call-1", recommendation }, { onConflict: "user_id,assistant_message_id,tool_call_id", ignoreDuplicates: true });
+    expect(upsert).toHaveBeenCalledWith({ user_id: userId, assistant_message_id: "22222222-2222-4222-8222-222222222222", tool_call_id: "call-1", recommendation: storedRecommendation }, { onConflict: "user_id,assistant_message_id,tool_call_id", ignoreDuplicates: true });
     expect(messageQuery.eq).toHaveBeenCalledWith("user_id", userId);
   });
   it("rejects recommendations absent from the owner's stored assistant message", async () => {
