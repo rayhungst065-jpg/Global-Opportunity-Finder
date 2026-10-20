@@ -5,7 +5,7 @@
 - [x] Targeted About/homepage labels and whole-section/CTA links with post-login return; both signed-out returns and signed-in CTAs verified
 - [x] Two isolated test accounts: two-way discovery/search, request/accept, friend cards, refresh/re-sign-in persistence, discovery opt-out, hidden raw profile fields and avatar denial verified; 6 focused tests passed
 - [x] Student discovery cards, full profiles, Bio (Skills removed), Country, friend requests and private messaging; two test accounts verified request/accept, duplicate/spoof/participant-change rejection, two-way messages, persistence after reload, desktop/mobile
-- [ ] Third-account message isolation tested only as signed-out reader (no third test session); decline/cancel UI paths not re-run this turn
+- [x] Full E2E: remove/re-request/decline/cancel/accept lifecycle, two-way chat with timestamps, persistence after reload and re-sign-in, third-account read/send isolation, non-friend and spoofed-sender blocks, real friend request sent to Ray's account (26/26 checks); homepage "In development" badge removed
 - [x] Targeted College Search cleanup: removed preferences/text input, preserved database filters/cards and existing numeric QS sort with missing ranks last, replaced notice; 6 focused tests and signed-in filters/sort/pagination/clear/cards checks passed with no AI/premium requests
 - [x] Imported all 617 university rows and 17 spreadsheet notes, omitted blank rows, retained original values; signed-in database search, Canada filter and exact-rank sorting verified
 - [x] Original Gemini chat recommendation saved privately to Recommend, survived reload, and removed without deleting chat or another Gemini generation; real signed-in flow verified

@@ -206,9 +206,8 @@ function Landing() {
             <Eyebrow dark>Meet New Students</Eyebrow>
             <h2 id="student-connections-heading" className="mt-3 text-4xl font-semibold md:text-6xl">Great Projects Need Great Teammates.</h2>
             <p className="mx-auto mt-6 max-w-2xl text-lg opacity-80">
-              Find students who share your interests and intended major, send connection requests, and build your project network. Direct messaging, blocking, and reporting are not available yet.
+              Find students who share your interests and intended major, send connection requests, chat privately, and build your project network. Blocking and reporting are not available yet.
             </p>
-            <p className="mt-6 inline-block rounded-full border border-ink-foreground/30 px-4 py-1.5 text-xs font-medium uppercase tracking-wider opacity-80">In development</p>
             <div className="mt-9"><Link to={user ? "/meet-students" : "/login"} search={user ? {} : { next: "/meet-students" }} className={`relative z-10 ${btnLight}`}>Meet Students</Link></div>
           </Reveal>
         </div>
