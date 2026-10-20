@@ -30,3 +30,4 @@
 - Recommend stores owner-selected snapshots from persisted assistant recommendation tool outputs with RLS validation; why: preserve the original Gemini recommendation and reason without another model call or shared catalog mutation.
 - Opportunity verification timestamps are separate from update timestamps and never backfilled from AI or ordinary edits; why: label unknown/stale evidence without silently changing deadlines.
 - Password recovery uses Cloud Auth verification and updateUser on a public reset page; why: preserve provider token expiry and avoid a separate password system.
+- Private student messages are one-to-one rows readable by participants and insertable only by the sender to an accepted friend (`are_friends`); connection participants are immutable via trigger and pairs are unique; why: friendships and messages cannot be forged from the client.

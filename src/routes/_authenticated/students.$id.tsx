@@ -38,7 +38,7 @@ function StudentPage() {
         <section className="rounded-2xl border border-border bg-card p-6 shadow-soft">
           <div className="flex flex-wrap items-center gap-5">
             <Avatar path={s.avatar_path} name={s.display_name} size="lg" />
-            <h2 className="min-w-0 flex-1 truncate text-xl font-semibold">{s.display_name}</h2>
+            <h2 className="min-w-0 flex-1 break-words text-xl font-semibold">{s.display_name}</h2>
             {s.id !== user.id && <ConnectButton studentId={s.id} rows={conns.data ?? []} />}
           </div>
           <dl className="mt-5 divide-y divide-border">
