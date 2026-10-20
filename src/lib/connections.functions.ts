@@ -33,7 +33,7 @@ export type StudentCard = ReturnType<typeof toCard>;
 /** Discoverable students, newest first. Field-level privacy applied server-side. */
 export const discoverStudents = createServerFn({ method: "GET" })
   .inputValidator((d) =>
-    z.object({ q: z.string().max(100).optional(), major: z.string().max(120).optional(), interest: z.string().max(60).optional() }).parse(d ?? {}),
+    z.object({ q: z.string().max(100).optional(), major: z.string().max(120).optional(), interest: z.string().max(60).optional(), country: z.string().max(120).optional(), education: z.string().max(120).optional() }).parse(d ?? {}),
   )
   .middleware([requireSupabaseAuth])
   .handler(async ({ context, data }) => {
@@ -48,6 +48,11 @@ export const discoverStudents = createServerFn({ method: "GET" })
       const term = data.interest.toLowerCase();
       cards = cards.filter((c) => c.interests.some((i) => i.toLowerCase().includes(term)) || c.skills.some((s) => s.toLowerCase().includes(term)));
     }
+    if (data.country) {
+      const term = data.country.toLowerCase();
+      cards = cards.filter((c) => c.country_region?.toLowerCase().includes(term));
+    }
+    if (data.education) cards = cards.filter((c) => c.education_level === data.education);
     if (data.q) {
       const term = data.q.toLowerCase();
       cards = cards.filter((c) =>
@@ -55,6 +60,17 @@ export const discoverStudents = createServerFn({ method: "GET" })
       );
     }
     return cards;
+  });
+
+/** One student's visibility-filtered profile (null when not visible to the caller). */
+export const getStudent = createServerFn({ method: "GET" })
+  .inputValidator((d) => z.object({ id: z.string().uuid() }).parse(d))
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context, data }) => {
+    const { data: rows, error } = await context.supabase.rpc("student_profile_cards", { p_ids: [data.id] });
+    if (error) throw new Error(error.message);
+    const p = rows?.[0];
+    return p ? toCard(p) : null;
   });
 
 /** All connections involving the signed-in student (any status, either direction). */
@@ -93,7 +109,10 @@ export const sendRequest = createServerFn({ method: "POST" })
       .maybeSingle();
     if (existing) {
       if (existing.status === "declined" && existing.requester_id === context.userId) {
-        const { error } = await context.supabase.from("connections").update({ status: "pending", responded_at: null }).eq("id", existing.id);
+        // Re-request after a decline: replace the old row (requester may delete; only addressee may update).
+        const { error: delErr } = await context.supabase.from("connections").delete().eq("id", existing.id);
+        if (delErr) throw new Error(delErr.message);
+        const { error } = await context.supabase.from("connections").insert({ requester_id: context.userId, addressee_id: data.to });
         if (error) throw new Error(error.message);
         return { ok: true };
       }

@@ -29,12 +29,11 @@ export type Visibility = {
 export const visibilityFields: { key: keyof Visibility; label: string }[] = [
   { key: "avatar", label: "Profile picture" },
   { key: "bio", label: "Short bio" },
-  { key: "country_region", label: "Country or region" },
+  { key: "country_region", label: "Country" },
   { key: "education", label: "Education level & grade" },
   { key: "major", label: "Intended major" },
   { key: "languages", label: "Languages" },
   { key: "interests", label: "Interests" },
-  { key: "skills", label: "Skills & topics" },
   { key: "goals", label: "Goals" },
 ];
 
