@@ -99,8 +99,8 @@ export function ProfileForm({ userId, profile, stepped, onDone }: { userId: stri
         <div className="space-y-5">
           <label className="block"><span className="text-sm font-medium">Display name</span>
             <input className={input} value={d.first_name} maxLength={120} onChange={(e) => set("first_name", e.target.value)} autoComplete="nickname" /></label>
-          <label className="block"><span className="text-sm font-medium">Short bio</span>
-            <textarea className={`${input} min-h-24`} maxLength={500} placeholder="A sentence or two about what you're curious about." value={d.bio} onChange={(e) => set("bio", e.target.value)} />
+          <label className="block"><span className="text-sm font-medium">Bio</span>
+            <textarea className={`${input} min-h-24`} maxLength={500} placeholder="Introduce yourself in your own words — your interests, personality, goals, passions, or the projects and collaborations you're looking for." value={d.bio} onChange={(e) => set("bio", e.target.value)} />
             <span className="mt-1 block text-xs text-muted-foreground">{d.bio.length}/500</span></label>
           <div className="grid gap-5 md:grid-cols-2">
             <label className="block"><span className="text-sm font-medium">Education level</span>
@@ -110,9 +110,9 @@ export function ProfileForm({ userId, profile, stepped, onDone }: { userId: stri
             <label className="block"><span className="text-sm font-medium">Grade or year</span>
               <input className={input} placeholder="e.g. 11th grade, Year 2" value={d.grade} onChange={(e) => set("grade", e.target.value)} /></label>
           </div>
-          <label className="block"><span className="text-sm font-medium">Country or general region</span>
-            <input className={input} placeholder="e.g. Canada, Southeast Asia" value={d.country_region} onChange={(e) => set("country_region", e.target.value)} />
-            <span className="mt-1 block text-xs text-muted-foreground">No addresses needed — a country or region is enough.</span></label>
+          <label className="block"><span className="text-sm font-medium">Country</span>
+            <input className={input} placeholder="e.g. Canada" value={d.country_region} onChange={(e) => set("country_region", e.target.value)} />
+            <span className="mt-1 block text-xs text-muted-foreground">Optional. No address needed.</span></label>
           <label className="block"><span className="text-sm font-medium">Languages (separate with commas)</span>
             <input className={input} placeholder="English, Spanish, Mandarin" value={d.languages} onChange={(e) => set("languages", e.target.value)} /></label>
         </div>
@@ -135,8 +135,6 @@ export function ProfileForm({ userId, profile, stepped, onDone }: { userId: stri
                 onChange={(e) => set("customInterest", e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addCustom(); } }} />
               <button type="button" onClick={addCustom} className="rounded-xl border border-border px-4 text-sm hover:bg-accent">Add</button>
             </div></fieldset>
-          <label className="block"><span className="text-sm font-medium">Skills & topics to explore (separate with commas)</span>
-            <input className={input} placeholder="Python, public speaking, CAD" value={d.skills} onChange={(e) => set("skills", e.target.value)} /></label>
         </div>
       ),
     },

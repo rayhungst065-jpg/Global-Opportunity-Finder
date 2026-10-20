@@ -7,7 +7,8 @@ import { Avatar } from "@/components/site/Avatar";
 import { useUser } from "@/lib/auth";
 import { listCommunities, communityCategories } from "@/lib/communities.functions";
 import { useMyMemberships } from "@/lib/communities";
-import { discoverStudents, listMyConnections, sendRequest, type StudentCard } from "@/lib/connections.functions";
+import { discoverStudents, listMyConnections, type StudentCard } from "@/lib/connections.functions";
+import { StudentCardView, ConnectButton } from "@/components/site/StudentCard";
 import { listPosts, createPost, updatePost } from "@/lib/posts.functions";
 
 export const Route = createFileRoute("/_authenticated/communities/")({
@@ -137,7 +138,6 @@ function DiscoverGroups({ userId }: { userId: string | undefined }) {
 
 /** Student discovery lives here — opted-in students only, privacy-filtered server-side. */
 function StudentDiscovery({ userId }: { userId: string | undefined }) {
-  const qc = useQueryClient();
   const [q, setQ] = useState("");
   const [major, setMajor] = useState("");
   const [country, setCountry] = useState("");
@@ -187,7 +187,6 @@ function StudentDiscovery({ userId }: { userId: string | undefined }) {
             ))}
           </ul>
         )}
-      </div>
       </div>
     </section>
   );

@@ -47,7 +47,6 @@ function ProfileView({ p, onEdit }: { p: Profile; onEdit: () => void }) {
             <p className="mt-0.5 text-sm text-muted-foreground">
               {[p.education_level, p.grade, p.intended_major].filter(Boolean).join(" · ") || "Student"}
             </p>
-            {p.bio && <p className="mt-3 max-w-xl text-sm text-muted-foreground">{p.bio}</p>}
           </div>
           <button onClick={onEdit} className={editBtn}><Pencil className="h-4 w-4" /> Edit profile</button>
         </div>
@@ -73,11 +72,8 @@ function ProfileView({ p, onEdit }: { p: Profile; onEdit: () => void }) {
               <span className="flex flex-wrap gap-2">{p.languages.map((l) => <span key={l} className={`${chip} bg-coral-soft text-coral`}>{l}</span>)}</span>
             ) : <span className="text-muted-foreground">Not set</span>}
           </Row>
-          <Row label="Skills">
-            {p.skills.length ? (
-              <span className="flex flex-wrap gap-2">{p.skills.map((s) => <span key={s} className={`${chip} border border-border text-muted-foreground`}>{s}</span>)}</span>
-            ) : <span className="text-muted-foreground">Not set</span>}
-          </Row>
+          <Row label="Country">{p.country_region ?? <span className="text-muted-foreground">Not set</span>}</Row>
+          <Row label="Bio">{p.bio ? <span className="whitespace-pre-line">{p.bio}</span> : <span className="text-muted-foreground">No bio yet.</span>}</Row>
         </dl>
         <p className="mt-4 text-xs text-muted-foreground">
           You control what other students can see in your <Link to="/settings" className="text-primary hover:underline">privacy settings</Link>.
