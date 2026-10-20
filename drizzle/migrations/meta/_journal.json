@@ -113,6 +113,13 @@
       "when": 1792383307485,
       "tag": "0015_protect_student_profile_visibility",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1792456077715,
+      "tag": "0016_student_private_messages",
+      "breakpoints": true
     }
   ]
 }
