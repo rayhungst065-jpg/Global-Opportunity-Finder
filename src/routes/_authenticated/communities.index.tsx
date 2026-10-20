@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Search, UserPlus, Plus } from "lucide-react";
+import { Search, Plus } from "lucide-react";
 import { WorkspaceShell } from "@/components/site/WorkspaceShell";
 import { Avatar } from "@/components/site/Avatar";
 import { useUser } from "@/lib/auth";

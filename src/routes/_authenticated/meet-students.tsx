@@ -4,11 +4,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, X, Trash2, MessageSquare, Plus } from "lucide-react";
 import { WorkspaceShell, Panel } from "@/components/site/WorkspaceShell";
 import { Avatar } from "@/components/site/Avatar";
+import { StudentCardView } from "@/components/site/StudentCard";
+import { MessagesTab } from "@/components/site/MessagesTab";
 import { useUser } from "@/lib/auth";
 import { useProfile } from "@/lib/profile";
 import {
   listMyConnections, respondRequest, removeConnection,
-  type StudentCard, type ConnectionRow,
+  type ConnectionRow,
 } from "@/lib/connections.functions";
 import { listMyGroups, createGroup, inviteToGroup, updateMembership } from "@/lib/groups.functions";
 
@@ -30,34 +32,12 @@ const chip = "rounded-full bg-primary-soft px-2.5 py-0.5 text-xs text-accent-for
 const input = "w-full rounded-xl border border-input bg-background px-4 py-2.5 text-sm outline-none transition focus:border-ring focus:ring-4 focus:ring-primary-soft";
 const smallBtn = "inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition";
 
-function StudentCardView({ s, action }: { s: StudentCard; action?: React.ReactNode }) {
-  return (
-    <li className="flex flex-col rounded-2xl border border-border bg-card p-5 shadow-soft">
-      <div className="flex items-center gap-3">
-        <Avatar path={s.avatar_path} name={s.display_name} size="sm" />
-        <div className="min-w-0">
-          <p className="truncate font-medium">{s.display_name}</p>
-          <p className="truncate text-xs text-muted-foreground">
-            {[s.education_level, s.intended_major, s.country_region].filter(Boolean).join(" · ") || "Student"}
-          </p>
-        </div>
-      </div>
-      {s.bio && <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">{s.bio}</p>}
-      {(s.interests.length > 0 || s.goals.length > 0) && (
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {s.interests.slice(0, 4).map((i) => <span key={i} className={chip}>{i}</span>)}
-          {s.goals.slice(0, 2).map((g) => <span key={g} className="rounded-full bg-teal-soft px-2.5 py-0.5 text-xs text-teal">{g}</span>)}
-        </div>
-      )}
-      {action && <div className="mt-auto pt-4">{action}</div>}
-    </li>
-  );
-}
-
 function MeetStudents() {
   const { user } = useUser();
   const profile = useProfile(user?.id).data;
   const [tab, setTab] = useState<"messages" | "friends" | "groups">("friends");
+  const [chatWith, setChatWith] = useState<string | null>(null);
+  const openChat = (id: string) => { setChatWith(id); setTab("messages"); };
 
   const connections = useQuery({
     queryKey: ["my-connections"],
@@ -100,31 +80,16 @@ function MeetStudents() {
         ))}
       </div>
 
-      {tab === "messages" && <MessagesTab />}
-      {tab === "friends" && <FriendsTab userId={user?.id} rows={rows} />}
+      {tab === "messages" && user && <MessagesTab userId={user.id} rows={rows} selected={chatWith} onSelect={setChatWith} />}
+      {tab === "friends" && <FriendsTab userId={user?.id} rows={rows} onMessage={openChat} />}
       {tab === "groups" && <GroupsTab userId={user?.id} connections={rows} />}
     </WorkspaceShell>
   );
 }
 
-/* ---------------- Messages (honest placeholder) ---------------- */
-
-function MessagesTab() {
-  return (
-    <div className="rounded-3xl border border-dashed border-border bg-card p-12 text-center">
-      <MessageSquare className="mx-auto h-8 w-8 text-muted-foreground" />
-      <h2 className="mt-4 font-display text-xl font-semibold">Messaging isn't available yet</h2>
-      <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-        Direct messages are still in development. They'll launch together with blocking and reporting controls,
-        so conversations stay safe. For now, use connection requests and collaboration groups to reach out.
-      </p>
-    </div>
-  );
-}
-
 /* ---------------- Friends ---------------- */
 
-function FriendsTab({ userId, rows }: { userId: string | undefined; rows: ConnectionRow[] }) {
+function FriendsTab({ userId, rows, onMessage }: { userId: string | undefined; rows: ConnectionRow[]; onMessage: (id: string) => void }) {
   const qc = useQueryClient();
   const [notice, setNotice] = useState("");
   const refresh = () => qc.invalidateQueries({ queryKey: ["my-connections"] });
@@ -182,16 +147,19 @@ function FriendsTab({ userId, rows }: { userId: string | undefined; rows: Connec
         {accepted.length === 0 ? (
           <p className="mt-3 rounded-2xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
             No connections yet. Find students under{" "}
-            <Link to="/communities" className="text-primary hover:underline">Communities → Discover Communities → Find Students</Link>.
+            <Link to="/communities" className="text-primary hover:underline">Communities → Find Students</Link>.
           </p>
         ) : (
           <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {accepted.map((r) => r.other && (
-              <StudentCardView key={r.id} s={r.other} action={
-                <button disabled={remove.isPending} onClick={() => remove.mutate(r.id)} className={`${smallBtn} border border-border text-muted-foreground hover:bg-accent`}>
-                  <Trash2 className="h-3.5 w-3.5" /> Remove connection
+              <StudentCardView key={r.id} s={r.other} action={<div className="flex flex-wrap gap-2">
+                <button onClick={() => onMessage(r.other!.id)} className={`${smallBtn} bg-primary text-primary-foreground hover:opacity-90`}>
+                  <MessageSquare className="h-3.5 w-3.5" /> Message
                 </button>
-              } />
+                <button disabled={remove.isPending} onClick={() => remove.mutate(r.id)} className={`${smallBtn} border border-border text-muted-foreground hover:bg-accent`}>
+                  <Trash2 className="h-3.5 w-3.5" /> Remove friend
+                </button>
+              </div>} />
             ))}
           </ul>
         )}

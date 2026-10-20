@@ -34,7 +34,6 @@ export const visibilityFields: { key: keyof Visibility; label: string }[] = [
   { key: "major", label: "Intended major" },
   { key: "languages", label: "Languages" },
   { key: "interests", label: "Interests" },
-  { key: "skills", label: "Skills & topics" },
   { key: "goals", label: "Goals" },
 ];
 
