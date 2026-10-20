@@ -140,11 +140,12 @@ function StudentDiscovery({ userId }: { userId: string | undefined }) {
   const qc = useQueryClient();
   const [q, setQ] = useState("");
   const [major, setMajor] = useState("");
-  const [notice, setNotice] = useState("");
+  const [country, setCountry] = useState("");
+  const [education, setEducation] = useState("");
 
   const students = useQuery({
-    queryKey: ["discover-students", q, major],
-    queryFn: () => discoverStudents({ data: { q: q || undefined, major: major || undefined } }),
+    queryKey: ["discover-students", q, major, country, education],
+    queryFn: () => discoverStudents({ data: { q: q || undefined, major: major || undefined, country: country || undefined, education: education || undefined } }),
     enabled: !!userId,
   });
   const connections = useQuery({
@@ -152,29 +153,25 @@ function StudentDiscovery({ userId }: { userId: string | undefined }) {
     queryFn: () => listMyConnections({}),
     enabled: !!userId,
   });
-  const send = useMutation({
-    mutationFn: (to: string) => sendRequest({ data: { to } }),
-    onSuccess: () => { setNotice(""); qc.invalidateQueries({ queryKey: ["my-connections"] }); },
-    onError: (e) => setNotice(e instanceof Error ? e.message : "Something went wrong."),
-  });
-
   const rows = connections.data ?? [];
-  const pendingWith = new Set(rows.filter((r) => r.status === "pending").map((r) => (r.outgoing ? r.addressee_id : r.requester_id)));
-  const connectedWith = new Set(rows.filter((r) => r.status === "accepted").map((r) => (r.outgoing ? r.addressee_id : r.requester_id)));
 
   return (
     <section className="mt-12 border-t border-border pt-8">
       <h2 className="font-display text-xl font-semibold">Find Students</h2>
       <p className="mt-1 text-sm text-muted-foreground">
-        Students who opted in to discovery. Each card shows only the fields they chose to share.
+        Students who opted in to discovery. Each card shows only the fields they chose to share. Click a name to see the full profile.
       </p>
-      {notice && <p className="mt-3 rounded-xl bg-destructive/10 p-3 text-sm text-destructive">{notice}</p>}
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+      <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <label className="relative">
           <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <input className={`${input} pl-10`} placeholder="Search name, bio, goals…" value={q} onChange={(e) => setQ(e.target.value)} />
+          <input className={`${input} pl-10`} aria-label="Search students" placeholder="Search name, interests, goals…" value={q} onChange={(e) => setQ(e.target.value)} />
         </label>
-        <input className={input} placeholder="Filter by intended major" value={major} onChange={(e) => setMajor(e.target.value)} />
+        <input className={input} aria-label="Intended major" placeholder="Intended major" value={major} onChange={(e) => setMajor(e.target.value)} />
+        <input className={input} aria-label="Country" placeholder="Country" value={country} onChange={(e) => setCountry(e.target.value)} />
+        <select className={input} aria-label="Education level" value={education} onChange={(e) => setEducation(e.target.value)}>
+          <option value="">Any education level</option>
+          {[...new Set((students.data ?? []).map((s) => s.education_level).filter(Boolean) as string[]), ...(education ? [education] : [])].filter((v, i, a) => a.indexOf(v) === i).map((l) => <option key={l}>{l}</option>)}
+        </select>
       </div>
       <div className="mt-5">
         {students.isLoading ? <p className="text-sm text-muted-foreground">Loading…</p>
@@ -186,36 +183,11 @@ function StudentDiscovery({ userId }: { userId: string | undefined }) {
         ) : (
           <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {(students.data ?? []).map((s: StudentCard) => (
-              <li key={s.id} className="flex flex-col rounded-2xl border border-border bg-card p-5 shadow-soft">
-                <div className="flex items-center gap-3">
-                  <Avatar path={s.avatar_path} name={s.display_name} size="sm" />
-                  <div className="min-w-0">
-                    <p className="truncate font-medium">{s.display_name}</p>
-                    <p className="truncate text-xs text-muted-foreground">
-                      {[s.education_level, s.intended_major, s.country_region].filter(Boolean).join(" · ") || "Student"}
-                    </p>
-                  </div>
-                </div>
-                {s.bio && <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">{s.bio}</p>}
-                {s.interests.length > 0 && (
-                  <div className="mt-3 flex flex-wrap gap-1.5">
-                    {s.interests.slice(0, 4).map((i) => <span key={i} className={chip}>{i}</span>)}
-                  </div>
-                )}
-                <div className="mt-auto pt-4">
-                  {connectedWith.has(s.id) ? <span className="text-xs font-medium text-teal">Connected</span>
-                  : pendingWith.has(s.id) ? <span className="text-xs text-muted-foreground">Request pending</span>
-                  : (
-                    <button disabled={send.isPending} onClick={() => send.mutate(s.id)}
-                      className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3.5 py-1.5 text-xs font-medium text-primary-foreground transition hover:opacity-90 disabled:opacity-50">
-                      <UserPlus className="h-3.5 w-3.5" /> Send request
-                    </button>
-                  )}
-                </div>
-              </li>
+              <StudentCardView key={s.id} s={s} action={<ConnectButton studentId={s.id} rows={rows} />} />
             ))}
           </ul>
         )}
+      </div>
       </div>
     </section>
   );

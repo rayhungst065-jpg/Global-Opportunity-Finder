@@ -39,6 +39,7 @@ import { Route as AuthenticatedCommunitiesIndexRouteImport } from './routes/_aut
 import { Route as AuthenticatedCommunitiesIdRouteImport } from './routes/_authenticated/communities.$id'
 import { Route as AuthenticatedCommunitiesMyRouteImport } from './routes/_authenticated/communities.my'
 import { Route as AuthenticatedCommunitiesNewRouteImport } from './routes/_authenticated/communities.new'
+import { Route as AuthenticatedStudentsIdRouteImport } from './routes/_authenticated/students.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -196,6 +197,11 @@ const AuthenticatedCommunitiesNewRoute =
     path: '/communities/new',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedStudentsIdRoute = AuthenticatedStudentsIdRouteImport.update({
+  id: '/students/$id',
+  path: '/students/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -226,6 +232,7 @@ export interface FileRoutesByFullPath {
   '/communities/$id': typeof AuthenticatedCommunitiesIdRoute
   '/communities/my': typeof AuthenticatedCommunitiesMyRoute
   '/communities/new': typeof AuthenticatedCommunitiesNewRoute
+  '/students/$id': typeof AuthenticatedStudentsIdRoute
   '/communities/': typeof AuthenticatedCommunitiesIndexRoute
 }
 export interface FileRoutesByTo {
@@ -257,6 +264,7 @@ export interface FileRoutesByTo {
   '/communities/$id': typeof AuthenticatedCommunitiesIdRoute
   '/communities/my': typeof AuthenticatedCommunitiesMyRoute
   '/communities/new': typeof AuthenticatedCommunitiesNewRoute
+  '/students/$id': typeof AuthenticatedStudentsIdRoute
   '/communities': typeof AuthenticatedCommunitiesIndexRoute
 }
 export interface FileRoutesById {
@@ -290,6 +298,7 @@ export interface FileRoutesById {
   '/_authenticated/communities/$id': typeof AuthenticatedCommunitiesIdRoute
   '/_authenticated/communities/my': typeof AuthenticatedCommunitiesMyRoute
   '/_authenticated/communities/new': typeof AuthenticatedCommunitiesNewRoute
+  '/_authenticated/students/$id': typeof AuthenticatedStudentsIdRoute
   '/_authenticated/communities/': typeof AuthenticatedCommunitiesIndexRoute
 }
 export interface FileRouteTypes {
@@ -323,6 +332,7 @@ export interface FileRouteTypes {
     | '/communities/$id'
     | '/communities/my'
     | '/communities/new'
+    | '/students/$id'
     | '/communities/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -354,6 +364,7 @@ export interface FileRouteTypes {
     | '/communities/$id'
     | '/communities/my'
     | '/communities/new'
+    | '/students/$id'
     | '/communities'
   id:
     | '__root__'
@@ -386,6 +397,7 @@ export interface FileRouteTypes {
     | '/_authenticated/communities/$id'
     | '/_authenticated/communities/my'
     | '/_authenticated/communities/new'
+    | '/_authenticated/students/$id'
     | '/_authenticated/communities/'
   fileRoutesById: FileRoutesById
 }
@@ -620,6 +632,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCommunitiesNewRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/students/$id': {
+      id: '/_authenticated/students/$id'
+      path: '/students/$id'
+      fullPath: '/students/$id'
+      preLoaderRoute: typeof AuthenticatedStudentsIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -637,6 +656,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCommunitiesIdRoute: typeof AuthenticatedCommunitiesIdRoute
   AuthenticatedCommunitiesMyRoute: typeof AuthenticatedCommunitiesMyRoute
   AuthenticatedCommunitiesNewRoute: typeof AuthenticatedCommunitiesNewRoute
+  AuthenticatedStudentsIdRoute: typeof AuthenticatedStudentsIdRoute
   AuthenticatedCommunitiesIndexRoute: typeof AuthenticatedCommunitiesIndexRoute
 }
 
@@ -654,6 +674,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCommunitiesIdRoute: AuthenticatedCommunitiesIdRoute,
   AuthenticatedCommunitiesMyRoute: AuthenticatedCommunitiesMyRoute,
   AuthenticatedCommunitiesNewRoute: AuthenticatedCommunitiesNewRoute,
+  AuthenticatedStudentsIdRoute: AuthenticatedStudentsIdRoute,
   AuthenticatedCommunitiesIndexRoute: AuthenticatedCommunitiesIndexRoute,
 }
 
