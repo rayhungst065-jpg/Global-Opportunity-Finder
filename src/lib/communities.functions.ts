@@ -1,23 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
-import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
-import type { Database } from "@/integrations/supabase/types";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-
-function publicClient() {
-  const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
-  return createClient<Database>(process.env["SUPABASE_URL"]!, key, {
-    auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
-    global: {
-      fetch: (input, init) => {
-        const h = new Headers(init?.headers);
-        if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization");
-        h.set("apikey", key);
-        return fetch(input, { ...init, headers: h });
-      },
-    },
-  });
-}
 
 export const communityCategories = [
   "Robotics & Engineering",
@@ -50,13 +33,14 @@ const proposalInput = z.object({
   rules: optionalText(2000),
 });
 
-/** Public directory: every row in communities is an approved group. */
+/** Signed-in directory: every row in communities is an approved group. */
 export const listCommunities = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((d) =>
     z.object({ q: z.string().max(100).optional(), category: z.string().max(80).optional() }).parse(d ?? {}),
   )
-  .handler(async ({ data }) => {
-    let query = publicClient().from("communities").select("*").order("name");
+  .handler(async ({ data, context }) => {
+    let query = context.supabase.from("communities").select("*").order("name");
     if (data.category) query = query.eq("category", data.category);
     if (data.q) {
       const term = data.q.replace(/[%,()*]/g, " ").trim();
@@ -78,9 +62,10 @@ export const listCommunities = createServerFn({ method: "GET" })
   });
 
 export const getCommunity = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((d) => z.object({ id: z.string().uuid() }).parse(d))
-  .handler(async ({ data }) => {
-    const { data: row, error } = await publicClient().from("communities").select("*").eq("id", data.id).maybeSingle();
+  .handler(async ({ data, context }) => {
+    const { data: row, error } = await context.supabase.from("communities").select("*").eq("id", data.id).maybeSingle();
     if (error) throw new Error(error.message);
     return row;
   });

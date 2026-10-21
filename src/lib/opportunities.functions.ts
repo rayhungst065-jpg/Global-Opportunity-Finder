@@ -1,21 +1,11 @@
 import { createServerFn } from "@tanstack/react-start";
-import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
-import type { Database } from "@/integrations/supabase/types";
 
-function publicClient() {
-  const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
-  return createClient<Database>(process.env["SUPABASE_URL"]!, key, {
-    auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
-    global: {
-      fetch: (input, init) => {
-        const h = new Headers(init?.headers);
-        if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization");
-        h.set("apikey", key);
-        return fetch(input, { ...init, headers: h });
-      },
-    },
-  });
+/** Read-only catalog client. The public catalog has no anonymous database
+ * policy, so public pages read it here on the server only. */
+async function catalogClient() {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  return supabaseAdmin;
 }
 
 const categoryEnum = z.enum(["volunteer", "competitions", "research", "awards"]);
@@ -26,7 +16,7 @@ export const listOpportunities = createServerFn({ method: "GET" })
     z.object({ q: z.string().max(100).optional(), category: categoryEnum.optional() }).parse(d ?? {}),
   )
   .handler(async ({ data }) => {
-    let query = publicClient()
+    let query = (await catalogClient())
       .from("opportunities")
       .select("*")
       .order("deadline", { ascending: true, nullsFirst: false })
@@ -44,7 +34,7 @@ export const listOpportunities = createServerFn({ method: "GET" })
 export const getOpportunity = createServerFn({ method: "GET" })
   .inputValidator((d) => z.object({ id: z.string().uuid() }).parse(d))
   .handler(async ({ data }) => {
-    const { data: row, error } = await publicClient().from("opportunities").select("*").eq("id", data.id).maybeSingle();
+    const { data: row, error } = await (await catalogClient()).from("opportunities").select("*").eq("id", data.id).maybeSingle();
     if (error) throw new Error(error.message);
     return row;
   });
