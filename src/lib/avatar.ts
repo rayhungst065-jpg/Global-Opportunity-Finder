@@ -11,17 +11,19 @@ export function validateAvatar(file: File) {
   return null;
 }
 
-/** Short-lived signed URL for a private avatar (bucket is private; RLS limits reads). */
+/** Private avatar loaded through an authenticated, RLS-checked download each time
+ * (no shareable signed link), so revoked access takes effect on the next load. */
 export function useAvatarUrl(path: string | null | undefined) {
   return useQuery({
     queryKey: ["avatar-url", path],
     enabled: !!path,
-    staleTime: 50 * 60 * 1000,
+    staleTime: 60 * 1000,
+    gcTime: 60 * 1000,
     queryFn: async () => {
       if (!path) return null;
-      const { data, error } = await supabase.storage.from("avatars").createSignedUrl(path, 60 * 60);
+      const { data, error } = await supabase.storage.from("avatars").download(path);
       if (error) throw error;
-      return data.signedUrl;
+      return URL.createObjectURL(data);
     },
   });
 }

@@ -13,9 +13,9 @@
 - Homepage and About share one creator-introduction component and original-photo asset pointer; why: reuse the photo and layout while keeping short/full copy distinct and linking to one About anchor.
 - Public opportunity reads go through `src/lib/opportunities.functions.ts` using the server-only admin client loaded inside read-only handlers; why: listing pages SSR without a session while the database has no anonymous read policy.
 - Student-owned data (profiles, saved_opportunities) is read/written from the browser client under RLS; why: RLS scopes rows to auth.uid().
-- Shared opportunity edits are admin-only via `public.has_role`; the assistant may insert NEW catalog rows only through `recommendOpportunity` (admin client, title dedupe, unverified, labeled estimates), and saves stay owner-scoped; why: auto-collect chat recommendations without duplicates while preserving verified deadlines and source integrity.
+- Shared opportunity edits are admin-only via `public.has_role`; the assistant never inserts catalog rows (recommendations outside the catalog are chat-only cards), and saves stay owner-scoped; why: students must not be able to add unreviewed records to the shared catalog through chat.
 - Demo rows carry `is_demo = true` and must be labeled in the UI; why: never present fake opportunities as real.
-- Profile pictures live in the private `avatars` bucket under `<user_id>/…`, shown via signed URLs; why: storage RLS limits access to the owner folder.
+- Profile pictures live in the private `avatars` bucket under `<user_id>/…`, shown via authenticated downloads (object URLs), never signed links; why: revoked visibility must apply on the next load.
 - Peer profile reads use the authenticated `student_profile_cards` RPC; direct profile reads are owner-only and avatar access follows shared-field visibility, so hidden fields cannot leak through direct database requests.
 - Homepage feature login destinations use an explicit path allowlist; why: return students to the selected existing page without permitting external redirects.
 - Group membership RLS uses security-definer `is_group_member`/`is_group_creator` functions, never self-referencing policies; why: a policy querying its own table causes infinite recursion, and insert policies can't read rows the read policy hides.
