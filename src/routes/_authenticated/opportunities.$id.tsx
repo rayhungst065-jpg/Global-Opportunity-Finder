@@ -7,7 +7,7 @@ import { useUser } from "@/lib/auth";
 import { statusLabel, useSavedIds, useToggleSave } from "@/lib/saved";
 import { verificationState } from "@/lib/opportunity-source";
 
-export const Route = createFileRoute("/opportunities/$id")({
+export const Route = createFileRoute("/_authenticated/opportunities/$id")({
   loader: async ({ params }) => {
     const o = await getOpportunity({ data: { id: params.id } }).catch(() => null);
     if (!o) throw notFound();
