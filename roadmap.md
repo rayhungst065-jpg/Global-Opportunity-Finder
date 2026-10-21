@@ -1,11 +1,6 @@
 # Roadmap — Brand & Communities Update
 
 ## Focused fixes
-- [ ] Image-only restoration: original hero.jpg, volunteer.jpg, competitions.jpg, research.jpg and awards.jpg are retained; narrow audit found no other image replacements. Blocked: available documented undo restores a project version, user forbids full-project revert and agent instructions prohibit code-based undo. No application edits, new images, or publishing; restored preview cannot be verified until an image-only restoration is applied.
-- [x] Sender DNS verified; disposable inbox actually received signup and password-reset emails from default auth sender; signup link verified, unconfirmed login blocked, consumed/invalid links rejected, password changed through UI and new login passed; no real-user emails
-- [ ] Auth email branding, intended welcome email, Gmail-specific delivery and exact expiry boundary — custom auth templates/welcome do not exist, no authorized Gmail inbox, hosted expiry settings unavailable; no speculative feature changes
-- [x] Existing standalone local AI Chat sent real Gemini message, displayed reply, retained it after reload; HTTP 200, no alerts or browser errors; no security/design changes
-- [ ] Compare actual editor preview vs external-tab Chat — custom domain returns no published build (404), external preview redirects to Lovable viewer login; needs authorized external preview access, no automatic publishing or guessed fix
 - [x] Added exact homepage/About creator introductions and original photo, existing About anchor links, and Feedback & Support navigation/contact links; signed-in desktop/mobile navigation, undistorted whole-photo layouts, preserved platform introduction/quote, exact mailto and Google Form new-tab navigation passed; routing test passed and preview build OK; no AI/premium calls or publishing
 - [x] Targeted About/homepage labels and whole-section/CTA links with post-login return; both signed-out returns and signed-in CTAs verified
 - [x] Two isolated test accounts: two-way discovery/search, request/accept, friend cards, refresh/re-sign-in persistence, discovery opt-out, hidden raw profile fields and avatar denial verified; 6 focused tests passed
@@ -28,8 +23,7 @@
 - [x] Original symbol plus readable brand name; Capstone footer sentence removed
 - [x] Assistant real search returned FRC/FTC organizer links inline; both official URLs returned HTTP 200
 - [x] Provider recovery request accepted (HTTP 200); generic response and invalid/expired-link rejection verified
-- [x] Recovery email receipt and password change verified with a disposable inbox; delivered recovery token accepted through reset UI and new password login passed
-- [ ] Hosted redirect allowlist and expiry duration — no hosted settings read available; do not infer settings from local success
+- [ ] Recovery email receipt, password change and redirect allowlist — needs the user to follow the emailed link; hosted redirect settings are not accessible through current tools
 
 ## Done
 - [x] Logo assets (full + symbol) via lovable-assets; favicon from symbol; brand renamed to Global Opportunity Finder
