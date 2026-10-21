@@ -831,6 +831,21 @@ export type Database = {
         }
         Relationships: []
       }
+      welcome_emails: {
+        Row: {
+          sent_at: string
+          user_id: string
+        }
+        Insert: {
+          sent_at?: string
+          user_id: string
+        }
+        Update: {
+          sent_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
