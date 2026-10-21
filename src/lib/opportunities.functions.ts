@@ -1,4 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
+
 /** Read-only catalog client. The public catalog has no anonymous database
  * policy, so public pages read it here on the server only. */
 async function catalogClient() {

@@ -134,6 +134,13 @@
       "when": 1792556768633,
       "tag": "0018_tighten_permissive_read_policies",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1792556899839,
+      "tag": "0019_restrict_catalog_reads_to_signed_in",
+      "breakpoints": true
     }
   ]
 }
