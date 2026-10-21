@@ -21,7 +21,7 @@ type Search = z.infer<typeof search>;
 const listQuery = (s: Search) =>
   queryOptions({ queryKey: ["opportunities", s.q ?? "", s.category ?? ""], queryFn: () => listOpportunities({ data: s }) });
 
-export const Route = createFileRoute("/opportunities/")({
+export const Route = createFileRoute("/_authenticated/opportunities/")({
   validateSearch: search,
   loaderDeps: ({ search }) => search,
   loader: ({ context, deps }) => context.queryClient.ensureQueryData(listQuery(deps)),
