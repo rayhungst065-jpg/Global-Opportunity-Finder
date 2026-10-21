@@ -1,4 +1,4 @@
-import volunteer from "@/assets/volunteer.jpg";
+import volunteer from "@/assets/volunteer-tree-planting.png.asset.json";
 import competitions from "@/assets/competitions.jpg";
 import research from "@/assets/research.jpg";
 import awards from "@/assets/awards.jpg";
