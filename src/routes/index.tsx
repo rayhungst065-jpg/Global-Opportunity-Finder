@@ -5,6 +5,7 @@ import { CreatorIntroduction } from "@/components/site/CreatorIntroduction";
 import { Reveal } from "@/components/site/Reveal";
 import { categories } from "@/lib/categories";
 import hero from "@/assets/hero.jpg";
+import volunteerStMarys from "@/assets/volunteer-st-marys-food-bank.jpg.asset.json";
 import globalStudents from "@/assets/global-students.jpg";
 import collegeCampus from "@/assets/college-campus.jpg";
 import nextChapter from "@/assets/next-chapter.jpg";
@@ -150,7 +151,7 @@ function Landing() {
               <Reveal key={c.key} delay={i * 100}>
                 <Link to="/categories" hash={c.key} className={`group block overflow-hidden rounded-3xl border border-ink-foreground/15 border-t-4 ${categoryAccent[c.key] ?? "border-t-primary"}`}>
                   <div className="overflow-hidden">
-                    <img src={c.image} alt={c.name} loading="lazy" width={1280} height={960} className="aspect-[4/3] w-full object-cover transition duration-700 group-hover:scale-105" />
+                    <img src={c.key === "volunteer" ? volunteerStMarys.url : c.image} alt={c.name} loading="lazy" width={1280} height={960} className="aspect-[4/3] w-full object-cover transition duration-700 group-hover:scale-105" />
                   </div>
                   <div className="p-5">
                     <div className="font-display font-medium">{c.name}</div>
