@@ -10,7 +10,7 @@ export const categories = [
     name: "Volunteer",
     tagline: "Make an impact that matters.",
     text: "Find community service, environmental projects, and nonprofit work — locally or online.",
-    image: volunteer,
+    image: volunteer.url,
   },
   {
     key: "competitions",
