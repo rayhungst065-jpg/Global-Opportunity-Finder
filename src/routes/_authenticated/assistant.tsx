@@ -53,12 +53,12 @@ function AssistantPage() {
     catch (e) { setNotice(e instanceof Error ? e.message : "Could not start a chat."); }
     finally { setCreating(false); }
   }
-  return <WorkspaceShell title="AI Opportunity Assistant">
-    <div className="mb-5 flex flex-wrap items-center gap-2">
+  return <WorkspaceShell title="AI Opportunity Assistant" fitViewport>
+    <div className="mb-3 flex shrink-0 flex-wrap items-center gap-2">
       <Button variant="outline" onClick={startNew} disabled={creating}><Plus />Start New Chat</Button>
       <DropdownMenu><DropdownMenuTrigger asChild><Button variant="ghost"><History />Previous chats</Button></DropdownMenuTrigger><DropdownMenuContent className="max-h-80 w-72 overflow-y-auto">{history.data?.map(c => <DropdownMenuItem key={c.id} onClick={() => setSelected(c.id)} className="whitespace-normal">{c.title}</DropdownMenuItem>)}{!history.data?.length && <p className="p-3 text-sm text-muted-foreground">No previous chats.</p>}</DropdownMenuContent></DropdownMenu>
     </div>
-    <p className="mb-4 flex items-start gap-2 text-xs text-muted-foreground"><ShieldCheck className="h-4 w-4 shrink-0" />Chat messages and selected preferences are sent to Google Gemini. Google’s free API tier may use this data to improve its products. Chat uses saved opportunity records, not live web search. College Search uses the saved spreadsheet database. Do not include sensitive information.</p>
+    <p className="mb-3 flex shrink-0 items-start gap-2 text-xs text-muted-foreground"><ShieldCheck className="h-4 w-4 shrink-0" />Chat messages and selected preferences are sent to Google Gemini. Google’s free API tier may use this data to improve its products. Chat uses saved opportunity records, not live web search. College Search uses the saved spreadsheet database. Do not include sensitive information.</p>
     {(notice || history.error || chat.error) && <p role="alert" className="mb-4 text-sm text-destructive">{notice || history.error?.message || chat.error?.message}</p>}
     {history.isPending || (activeId && chat.isPending) ? <Shimmer>Loading your chat…</Shimmer> : chat.data ? <ChatWindow key={chat.data.chat.id} id={chat.data.chat.id} initialMessages={chat.data.messages.map(m => ({ id: m.message_id, role: m.role, parts: m.parts })) as UIMessage[]} summary={chat.data.chat.summary} /> : <div className="py-16 text-center"><img src={symbol.url} alt="Global Opportunity Finder" className="mx-auto h-16 w-auto" /><h2 className="mt-5 text-xl font-semibold">Your next opportunity</h2><Button className="mt-6" onClick={startNew} disabled={creating}>Start a conversation</Button></div>}
   </WorkspaceShell>;
@@ -89,10 +89,10 @@ function ChatWindow({ id, initialMessages, summary }: { id: string; initialMessa
   useEffect(() => { if (!busy) input.current?.focus(); }, [busy]);
   const send = (value: string) => { if (!value.trim() || busy) return; setText(""); void sendMessage({ text: value }); input.current?.focus(); };
   const prompts = ["Find competitions for me", "Find research programs in robotics", "Create an opportunity action plan"];
-  return <div className="min-w-0">
-    <div className="mb-3 flex flex-wrap items-center justify-between gap-2"><span className="text-sm font-medium">Opportunity chat</span><Button variant="ghost" size="sm" disabled={busy || !messages.length} onClick={() => send(SUMMARY_REQUEST)}><FileText />Summarize Our Conversation</Button></div>
-    {summary && <details className="mb-4 border-b border-border pb-3"><summary className="cursor-pointer text-sm font-medium">Latest conversation summary</summary><MessageResponse className="mt-3 text-sm">{summary}</MessageResponse></details>}
-    <Conversation className="relative h-[min(58vh,650px)] min-h-72 border-y border-border"><ConversationContent className="gap-7 px-0 py-5">
+  return <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+    <div className="mb-3 flex shrink-0 flex-wrap items-center justify-between gap-2"><span className="text-sm font-medium">Opportunity chat</span><Button variant="ghost" size="sm" disabled={busy || !messages.length} onClick={() => send(SUMMARY_REQUEST)}><FileText />Summarize Our Conversation</Button></div>
+    {summary && <details className="mb-3 max-h-32 shrink-0 overflow-y-auto border-b border-border pb-3"><summary className="cursor-pointer text-sm font-medium">Latest conversation summary</summary><MessageResponse className="mt-3 text-sm">{summary}</MessageResponse></details>}
+    <Conversation className="relative min-h-0 flex-1 border-y border-border"><ConversationContent className="gap-7 px-0 py-5">
       {!messages.length && <div className="py-8"><img src={symbol.url} alt="Global Opportunity Finder" className="h-12 w-auto" /><h2 className="mt-4 text-xl font-semibold">Big Dreams. Real Opportunities.</h2><div className="mt-6 flex flex-wrap gap-2">{prompts.map(p => <Button key={p} variant="outline" className="h-auto whitespace-normal py-3 text-left" onClick={() => send(p)}>{p}</Button>)}</div></div>}
       {messages.map(m => <Message key={m.id} from={m.role}><MessageContent className={m.role === "user" ? "bg-primary text-primary-foreground" : "w-full"}>{m.parts.map((p, i) => {
         if (p.type === "text") return <MessageResponse key={i}>{p.text}</MessageResponse>;
@@ -109,7 +109,7 @@ function ChatWindow({ id, initialMessages, summary }: { id: string; initialMessa
       })}</MessageContent></Message>)}
       {status === "submitted" && <Shimmer>Thinking about your next steps…</Shimmer>}
     </ConversationContent><ConversationScrollButton /></Conversation>
-    {(error || saveError) && <p role="alert" className="my-3 break-words text-sm text-destructive">{saveError || error?.message}</p>}
-    <PromptInput className="mt-4" onSubmit={() => send(text)}><PromptInputTextarea ref={input} aria-label="Message the opportunity assistant" placeholder="Ask about opportunities, eligibility or your next steps…" value={text} onChange={e => setText(e.target.value)} disabled={busy} /><PromptInputFooter className="justify-end"><PromptInputSubmit status={status} onStop={stop} disabled={!busy && !text.trim()} /></PromptInputFooter></PromptInput>
+    {(error || saveError) && <p role="alert" className="my-3 max-h-24 shrink-0 overflow-y-auto break-words text-sm text-destructive">{saveError || error?.message}</p>}
+    <PromptInput className="mt-3 shrink-0" onSubmit={() => send(text)}><PromptInputTextarea ref={input} className="max-h-24" aria-label="Message the opportunity assistant" placeholder="Ask about opportunities, eligibility or your next steps…" value={text} onChange={e => setText(e.target.value)} disabled={busy} /><PromptInputFooter className="justify-end"><PromptInputSubmit status={status} onStop={stop} disabled={!busy && !text.trim()} /></PromptInputFooter></PromptInput>
   </div>;
 }

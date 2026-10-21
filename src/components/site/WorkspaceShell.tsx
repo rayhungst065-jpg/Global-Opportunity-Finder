@@ -80,11 +80,11 @@ const items = [
 ] as const;
 
 /** Logged-in student workspace: left sidebar on desktop, scrollable tab bar on mobile. */
-export function WorkspaceShell({ title, subtitle, children }: { title: string; subtitle?: string; children: ReactNode }) {
+export function WorkspaceShell({ title, subtitle, children, fitViewport = false }: { title: string; subtitle?: string; children: ReactNode; fitViewport?: boolean }) {
   const link = "flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-muted-foreground transition hover:bg-accent hover:text-foreground";
   const active = { className: "bg-primary-soft font-medium text-accent-foreground" };
   return (
-    <div className="min-h-screen bg-surface md:flex">
+    <div className={fitViewport ? "flex h-dvh flex-col overflow-hidden bg-surface md:flex-row" : "min-h-screen bg-surface md:flex"}>
       <aside className="hidden w-64 shrink-0 flex-col border-r border-border bg-background px-4 py-6 md:sticky md:top-0 md:flex md:h-screen">
         <div className="px-2"><LogoSymbol /></div>
         <SidebarUser />
@@ -101,8 +101,8 @@ export function WorkspaceShell({ title, subtitle, children }: { title: string; s
         </div>
       </aside>
 
-      <div className="min-w-0 flex-1">
-        <div className="border-b border-border bg-background md:hidden">
+      <div className={fitViewport ? "flex min-h-0 min-w-0 flex-1 flex-col" : "min-w-0 flex-1"}>
+        <div className="shrink-0 border-b border-border bg-background md:hidden">
           <div className="flex items-center justify-between px-5 py-4">
             <LogoSymbol className="h-8" />
             <div className="flex items-center gap-3 text-sm">
@@ -119,10 +119,10 @@ export function WorkspaceShell({ title, subtitle, children }: { title: string; s
             ))}
           </nav>
         </div>
-        <main className="mx-auto max-w-5xl px-5 py-8 md:px-10 md:py-10">
-          <h1 className="text-2xl font-semibold md:text-3xl">{title}</h1>
+        <main className={fitViewport ? "mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col px-5 py-4 md:px-10 md:py-6" : "mx-auto max-w-5xl px-5 py-8 md:px-10 md:py-10"}>
+          <h1 className="shrink-0 text-2xl font-semibold md:text-3xl">{title}</h1>
           {subtitle && <p className="mt-1.5 text-sm text-muted-foreground">{subtitle}</p>}
-          <div className="mt-8">{children}</div>
+          <div className={fitViewport ? "mt-4 flex min-h-0 flex-1 flex-col" : "mt-8"}>{children}</div>
         </main>
       </div>
     </div>
