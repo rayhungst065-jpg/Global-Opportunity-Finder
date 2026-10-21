@@ -1,7 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site/SiteLayout";
 import { CreatorIntroduction } from "@/components/site/CreatorIntroduction";
-import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -44,11 +43,6 @@ export const Route = createFileRoute("/about")({
       <blockquote className="rounded-2xl border-l-4 border-primary bg-primary-soft p-5 font-display text-xl text-accent-foreground">
         “To make opportunities more accessible and help students turn curiosity into meaningful action.”
       </blockquote>
-        <section aria-labelledby="learn-about-creator-heading" className="mt-10">
-          <h2 id="learn-about-creator-heading" className="font-display text-2xl font-semibold">Learn About the Creator</h2>
-          <p className="mt-4 text-lg leading-relaxed text-muted-foreground">Curious about why I created Global Opportunity Finder? Learn more about the story behind this project and my goal of helping students discover more opportunities.</p>
-          <Button asChild className="mt-6 h-auto whitespace-normal rounded-full px-6 py-3"><Link to="/about" hash="creator">Meet the Creator</Link></Button>
-        </section>
       </div>
     </SiteShell>
   ),
