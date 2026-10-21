@@ -40,6 +40,7 @@ import { Route as AuthenticatedCommunitiesIdRouteImport } from './routes/_authen
 import { Route as AuthenticatedCommunitiesMyRouteImport } from './routes/_authenticated/communities.my'
 import { Route as AuthenticatedCommunitiesNewRouteImport } from './routes/_authenticated/communities.new'
 import { Route as AuthenticatedStudentsIdRouteImport } from './routes/_authenticated/students.$id'
+import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -202,6 +203,12 @@ const AuthenticatedStudentsIdRoute = AuthenticatedStudentsIdRouteImport.update({
   path: '/students/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const LovableEmailTransactionalPreviewRoute =
+  LovableEmailTransactionalPreviewRouteImport.update({
+    id: '/lovable/email/transactional/preview',
+    path: '/lovable/email/transactional/preview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -234,6 +241,7 @@ export interface FileRoutesByFullPath {
   '/communities/new': typeof AuthenticatedCommunitiesNewRoute
   '/students/$id': typeof AuthenticatedStudentsIdRoute
   '/communities/': typeof AuthenticatedCommunitiesIndexRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -266,6 +274,7 @@ export interface FileRoutesByTo {
   '/communities/new': typeof AuthenticatedCommunitiesNewRoute
   '/students/$id': typeof AuthenticatedStudentsIdRoute
   '/communities': typeof AuthenticatedCommunitiesIndexRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -300,6 +309,7 @@ export interface FileRoutesById {
   '/_authenticated/communities/new': typeof AuthenticatedCommunitiesNewRoute
   '/_authenticated/students/$id': typeof AuthenticatedStudentsIdRoute
   '/_authenticated/communities/': typeof AuthenticatedCommunitiesIndexRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -334,6 +344,7 @@ export interface FileRouteTypes {
     | '/communities/new'
     | '/students/$id'
     | '/communities/'
+    | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -366,6 +377,7 @@ export interface FileRouteTypes {
     | '/communities/new'
     | '/students/$id'
     | '/communities'
+    | '/lovable/email/transactional/preview'
   id:
     | '__root__'
     | '/'
@@ -399,6 +411,7 @@ export interface FileRouteTypes {
     | '/_authenticated/communities/new'
     | '/_authenticated/students/$id'
     | '/_authenticated/communities/'
+    | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -418,6 +431,7 @@ export interface RootRouteChildren {
   ApiAssistantRoute: typeof ApiAssistantRoute
   OpportunitiesIdRoute: typeof OpportunitiesIdRoute
   OpportunitiesIndexRoute: typeof OpportunitiesIndexRoute
+  LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -639,6 +653,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudentsIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/lovable/email/transactional/preview': {
+      id: '/lovable/email/transactional/preview'
+      path: '/lovable/email/transactional/preview'
+      fullPath: '/lovable/email/transactional/preview'
+      preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -698,6 +719,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAssistantRoute: ApiAssistantRoute,
   OpportunitiesIdRoute: OpportunitiesIdRoute,
   OpportunitiesIndexRoute: OpportunitiesIndexRoute,
+  LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
