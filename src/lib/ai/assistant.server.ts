@@ -70,7 +70,8 @@ export async function handleAssistant(request: Request) {
     });
     const result = streamText({
       model: provider(GEMINI_MODEL), instructions: `${ASSISTANT_POLICY}\nToday's UTC date: ${new Date().toISOString().slice(0, 10)}\nPermitted profile: ${JSON.stringify(permittedProfile(profile))}`,
-      messages: await convertToModelMessages(messages), abortSignal: request.signal, maxRetries: 0,
+      // Retry Gemini's temporary "high demand" (503/429) failures with backoff instead of failing the chat immediately.
+      messages: await convertToModelMessages(messages), abortSignal: request.signal, maxRetries: 3,
       maxOutputTokens: 2048, stopWhen: stepCountIs(5),
       tools: {
         recommendOpportunity: tool({ description: "Present one original, specific opportunity recommendation as a chat card with a Save option. Identifiable opportunities are also added to Explore Opportunities automatically (deduplicated by title); this never marks them as saved and never calls another AI. Prefer an existing catalogId and accurate catalog facts; use null for unknown dates/links, and deadlineEstimate for a labeled approximate period such as 'mid-July'. Only recommend specific identifiable opportunities, never general advice. Preserve your personalized reason.", inputSchema: chatRecommendationSchema, execute: async (input) => {
