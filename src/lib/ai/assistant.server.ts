@@ -74,28 +74,19 @@ export async function handleAssistant(request: Request) {
       messages: await convertToModelMessages(messages), abortSignal: request.signal, maxRetries: 3,
       maxOutputTokens: 2048, stopWhen: stepCountIs(5),
       tools: {
-        recommendOpportunity: tool({ description: "Present one original, specific opportunity recommendation as a chat card with a Save option. Identifiable opportunities are also added to Explore Opportunities automatically (deduplicated by title); this never marks them as saved and never calls another AI. Prefer an existing catalogId and accurate catalog facts; use null for unknown dates/links, and deadlineEstimate for a labeled approximate period such as 'mid-July'. Only recommend specific identifiable opportunities, never general advice. Preserve your personalized reason.", inputSchema: chatRecommendationSchema, execute: async (input) => {
+        recommendOpportunity: tool({ description: "Present one original, specific opportunity recommendation as a chat card with a Save option. Opportunities already in Explore Opportunities are linked by title; new ones are shown in chat only and never added to the shared catalog. Prefer an existing catalogId and accurate catalog facts; use null for unknown dates/links, and deadlineEstimate for a labeled approximate period such as 'mid-July'. Only recommend specific identifiable opportunities, never general advice. Preserve your personalized reason.", inputSchema: chatRecommendationSchema, execute: async (input) => {
           if (input.catalogId) {
             const { data: row, error } = await db.from("opportunities").select("*").eq("id", input.catalogId).single();
             if (error || !row || !isNormalRecommendation(row)) throw new Error("This catalog opportunity is unavailable for recommendation.");
             return normalizeChatRecommendation({ ...input, name: row.title, description: row.description, deadline: row.deadline, deadlineEstimate: row.deadline_estimate, officialUrl: row.official_url });
           }
-          // New identifiable opportunity: add it to Explore Opportunities, deduplicated by title.
-          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+          // Not in the catalog: show the card only. Shared catalog writes are admin-only, so chat never inserts rows.
           const normalized = input.name.trim().replace(/\s+/g, " ").toLowerCase();
-          const { data: existing, error: findError } = await supabaseAdmin.from("opportunities").select("*").ilike("title", normalized).limit(5);
+          const { data: existing, error: findError } = await db.from("opportunities").select("*").ilike("title", normalized).limit(5);
           if (findError) throw new Error(findError.message);
           const match = (existing ?? []).find(r => r.title.trim().replace(/\s+/g, " ").toLowerCase() === normalized);
           if (match) return normalizeChatRecommendation({ ...input, catalogId: match.id, name: match.title, description: match.description, deadline: match.deadline, deadlineEstimate: match.deadline_estimate, officialUrl: match.official_url });
-          const { data: inserted, error: insertError } = await supabaseAdmin.from("opportunities").insert({
-            title: input.name.trim(), description: input.description, category: input.category,
-            organizer: input.organizer ?? "Not specified", location: "Not specified", eligibility: "Not specified",
-            deadline: input.deadline && /^\d{4}-\d{2}-\d{2}$/.test(input.deadline) ? input.deadline : null,
-            deadline_estimate: input.deadlineEstimate, official_url: safeOfficialUrl(input.officialUrl),
-            application_status: "upcoming", is_demo: false, last_verified_at: null,
-          }).select("id").single();
-          if (insertError || !inserted) throw new Error(insertError?.message ?? "Could not add this opportunity to Explore Opportunities.");
-          return normalizeChatRecommendation({ ...input, catalogId: inserted.id });
+          return normalizeChatRecommendation({ ...input, catalogId: null, officialUrl: safeOfficialUrl(input.officialUrl) });
         } }),
         searchCatalog: tool({ description: "Read shared opportunity records. Demo records are not actual opportunities. Returns eligibility, deadline and official link if recorded.", inputSchema: z.object({ query: z.string() }), execute: async ({ query }) => {
           const { data: rows, error } = await db.from("opportunities").select("*");
