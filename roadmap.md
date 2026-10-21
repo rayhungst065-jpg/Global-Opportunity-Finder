@@ -1,6 +1,7 @@
 # Roadmap — Brand & Communities Update
 
 ## Focused fixes
+- [ ] Generate five separate editorial hero/category photos, reuse category assets on matching cards, preserve layout/original photos, and verify desktop/mobile image rendering without publishing
 - [x] Added exact homepage/About creator introductions and original photo, existing About anchor links, and Feedback & Support navigation/contact links; signed-in desktop/mobile navigation, undistorted whole-photo layouts, preserved platform introduction/quote, exact mailto and Google Form new-tab navigation passed; routing test passed and preview build OK; no AI/premium calls or publishing
 - [x] Targeted About/homepage labels and whole-section/CTA links with post-login return; both signed-out returns and signed-in CTAs verified
 - [x] Two isolated test accounts: two-way discovery/search, request/accept, friend cards, refresh/re-sign-in persistence, discovery opt-out, hidden raw profile fields and avatar denial verified; 6 focused tests passed

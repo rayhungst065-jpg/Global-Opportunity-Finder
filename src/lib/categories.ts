@@ -1,7 +1,7 @@
-import volunteer from "@/assets/volunteer.jpg";
-import competitions from "@/assets/competitions.jpg";
-import research from "@/assets/research.jpg";
-import awards from "@/assets/awards.jpg";
+import volunteer from "@/assets/editorial-volunteer.jpg";
+import competitions from "@/assets/editorial-competitions.jpg";
+import research from "@/assets/editorial-research.jpg";
+import awards from "@/assets/editorial-awards.jpg";
 
 /** The four opportunity categories, shared by the landing and categories pages. */
 export const categories = [
