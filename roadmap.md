@@ -1,6 +1,8 @@
 # Roadmap — Brand & Communities Update
 
 ## Focused fixes
+- [ ] Verify one Gmail diagnostic send and existing welcome/confirmation/recovery email availability; confirm delivery evidence without changing email/auth settings or publishing
+- [ ] Reproduce and minimally fix expanded AI Opportunity Assistant; verify regular/expanded input, send and scrolling while preserving Gemini configuration
 - [x] Added exact homepage/About creator introductions and original photo, existing About anchor links, and Feedback & Support navigation/contact links; signed-in desktop/mobile navigation, undistorted whole-photo layouts, preserved platform introduction/quote, exact mailto and Google Form new-tab navigation passed; routing test passed and preview build OK; no AI/premium calls or publishing
 - [x] Targeted About/homepage labels and whole-section/CTA links with post-login return; both signed-out returns and signed-in CTAs verified
 - [x] Two isolated test accounts: two-way discovery/search, request/accept, friend cards, refresh/re-sign-in persistence, discovery opt-out, hidden raw profile fields and avatar denial verified; 6 focused tests passed
