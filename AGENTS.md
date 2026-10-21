@@ -10,6 +10,7 @@
 <!-- LOVABLE:END -->
 
 ## Architecture rules
+- All matching category cards read image assets from `src/lib/categories.ts`, without page-specific photo overrides; why: keep homepage, Explore Categories, and opportunity-card fallbacks consistent while preserving unrelated photos.
 - Homepage and About share one creator-introduction component and original-photo asset pointer; why: reuse the photo and layout while keeping short/full copy distinct and linking to one About anchor.
 - Public opportunity reads go through `src/lib/opportunities.functions.ts` (publishable-key server client) so listing pages SSR; why: anon RLS read policy, no session on server.
 - Student-owned data (profiles, saved_opportunities) is read/written from the browser client under RLS; why: RLS scopes rows to auth.uid().
