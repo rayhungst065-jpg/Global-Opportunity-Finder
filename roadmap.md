@@ -55,3 +55,6 @@
 - [ ] Blocking/reporting users, notifications, self-serve account deletion
 - [x] Real extracted official-source records added without changing existing demo records or accounts
 - [x] Privacy remediation — direct profiles owner-only, peer cards use visibility-safe authenticated RPC, avatar sharing follows visibility; two-test-account checks passed
+- [x] Assistant: retry Gemini "high demand" failures; full-screen send + reply re-verified
+- [x] One-time welcome email after confirmed registration (sent once to Ray's account as a test)
+- [ ] Feature-announcement emails to all users — not supported by the built-in email system (bulk/announcement sending); needs a dedicated mailing service if wanted

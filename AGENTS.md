@@ -32,3 +32,4 @@
 - Opportunity verification timestamps are separate from update timestamps and never backfilled from AI or ordinary edits; why: label unknown/stale evidence without silently changing deadlines.
 - Password recovery uses Cloud Auth verification and updateUser on a public reset page; why: preserve provider token expiry and avoid a separate password system.
 - Private student messages are one-to-one rows readable by participants and insertable only by the sender to an accepted friend (`are_friends`); connection participants are immutable via trigger and pairs are unique; why: friendships and messages cannot be forged from the client.
+- Welcome emails are claimed in the server-only `welcome_emails` table (no client policies) before sending with a per-user idempotency key, triggered from the authenticated layout once per session; why: send exactly once per confirmed account without user-editable flags. Accounts that existed before this feature were pre-marked.
