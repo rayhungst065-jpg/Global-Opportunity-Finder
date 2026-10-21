@@ -11,7 +11,7 @@
 
 ## Architecture rules
 - Homepage and About share one creator-introduction component and original-photo asset pointer; why: reuse the photo and layout while keeping short/full copy distinct and linking to one About anchor.
-- Public opportunity reads go through `src/lib/opportunities.functions.ts` using the server-only admin client loaded inside read-only handlers; why: listing pages SSR without a session while the database has no anonymous read policy.
+- Opportunity listing/detail pages live under `_authenticated` and read through `requireSupabaseAuth` server functions with the user's RLS client; why: the catalog is signed-in-only.
 - Student-owned data (profiles, saved_opportunities) is read/written from the browser client under RLS; why: RLS scopes rows to auth.uid().
 - Shared opportunity edits are admin-only via `public.has_role`; the assistant never inserts catalog rows (recommendations outside the catalog are chat-only cards), and saves stay owner-scoped; why: students must not be able to add unreviewed records to the shared catalog through chat.
 - Demo rows carry `is_demo = true` and must be labeled in the UI; why: never present fake opportunities as real.

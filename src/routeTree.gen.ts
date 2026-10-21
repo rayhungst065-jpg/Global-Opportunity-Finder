@@ -32,13 +32,13 @@ import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedSavedRouteImport } from './routes/_authenticated/saved'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as ApiAssistantRouteImport } from './routes/api/assistant'
-import { Route as OpportunitiesIndexRouteImport } from './routes/opportunities.index'
-import { Route as OpportunitiesIdRouteImport } from './routes/opportunities.$id'
 import { Route as AuthenticatedAdminProposalsRouteImport } from './routes/_authenticated/admin.proposals'
 import { Route as AuthenticatedCommunitiesIndexRouteImport } from './routes/_authenticated/communities.index'
 import { Route as AuthenticatedCommunitiesIdRouteImport } from './routes/_authenticated/communities.$id'
 import { Route as AuthenticatedCommunitiesMyRouteImport } from './routes/_authenticated/communities.my'
 import { Route as AuthenticatedCommunitiesNewRouteImport } from './routes/_authenticated/communities.new'
+import { Route as AuthenticatedOpportunitiesIndexRouteImport } from './routes/_authenticated/opportunities.index'
+import { Route as AuthenticatedOpportunitiesIdRouteImport } from './routes/_authenticated/opportunities.$id'
 import { Route as AuthenticatedStudentsIdRouteImport } from './routes/_authenticated/students.$id'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
@@ -158,16 +158,6 @@ const ApiAssistantRoute = ApiAssistantRouteImport.update({
   path: '/api/assistant',
   getParentRoute: () => rootRouteImport,
 } as any)
-const OpportunitiesIndexRoute = OpportunitiesIndexRouteImport.update({
-  id: '/opportunities/',
-  path: '/opportunities/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OpportunitiesIdRoute = OpportunitiesIdRouteImport.update({
-  id: '/opportunities/$id',
-  path: '/opportunities/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthenticatedAdminProposalsRoute =
   AuthenticatedAdminProposalsRouteImport.update({
     id: '/admin/proposals',
@@ -196,6 +186,18 @@ const AuthenticatedCommunitiesNewRoute =
   AuthenticatedCommunitiesNewRouteImport.update({
     id: '/communities/new',
     path: '/communities/new',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedOpportunitiesIndexRoute =
+  AuthenticatedOpportunitiesIndexRouteImport.update({
+    id: '/opportunities/',
+    path: '/opportunities/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedOpportunitiesIdRoute =
+  AuthenticatedOpportunitiesIdRouteImport.update({
+    id: '/opportunities/$id',
+    path: '/opportunities/$id',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedStudentsIdRoute = AuthenticatedStudentsIdRouteImport.update({
@@ -233,14 +235,14 @@ export interface FileRoutesByFullPath {
   '/saved': typeof AuthenticatedSavedRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/api/assistant': typeof ApiAssistantRoute
-  '/opportunities/$id': typeof OpportunitiesIdRoute
-  '/opportunities/': typeof OpportunitiesIndexRoute
   '/admin/proposals': typeof AuthenticatedAdminProposalsRoute
   '/communities/$id': typeof AuthenticatedCommunitiesIdRoute
   '/communities/my': typeof AuthenticatedCommunitiesMyRoute
   '/communities/new': typeof AuthenticatedCommunitiesNewRoute
+  '/opportunities/$id': typeof AuthenticatedOpportunitiesIdRoute
   '/students/$id': typeof AuthenticatedStudentsIdRoute
   '/communities/': typeof AuthenticatedCommunitiesIndexRoute
+  '/opportunities/': typeof AuthenticatedOpportunitiesIndexRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesByTo {
@@ -266,14 +268,14 @@ export interface FileRoutesByTo {
   '/saved': typeof AuthenticatedSavedRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/api/assistant': typeof ApiAssistantRoute
-  '/opportunities/$id': typeof OpportunitiesIdRoute
-  '/opportunities': typeof OpportunitiesIndexRoute
   '/admin/proposals': typeof AuthenticatedAdminProposalsRoute
   '/communities/$id': typeof AuthenticatedCommunitiesIdRoute
   '/communities/my': typeof AuthenticatedCommunitiesMyRoute
   '/communities/new': typeof AuthenticatedCommunitiesNewRoute
+  '/opportunities/$id': typeof AuthenticatedOpportunitiesIdRoute
   '/students/$id': typeof AuthenticatedStudentsIdRoute
   '/communities': typeof AuthenticatedCommunitiesIndexRoute
+  '/opportunities': typeof AuthenticatedOpportunitiesIndexRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesById {
@@ -301,14 +303,14 @@ export interface FileRoutesById {
   '/_authenticated/saved': typeof AuthenticatedSavedRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/api/assistant': typeof ApiAssistantRoute
-  '/opportunities/$id': typeof OpportunitiesIdRoute
-  '/opportunities/': typeof OpportunitiesIndexRoute
   '/_authenticated/admin/proposals': typeof AuthenticatedAdminProposalsRoute
   '/_authenticated/communities/$id': typeof AuthenticatedCommunitiesIdRoute
   '/_authenticated/communities/my': typeof AuthenticatedCommunitiesMyRoute
   '/_authenticated/communities/new': typeof AuthenticatedCommunitiesNewRoute
+  '/_authenticated/opportunities/$id': typeof AuthenticatedOpportunitiesIdRoute
   '/_authenticated/students/$id': typeof AuthenticatedStudentsIdRoute
   '/_authenticated/communities/': typeof AuthenticatedCommunitiesIndexRoute
+  '/_authenticated/opportunities/': typeof AuthenticatedOpportunitiesIndexRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRouteTypes {
@@ -336,14 +338,14 @@ export interface FileRouteTypes {
     | '/saved'
     | '/settings'
     | '/api/assistant'
-    | '/opportunities/$id'
-    | '/opportunities/'
     | '/admin/proposals'
     | '/communities/$id'
     | '/communities/my'
     | '/communities/new'
+    | '/opportunities/$id'
     | '/students/$id'
     | '/communities/'
+    | '/opportunities/'
     | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -369,14 +371,14 @@ export interface FileRouteTypes {
     | '/saved'
     | '/settings'
     | '/api/assistant'
-    | '/opportunities/$id'
-    | '/opportunities'
     | '/admin/proposals'
     | '/communities/$id'
     | '/communities/my'
     | '/communities/new'
+    | '/opportunities/$id'
     | '/students/$id'
     | '/communities'
+    | '/opportunities'
     | '/lovable/email/transactional/preview'
   id:
     | '__root__'
@@ -403,14 +405,14 @@ export interface FileRouteTypes {
     | '/_authenticated/saved'
     | '/_authenticated/settings'
     | '/api/assistant'
-    | '/opportunities/$id'
-    | '/opportunities/'
     | '/_authenticated/admin/proposals'
     | '/_authenticated/communities/$id'
     | '/_authenticated/communities/my'
     | '/_authenticated/communities/new'
+    | '/_authenticated/opportunities/$id'
     | '/_authenticated/students/$id'
     | '/_authenticated/communities/'
+    | '/_authenticated/opportunities/'
     | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
 }
@@ -429,8 +431,6 @@ export interface RootRouteChildren {
   SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
   ApiAssistantRoute: typeof ApiAssistantRoute
-  OpportunitiesIdRoute: typeof OpportunitiesIdRoute
-  OpportunitiesIndexRoute: typeof OpportunitiesIndexRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
 
@@ -597,20 +597,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAssistantRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/opportunities/': {
-      id: '/opportunities/'
-      path: '/opportunities'
-      fullPath: '/opportunities/'
-      preLoaderRoute: typeof OpportunitiesIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/opportunities/$id': {
-      id: '/opportunities/$id'
-      path: '/opportunities/$id'
-      fullPath: '/opportunities/$id'
-      preLoaderRoute: typeof OpportunitiesIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_authenticated/admin/proposals': {
       id: '/_authenticated/admin/proposals'
       path: '/admin/proposals'
@@ -646,6 +632,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCommunitiesNewRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/opportunities/': {
+      id: '/_authenticated/opportunities/'
+      path: '/opportunities'
+      fullPath: '/opportunities/'
+      preLoaderRoute: typeof AuthenticatedOpportunitiesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/opportunities/$id': {
+      id: '/_authenticated/opportunities/$id'
+      path: '/opportunities/$id'
+      fullPath: '/opportunities/$id'
+      preLoaderRoute: typeof AuthenticatedOpportunitiesIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/students/$id': {
       id: '/_authenticated/students/$id'
       path: '/students/$id'
@@ -677,8 +677,10 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCommunitiesIdRoute: typeof AuthenticatedCommunitiesIdRoute
   AuthenticatedCommunitiesMyRoute: typeof AuthenticatedCommunitiesMyRoute
   AuthenticatedCommunitiesNewRoute: typeof AuthenticatedCommunitiesNewRoute
+  AuthenticatedOpportunitiesIdRoute: typeof AuthenticatedOpportunitiesIdRoute
   AuthenticatedStudentsIdRoute: typeof AuthenticatedStudentsIdRoute
   AuthenticatedCommunitiesIndexRoute: typeof AuthenticatedCommunitiesIndexRoute
+  AuthenticatedOpportunitiesIndexRoute: typeof AuthenticatedOpportunitiesIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -695,8 +697,10 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCommunitiesIdRoute: AuthenticatedCommunitiesIdRoute,
   AuthenticatedCommunitiesMyRoute: AuthenticatedCommunitiesMyRoute,
   AuthenticatedCommunitiesNewRoute: AuthenticatedCommunitiesNewRoute,
+  AuthenticatedOpportunitiesIdRoute: AuthenticatedOpportunitiesIdRoute,
   AuthenticatedStudentsIdRoute: AuthenticatedStudentsIdRoute,
   AuthenticatedCommunitiesIndexRoute: AuthenticatedCommunitiesIndexRoute,
+  AuthenticatedOpportunitiesIndexRoute: AuthenticatedOpportunitiesIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -717,8 +721,6 @@ const rootRouteChildren: RootRouteChildren = {
   SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,
   ApiAssistantRoute: ApiAssistantRoute,
-  OpportunitiesIdRoute: OpportunitiesIdRoute,
-  OpportunitiesIndexRoute: OpportunitiesIndexRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
 export const routeTree = rootRouteImport
