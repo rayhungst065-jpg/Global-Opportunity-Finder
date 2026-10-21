@@ -1,7 +1,7 @@
 # Roadmap — Brand & Communities Update
 
 ## Focused fixes
-- [ ] Image-only restoration: exact original hero and four shared category photos, plus any other recently changed photos; preserve all current functionality, no full-project revert, no new images, no publish — checking available non-code restoration controls
+- [ ] Image-only restoration: original hero.jpg, volunteer.jpg, competitions.jpg, research.jpg and awards.jpg are retained; narrow audit found no other image replacements. Blocked: available documented undo restores a project version, user forbids full-project revert and agent instructions prohibit code-based undo. No application edits, new images, or publishing; restored preview cannot be verified until an image-only restoration is applied.
 - [x] Sender DNS verified; disposable inbox actually received signup and password-reset emails from default auth sender; signup link verified, unconfirmed login blocked, consumed/invalid links rejected, password changed through UI and new login passed; no real-user emails
 - [ ] Auth email branding, intended welcome email, Gmail-specific delivery and exact expiry boundary — custom auth templates/welcome do not exist, no authorized Gmail inbox, hosted expiry settings unavailable; no speculative feature changes
 - [x] Existing standalone local AI Chat sent real Gemini message, displayed reply, retained it after reload; HTTP 200, no alerts or browser errors; no security/design changes
