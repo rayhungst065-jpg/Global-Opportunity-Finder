@@ -2,10 +2,10 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { queryOptions, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import { useEffect, useState } from "react";
-import { SiteShell } from "@/components/site/SiteLayout";
+import { WorkspaceShell } from "@/components/site/WorkspaceShell";
 import { OpportunityCard, SaveButton } from "@/components/site/OpportunityCard";
 import { listOpportunities } from "@/lib/opportunities.functions";
-import { categories } from "@/lib/categories";
+import { catalogCategories, catalogCategoryKeys } from "@/lib/opportunity-catalog";
 import { useUser } from "@/lib/auth";
 import { useSavedIds, useToggleSave } from "@/lib/saved";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ import { markOpportunitiesExplored } from "@/lib/profile";
 
 const search = z.object({
   q: z.string().optional(),
-  category: z.enum(["volunteer", "competitions", "research", "awards"]).optional(),
+  category: z.enum(catalogCategoryKeys).optional(),
 });
 type Search = z.infer<typeof search>;
 
@@ -29,7 +29,7 @@ export const Route = createFileRoute("/_authenticated/opportunities/")({
   head: () => ({
     meta: [
       { title: "Browse Opportunities — Global Opportunity Finder" },
-      { name: "description", content: "Search volunteer programs, competitions, research and scholarships for students." },
+      { name: "description", content: "Search student volunteer, competition, cultural exchange, research, leadership and education opportunities." },
       { property: "og:title", content: "Browse Opportunities — Global Opportunity Finder" },
       { property: "og:description", content: "Search and save student opportunities by category." },
           { property: "og:type", content: "website" },
@@ -54,18 +54,15 @@ function Opportunities() {
   const saved = useSavedIds(user?.id);
   const toggle = useToggleSave(user?.id);
   const [q, setQ] = useState(s.q ?? "");
+  useEffect(() => setQ(s.q ?? ""), [s.q]);
   const [msg, setMsg] = useState("");
   const [showDemo, setShowDemo] = useState(false);
   const listings = visibleCatalog(data, showDemo);
 
   return (
-    <SiteShell>
-      <section className="mx-auto max-w-6xl px-5 py-16">
-        <h1 className="text-4xl font-semibold md:text-5xl">Browse opportunities</h1>
-        <p className="mt-3 text-muted-foreground">Always confirm details and deadlines on the organizer's official website.</p>
-
+    <WorkspaceShell title="Explore Opportunities" subtitle="Always confirm details and deadlines on the organizer's official website.">
         <form
-          className="mt-8 flex flex-col gap-3 md:flex-row"
+          className="flex flex-col gap-3 md:flex-row"
           onSubmit={(e) => { e.preventDefault(); navigate({ search: (p) => ({ ...p, q: q.trim() || undefined }) }); }}
         >
           <input
@@ -73,15 +70,16 @@ function Opportunities() {
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search by title, organizer or keyword"
             aria-label="Search opportunities"
-            className="flex-1 rounded-full border border-input bg-background px-5 py-3 outline-none focus:border-ring focus:ring-4 focus:ring-primary-soft"
+            className="min-w-0 flex-1 rounded-full border border-input bg-background px-5 py-3 outline-none focus:border-ring focus:ring-4 focus:ring-primary-soft"
           />
           <Button type="submit" className="h-auto rounded-full px-6 py-3">Search</Button>
         </form>
 
         <div className="mt-4 flex flex-wrap gap-2">
-          {[{ key: undefined, name: "All" }, ...categories].map((c) => (
+          {[{ key: undefined, name: "All" }, ...catalogCategories].map((c) => (
             <Button
               key={c.name}
+              aria-pressed={s.category === c.key}
               onClick={() => navigate({ search: (p) => ({ ...p, category: c.key as Search["category"] }) })}
               className={`rounded-full px-4 py-1.5 text-sm ${s.category === c.key ? "bg-foreground text-background" : "border border-border hover:bg-accent"}`}
             >
@@ -97,7 +95,7 @@ function Opportunities() {
         {listings.length === 0 ? (
           <p className="mt-12 text-muted-foreground">No opportunities match your search yet.</p>
         ) : (
-          <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 grid gap-5 lg:grid-cols-2">
             {listings.map((o) => {
               const isSaved = saved.data?.has(o.id) ?? false;
               return (
@@ -120,7 +118,6 @@ function Opportunities() {
             })}
           </div>
         )}
-      </section>
-    </SiteShell>
+    </WorkspaceShell>
   );
 }

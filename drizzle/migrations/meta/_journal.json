@@ -162,6 +162,13 @@
       "when": 1793427299491,
       "tag": "0022_scope_chat_originated_opportunities",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1793486278439,
+      "tag": "0023_approved_catalog_source_fields",
+      "breakpoints": true
     }
   ]
 }
