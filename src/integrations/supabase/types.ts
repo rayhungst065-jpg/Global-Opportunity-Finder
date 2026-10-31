@@ -648,6 +648,7 @@ export type Database = {
           id: string
           intended_major: string | null
           interests: string[]
+          is_test_account: boolean
           languages: string[]
           onboarded: boolean
           preferences: Json
@@ -672,6 +673,7 @@ export type Database = {
           id: string
           intended_major?: string | null
           interests?: string[]
+          is_test_account?: boolean
           languages?: string[]
           onboarded?: boolean
           preferences?: Json
@@ -696,6 +698,7 @@ export type Database = {
           id?: string
           intended_major?: string | null
           interests?: string[]
+          is_test_account?: boolean
           languages?: string[]
           onboarded?: boolean
           preferences?: Json
@@ -894,6 +897,7 @@ export type Database = {
           id: string
           intended_major: string | null
           interests: string[]
+          is_test_account: boolean
           languages: string[]
           onboarded: boolean
           preferences: Json

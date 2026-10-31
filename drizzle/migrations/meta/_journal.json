@@ -141,6 +141,13 @@
       "when": 1792556899839,
       "tag": "0019_restrict_catalog_reads_to_signed_in",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1793423897823,
+      "tag": "0020_exclude_test_accounts_from_discovery",
+      "breakpoints": true
     }
   ]
 }
