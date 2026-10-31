@@ -8,6 +8,7 @@ import { useUser } from "@/lib/auth";
 import { listCommunities, communityCategories } from "@/lib/communities.functions";
 import { useMyMemberships } from "@/lib/communities";
 import { discoverStudents, listMyConnections, type StudentCard } from "@/lib/connections.functions";
+import { educationLevels } from "@/lib/profile-options";
 import { StudentCardView, ConnectButton } from "@/components/site/StudentCard";
 import { listPosts, createPost, updatePost } from "@/lib/posts.functions";
 

@@ -72,7 +72,9 @@ export async function handleAssistant(request: Request) {
       model: provider(GEMINI_MODEL), instructions: `${ASSISTANT_POLICY}\nToday's UTC date: ${new Date().toISOString().slice(0, 10)}\nPermitted profile: ${JSON.stringify(permittedProfile(profile))}`,
       // Retry Gemini's temporary "high demand" (503/429) failures with backoff instead of failing the chat immediately.
       messages: await convertToModelMessages(messages), abortSignal: request.signal, maxRetries: 3,
-      maxOutputTokens: 2048, stopWhen: stepCountIs(5),
+      // Reasoning and tool-call continuations share this budget; too small a cap ends the
+      // turn after tool execution with no final answer, so keep generous headroom.
+      maxOutputTokens: 8192, stopWhen: stepCountIs(5),
       tools: {
         recommendOpportunity: tool({ description: "Present one original, specific opportunity recommendation as a chat card with a Save option. Opportunities already in Explore Opportunities are linked by title; new ones are shown in chat only and never added to the shared catalog. Prefer an existing catalogId and accurate catalog facts; use null for unknown dates/links, and deadlineEstimate for a labeled approximate period such as 'mid-July'. Only recommend specific identifiable opportunities, never general advice. Preserve your personalized reason.", inputSchema: chatRecommendationSchema, execute: async (input) => {
           if (input.catalogId) {
