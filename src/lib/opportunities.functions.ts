@@ -1,9 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { catalogCategoryKeys } from "@/lib/opportunity-catalog";
 
 
-const categoryEnum = z.enum(["volunteer", "competitions", "research", "awards"]);
+const categoryEnum = z.enum(catalogCategoryKeys);
 
 /** Signed-in, read-only list of opportunities with optional search + category filter. */
 export const listOpportunities = createServerFn({ method: "GET" })
