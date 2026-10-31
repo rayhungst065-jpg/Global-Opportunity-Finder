@@ -10,6 +10,8 @@ import collegeCampus from "@/assets/college-campus.jpg";
 import nextChapter from "@/assets/next-chapter.jpg";
 import teammates from "@/assets/teammates.jpg";
 import { useUser } from "@/lib/auth";
+import { Button } from "@/components/ui/button";
+import { opportunityDestination } from "@/lib/auth-destination";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -76,6 +78,17 @@ const categoryAccent: Record<string, string> = {
   awards: "border-t-accent-foreground",
 };
 
+function OpportunityLink({ children, className, category }: { children: ReactNode; className: string; category?: (typeof categories)[number]["key"] }) {
+  const { user, ready } = useUser();
+  const to = opportunityDestination(ready, !!user);
+  if (!to) return <Button disabled variant="ghost" className={`h-auto whitespace-normal ${className}`}>{children}</Button>;
+  return (
+    <Button asChild variant="ghost" className={`h-auto whitespace-normal ${className}`}>
+      <Link to={to} search={to === "/login" ? { next: "/opportunities" } : { category }}>{children}</Link>
+    </Button>
+  );
+}
+
 function Landing() {
   const { user } = useUser();
   return (
@@ -99,8 +112,8 @@ function Landing() {
               Find opportunities. Meet your people. Build your future.
             </p>
             <div className="mt-9 flex flex-wrap justify-center gap-3">
-              <Link to="/opportunities" className={btnPrimary}>Explore Opportunities</Link>
-              <Link to="/signup" className={btnGhost}>Find Your Next Step</Link>
+              <OpportunityLink className={btnPrimary}>Explore Opportunities</OpportunityLink>
+              <OpportunityLink className={btnGhost}>Find Your Next Step</OpportunityLink>
             </div>
           </Reveal>
         </div>
@@ -148,7 +161,7 @@ function Landing() {
           <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {categories.map((c, i) => (
               <Reveal key={c.key} delay={i * 100}>
-                <Link to="/categories" hash={c.key} className={`group block overflow-hidden rounded-3xl border border-ink-foreground/15 border-t-4 ${categoryAccent[c.key] ?? "border-t-primary"}`}>
+                <OpportunityLink category={c.key} className={`group block w-full overflow-hidden rounded-3xl border border-ink-foreground/15 border-t-4 p-0 text-left text-ink-foreground hover:bg-ink ${categoryAccent[c.key] ?? "border-t-primary"}`}>
                   <div className="overflow-hidden">
                     <img src={c.image} alt={c.name} loading="lazy" width={1280} height={960} className="aspect-[4/3] w-full object-cover transition duration-700 group-hover:scale-105" />
                   </div>
@@ -156,7 +169,7 @@ function Landing() {
                     <div className="font-display font-medium">{c.name}</div>
                     <p className="mt-1 text-sm opacity-60">{c.tagline}</p>
                   </div>
-                </Link>
+                </OpportunityLink>
               </Reveal>
             ))}
           </div>
@@ -284,8 +297,8 @@ function Landing() {
             <h2 className="text-5xl font-semibold md:text-7xl">Your Next Opportunity Starts Here.</h2>
             <p className="mx-auto mt-6 max-w-xl text-lg opacity-80">Start discovering possibilities that fit your interests and goals.</p>
             <div className="mt-9 flex flex-wrap justify-center gap-3">
-              <Link to="/signup" className={btnLight}>Get Started</Link>
-              <Link to="/opportunities" className="inline-flex items-center justify-center rounded-full border border-ink-foreground/40 px-6 py-3 text-sm font-medium transition hover:-translate-y-0.5 hover:bg-ink-foreground/10">Browse Opportunities</Link>
+              <OpportunityLink className={btnLight}>Get Started</OpportunityLink>
+              <OpportunityLink className="inline-flex items-center justify-center rounded-full border border-ink-foreground/40 px-6 py-3 text-sm font-medium transition hover:-translate-y-0.5 hover:bg-ink-foreground/10">Browse Opportunities</OpportunityLink>
             </div>
           </Reveal>
         </div>
