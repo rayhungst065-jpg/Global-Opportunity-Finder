@@ -37,5 +37,5 @@
 - Education levels come from the shared `educationLevels` list and every `<option>` sets an explicit `value`; why: browser auto-translation rewrites option text, and without a value attribute the translated text (e.g. 高中) was stored in the database.
 - One root AuthProvider publishes identity only after clearing queries on account changes and keys descendants by identity; why: cached data, pending initial auth reads, and local drafts must not cross accounts.
 - Dashboard exploration state uses the owner's existing profile preferences and saved records; actual catalog visits mark exploration without searching or AI; why: first-time dashboards stay clean without a new table.
-- Avatar uploads validate originals, center-crop and compress in the browser before uploading only optimized images; why: phone photos remain clear without high-resolution storage or server-native image dependencies.
+- Avatars are browser-cropped/compressed, with private bucket size limits and restrictive MIME write policies; why: optimize originals and reject unsupported files without widening access.
 - The assistant's `maxOutputTokens` stays generous (8192) because reasoning and tool-call continuations share the budget; why: a small cap ends the turn after tool execution with no final natural-language answer.
