@@ -21,6 +21,18 @@ export function useProfile(userId: string | undefined) {
   });
 }
 
+/** Record an actual catalog visit, preserving all existing profile preferences. */
+export async function markOpportunitiesExplored(userId: string) {
+  const { data: profile, error } = await supabase.from("profiles").select("preferences").eq("id", userId).maybeSingle();
+  if (error) throw error;
+  if (!profile) return;
+  const preferences = profile.preferences;
+  const existing = typeof preferences === "object" && preferences !== null && !Array.isArray(preferences) ? preferences : {};
+  if (existing["opportunities_explored"] === true) return;
+  const { error: updateError } = await supabase.from("profiles").update({ preferences: { ...existing, opportunities_explored: true } }).eq("id", userId);
+  if (updateError) throw updateError;
+}
+
 /** All public listings, read in the browser (anon/auth SELECT policy). */
 export function useAllOpportunities() {
   return useQuery({
