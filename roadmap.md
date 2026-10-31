@@ -1,4 +1,10 @@
-# Roadmap — Three Specific Fixes (Ray)
+# Roadmap — Targeted Explore, authentication and approved catalog
+
+## Requested tasks
+- [ ] Reuse Saved Opportunities workspace for Explore and preserve search, filters, cards and navigation.
+- [ ] Make homepage opportunity/volunteer CTAs wait for existing auth and route signed-in users directly to Explore.
+- [ ] Check for existing approved rows; import only missing approved spreadsheet records into the existing catalog with exact six categories and source details. Preserve private AI results, saves and admin-only writes.
+- [ ] Verify focused layout, signed-out/in CTAs, two-account catalog/privacy, save and detail-return flows. No AI/provider/email changes or publishing.
 
 ## Current tasks
 - [x] Account isolation: one guarded root identity boundary clears queries before identity publication and remounts local drafts; saved queries/writes explicitly owner-filtered. Existing owner/participant RLS confirmed. Two existing test accounts verified A→B→A and refresh, A two saves + profile update, B empty saves/deadlines and own profile; direct cross-account read/update/delete returned zero rows and forged save rejected. Catalog identical for both; no existing records deleted/reset.
