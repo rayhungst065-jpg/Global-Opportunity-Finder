@@ -1,3 +1,6 @@
+/** Stable English education-level values. Stored verbatim; never derived from page text so browser auto-translation cannot change them. */
+export const educationLevels = ["Middle school", "High school", "Undergraduate", "Graduate", "Gap year", "Other"];
+
 export const interestOptions = [
   "Engineering & robotics",
   "Computer science & AI",

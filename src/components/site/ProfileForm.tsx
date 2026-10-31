@@ -3,9 +3,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { categories } from "@/lib/categories";
 import type { Category, Profile } from "@/lib/profile";
-import { goalOptions, interestOptions, readVisibility, visibilityFields, type Visibility } from "@/lib/profile-options";
+import { educationLevels, goalOptions, interestOptions, readVisibility, visibilityFields, type Visibility } from "@/lib/profile-options";
 
-const levels = ["Middle school", "High school", "Undergraduate", "Graduate", "Gap year", "Other"];
+const levels = educationLevels;
 const regions = ["Africa", "Asia", "Europe", "Latin America", "Middle East", "North America", "Oceania"];
 const formats = [
   { v: "online", l: "Online" },
