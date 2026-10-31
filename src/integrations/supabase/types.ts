@@ -594,6 +594,8 @@ export type Database = {
           official_url: string | null
           organizer: string
           owner_user_id: string | null
+          source_key: string | null
+          source_record: Json | null
           title: string
           updated_at: string
         }
@@ -612,6 +614,8 @@ export type Database = {
           official_url?: string | null
           organizer: string
           owner_user_id?: string | null
+          source_key?: string | null
+          source_record?: Json | null
           title: string
           updated_at?: string
         }
@@ -630,6 +634,8 @@ export type Database = {
           official_url?: string | null
           organizer?: string
           owner_user_id?: string | null
+          source_key?: string | null
+          source_record?: Json | null
           title?: string
           updated_at?: string
         }
@@ -921,7 +927,14 @@ export type Database = {
     Enums: {
       app_role: "admin" | "user"
       application_status: "open" | "rolling" | "upcoming" | "closed"
-      opportunity_category: "volunteer" | "competitions" | "research" | "awards"
+      opportunity_category:
+        | "volunteer"
+        | "competitions"
+        | "research"
+        | "awards"
+        | "cultural_exchange"
+        | "leadership"
+        | "education"
       saved_status: "interested" | "applying" | "submitted"
     }
     CompositeTypes: {
@@ -1052,7 +1065,15 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "user"],
       application_status: ["open", "rolling", "upcoming", "closed"],
-      opportunity_category: ["volunteer", "competitions", "research", "awards"],
+      opportunity_category: [
+        "volunteer",
+        "competitions",
+        "research",
+        "awards",
+        "cultural_exchange",
+        "leadership",
+        "education",
+      ],
       saved_status: ["interested", "applying", "submitted"],
     },
   },
