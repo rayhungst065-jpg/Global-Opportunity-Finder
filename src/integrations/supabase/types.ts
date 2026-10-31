@@ -593,6 +593,7 @@ export type Database = {
           location: string
           official_url: string | null
           organizer: string
+          owner_user_id: string | null
           title: string
           updated_at: string
         }
@@ -610,6 +611,7 @@ export type Database = {
           location?: string
           official_url?: string | null
           organizer: string
+          owner_user_id?: string | null
           title: string
           updated_at?: string
         }
@@ -627,6 +629,7 @@ export type Database = {
           location?: string
           official_url?: string | null
           organizer?: string
+          owner_user_id?: string | null
           title?: string
           updated_at?: string
         }
