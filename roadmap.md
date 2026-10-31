@@ -1,10 +1,11 @@
 # Roadmap — Targeted Explore, authentication and approved catalog
 
 ## Requested tasks
-- [ ] Reuse Saved Opportunities workspace for Explore and preserve search, filters, cards and navigation.
-- [ ] Make homepage opportunity/volunteer CTAs wait for existing auth and route signed-in users directly to Explore.
-- [ ] Check for existing approved rows; import only missing approved spreadsheet records into the existing catalog with exact six categories and source details. Preserve private AI results, saves and admin-only writes.
-- [ ] Verify focused layout, signed-out/in CTAs, two-account catalog/privacy, save and detail-return flows. No AI/provider/email changes or publishing.
+- [x] Reused Saved Opportunities workspace for Explore and detail pages; preserved existing sidebar, active navigation, search, filters, cards and saving. Desktop/tablet/mobile checked without horizontal content overflow.
+- [x] Homepage opportunity/volunteer CTAs wait for existing auth and send signed-in users directly to Explore; signed-out users enter existing login with validated Explore return destination.
+- [x] Approved rows were absent; imported 200 unique source-keyed, ownerless spreadsheet records into existing opportunities table after adding three missing category values and nullable source fields. Readback matched all mapped values and all 18 original fields exactly. Existing 15 rows, private AI records, saves and admin-only permissions preserved; no policy changes.
+- [x] 34 focused tests passed. Existing Accounts A/B saw identical 200 listings and independently saved the same entry; other-account saves/history/private catalog reads returned no rows and shared catalog edits were denied. All six filters matched source counts. Detail return retained query/category and settled scroll position. Temporary test saves removed. Preview build OK; content route heads checked. No AI/provider/email changes or publishing.
+- [x] Live creation of a personal AI search was not performed: no populated conversations existed for A/B and Gemini access was previously blocked; existing private history/catalog RLS was checked directly instead. Completion report notes this verification limitation.
 
 ## Current tasks
 - [x] Account isolation: one guarded root identity boundary clears queries before identity publication and remounts local drafts; saved queries/writes explicitly owner-filtered. Existing owner/participant RLS confirmed. Two existing test accounts verified A→B→A and refresh, A two saves + profile update, B empty saves/deadlines and own profile; direct cross-account read/update/delete returned zero rows and forged save rejected. Catalog identical for both; no existing records deleted/reset.
