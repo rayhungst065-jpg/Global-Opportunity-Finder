@@ -1,5 +1,11 @@
 import type { Json } from "@/integrations/supabase/types";
 
+declare module "@tanstack/react-router" {
+  interface HistoryState {
+    opportunityListReturn?: string | undefined;
+  }
+}
+
 /** Catalog-only options; leave the existing four homepage image sections intact. */
 export const catalogCategories = [
   { key: "volunteer", name: "Volunteer" },
