@@ -1,60 +1,18 @@
-# Roadmap — Brand & Communities Update
+# Roadmap — Stability & Account-Isolation Audit (Ray's testing brief)
 
-## Focused fixes
-- [x] Verified sender DNS and recipient not suppressed; one Gmail diagnostic send has a managed Sent event with no bounce/rejection in checked logs; welcome template/trigger absent; one existing password-recovery request returned HTTP 200; hosted email auto-confirm is false, Ray's address already confirmed; no provider/domain/auth changes or publishing
-- [ ] Gmail inbox receipt for diagnostic/recovery and confirmation email delivery — needs Ray to confirm inbox/spam receipt; confirmation not retriggered because the address is already confirmed; no delivered/opened events or Gmail access available
-- [x] Fixed assistant viewport sizing with flexible scrollable history and nonshrinking input/Send; checked regular, maximized, browser full-screen, mobile and short desktop; one real Gemini reply succeeded, persisted after reload and remained accessible when scrolling; 3 focused tests passed, no JavaScript errors, preview build OK; provider unchanged
-- [x] Added exact homepage/About creator introductions and original photo, existing About anchor links, and Feedback & Support navigation/contact links; signed-in desktop/mobile navigation, undistorted whole-photo layouts, preserved platform introduction/quote, exact mailto and Google Form new-tab navigation passed; routing test passed and preview build OK; no AI/premium calls or publishing
-- [x] Targeted About/homepage labels and whole-section/CTA links with post-login return; both signed-out returns and signed-in CTAs verified
-- [x] Two isolated test accounts: two-way discovery/search, request/accept, friend cards, refresh/re-sign-in persistence, discovery opt-out, hidden raw profile fields and avatar denial verified; 6 focused tests passed
-- [x] Student discovery cards, full profiles, Bio (Skills removed), Country, friend requests and private messaging; two test accounts verified request/accept, duplicate/spoof/participant-change rejection, two-way messages, persistence after reload, desktop/mobile
-- [x] Full E2E: remove/re-request/decline/cancel/accept lifecycle, two-way chat with timestamps, persistence after reload and re-sign-in, third-account read/send isolation, non-friend and spoofed-sender blocks, real friend request sent to Ray's account (26/26 checks); homepage "In development" badge removed
-- [x] Targeted College Search cleanup: removed preferences/text input, preserved database filters/cards and existing numeric QS sort with missing ranks last, replaced notice; 6 focused tests and signed-in filters/sort/pagination/clear/cards checks passed with no AI/premium requests
-- [x] Imported all 617 university rows and 17 spreadsheet notes, omitted blank rows, retained original values; signed-in database search, Canada filter and exact-rank sorting verified
-- [x] Original Gemini chat recommendation saved privately to Recommend, survived reload, and removed without deleting chat or another Gemini generation; real signed-in flow verified
-- [x] Removed all executable Parallel calls; linked connection retained for optional manual disconnection; 21 focused tests passed and preview build OK
-- [x] Checked official Gemini pricing without AI/Parallel requests: gemini-3.8-flash Search grounding is unavailable on Free Tier; no grounding test or billing change
-- [ ] Existing Google project billing status — cannot inspect without accessible Google billing metadata; previous successful chat does not prove Free Tier
-- [x] Gemini-first implementation: removed general opportunity Parallel access; preserved stored recommendations/saves and deadlines
-- [x] Historical College Research results retained; premium workflow retired in favor of imported database-only College Search
-- [x] 23 focused tests passed for no-network discovery, bounded mocked research, cache reuse/denials and deadline evidence; signed-in page reload/preference save and mobile layout checked without premium calls; preview build OK
-- [x] College Research provider verification no longer applicable: premium workflow removed, no Parallel requests made
-- [x] New Gemini recommendation-save round trip verified with one real student request; no new billing or paid services enabled
-- [x] Assistant switched to direct Gemini gemini-3.8-flash using existing secret; real signed-in reply and persistence verified without Parallel searches (2.5 Flash returned retirement 404)
-- [x] Limited repair to Recommended for Me and Browse Opportunities; stored matches survive reload, Browse search/category filters verified, demos opt-in, no paid searches run
-- [x] Real online recommendation retrieval through connected Parallel; extracted official links and real catalog save verified
-- [x] Original symbol plus readable brand name; Capstone footer sentence removed
-- [x] Assistant real search returned FRC/FTC organizer links inline; both official URLs returned HTTP 200
-- [x] Provider recovery request accepted (HTTP 200); generic response and invalid/expired-link rejection verified
-- [ ] Recovery email receipt, password change and redirect allowlist — needs the user to follow the emailed link; hosted redirect settings are not accessible through current tools
+## Issues to fix (from uploaded brief)
+- [x] Issue 1: assistant one-turn answers — raised maxOutputTokens 2048→8192 (reasoning+tool continuations share the budget; small cap ended turns with no final text); verified earlier turns produce full answers after tool calls; BLOCKED on full re-verify: Google returned "Gemini API free tier is not available for this project" (HTTP 403, persisted pause state) — needs Ray to restore API access; no billing enabled per standing rule
+- [x] Issue 2: education label 高中 — root cause: <option> without value attribute + browser auto-translation stored translated text; fixed with explicit value attributes + shared English educationLevels list; existing row normalized to "High school"; verified dropdown is English-only
+- [x] Issue 3: GOF Test Student A/B — added profiles.is_test_account, excluded in student_profile_cards/student_is_discoverable, marked A/B/Probe + E2E accounts; verified absent from Find Students
+- [x] Issue 4: saved opportunities — audited: RLS owner-scoped on all four commands, inserts use auth.uid(), no cross-account rows exist (only Ray:3, Probe:1); no code change needed
+- [x] Issue 5: cross-account activity — audited all personal tables (conversations, messages, chat recommendations, college preferences/research, messages, connections): all owner/participant-scoped; sign-out clears query cache; added cache clear on user-id change in _authenticated layout for switches without sign-out
+- [x] Issue 6: full isolation audit — every personal table has owner RLS; shared catalog (opportunities/colleges/communities) is intentionally signed-in-readable; no search-history table exists (searches are not stored)
+- [x] Issue 7: new-account E2E — registered fresh Accounts A and B (temporary auto-confirm, reverted after); A: onboarding, MESA search, 2 saves, saved/deadlines verified; B: empty saved/deadlines/assistant history, no A data, no test accounts, no Chinese labels; A→logout→B→logout→A switching with back/forward navigation kept data correct; assistant prompts blocked by the Gemini 403 above
+- [x] Final report delivered in chat; 33 tests + typecheck + build all pass
 
-## Done
-- [x] Logo assets (full + symbol) via lovable-assets; favicon from symbol; brand renamed to Global Opportunity Finder
-- [x] Navy/ivory/blue/coral/sage palette in styles.css
-- [x] Homepage headline + slogan per brief; nine-section design kept
-- [x] Split-screen login/signup with full logo
-- [x] Footer: About, Support, Privacy, Terms only; About rewritten; new Support page
-- [x] Communities: exactly two tabs (Discover Communities, Posts); posts table + create/edit/close; student discovery in Discover Communities; real approved-member counts on cards
-- [x] Meet Students: exactly three tabs (Messages placeholder, Friends, Groups); private collab groups with invite/accept/remove/leave; explainer + "Explore Communities" link
-- [x] RLS fixed for groups (is_group_member / is_group_creator security-definer functions)
-- [x] Verified: logo placements, palette, auth pages, tabs, post + group creation, mobile homepage — no page errors
+## Preserved constraints
+- Keep Gemini provider/model/config unchanged; no publishing; no email-system changes
+- Never present demo data as real; do not delete real student accounts
 
-- [x] Removed Recommended for Me page/nav; chat recommendations auto-collect into Explore Opportunities (title-deduped); one Save rule via saved_opportunities; estimated-deadline labels; dashboard section renamed Explore Opportunities
-
-## Remaining
-- [x] Exact new homepage/auth messaging; original logos retained; desktop/mobile pages inspected
-- [x] Substantive Privacy and Terms based on actual implementation; outstanding legal/privacy requirements disclosed
-- [x] Authenticated streaming Gemini assistant with stored history, summaries, retained older chats and profile/catalog tools
-- [x] Real AI requests verified: profile-aware plans, multi-turn history after refresh, summary persistence and previous-chat selection
-- [x] Approved catalog save verified through the assistant and existing Saved Opportunities screen (labeled DEMO test record)
-- [x] Desktop/mobile overflow checks and routing/privacy-helper regression tests passed; preview build OK
-- [x] Parallel connected; real source extraction, recommendations and catalog saving verified
-- [ ] Cross-account assistant isolation and Stop/denial-state end-to-end verification — not exercised; owner policies and Stop propagation implemented
-- [ ] Legal launch readiness — needs operator/contact, age/guardian policy, jurisdiction, retention/deletion/provider disclosures and legal review
-- [ ] Two-account handshake test (connection request → accept → group invite) — needs a second account
-- [ ] Blocking/reporting users, notifications, self-serve account deletion
-- [x] Real extracted official-source records added without changing existing demo records or accounts
-- [x] Privacy remediation — direct profiles owner-only, peer cards use visibility-safe authenticated RPC, avatar sharing follows visibility; two-test-account checks passed
-- [x] Assistant: retry Gemini "high demand" failures; full-screen send + reply re-verified
-- [x] One-time welcome email after confirmed registration (sent once to Ray's account as a test)
-- [ ] Feature-announcement emails to all users — not supported by the built-in email system (bulk/announcement sending); needs a dedicated mailing service if wanted
+## Prior roadmap (archived highlights)
+- Brand, communities, messaging, college search, assistant streaming, welcome email all previously completed — see git history / archived plan

@@ -3,9 +3,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { categories } from "@/lib/categories";
 import type { Category, Profile } from "@/lib/profile";
-import { goalOptions, interestOptions, readVisibility, visibilityFields, type Visibility } from "@/lib/profile-options";
+import { educationLevels, goalOptions, interestOptions, readVisibility, visibilityFields, type Visibility } from "@/lib/profile-options";
 
-const levels = ["Middle school", "High school", "Undergraduate", "Graduate", "Gap year", "Other"];
+const levels = educationLevels;
 const regions = ["Africa", "Asia", "Europe", "Latin America", "Middle East", "North America", "Oceania"];
 const formats = [
   { v: "online", l: "Online" },
@@ -105,7 +105,7 @@ export function ProfileForm({ userId, profile, stepped, onDone }: { userId: stri
           <div className="grid gap-5 md:grid-cols-2">
             <label className="block"><span className="text-sm font-medium">Education level</span>
               <select className={input} value={d.education_level} onChange={(e) => set("education_level", e.target.value)}>
-                <option value="">Prefer not to say</option>{levels.map((l) => <option key={l}>{l}</option>)}
+                <option value="">Prefer not to say</option>{levels.map((l) => <option key={l} value={l}>{l}</option>)}
               </select></label>
             <label className="block"><span className="text-sm font-medium">Grade or year</span>
               <input className={input} placeholder="e.g. 11th grade, Year 2" value={d.grade} onChange={(e) => set("grade", e.target.value)} /></label>

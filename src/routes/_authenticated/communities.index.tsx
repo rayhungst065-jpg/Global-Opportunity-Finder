@@ -8,6 +8,7 @@ import { useUser } from "@/lib/auth";
 import { listCommunities, communityCategories } from "@/lib/communities.functions";
 import { useMyMemberships } from "@/lib/communities";
 import { discoverStudents, listMyConnections, type StudentCard } from "@/lib/connections.functions";
+import { educationLevels } from "@/lib/profile-options";
 import { StudentCardView, ConnectButton } from "@/components/site/StudentCard";
 import { listPosts, createPost, updatePost } from "@/lib/posts.functions";
 
@@ -170,7 +171,7 @@ function StudentDiscovery({ userId }: { userId: string | undefined }) {
         <input className={input} aria-label="Country" placeholder="Country" value={country} onChange={(e) => setCountry(e.target.value)} />
         <select className={input} aria-label="Education level" value={education} onChange={(e) => setEducation(e.target.value)}>
           <option value="">Any education level</option>
-          {[...new Set((students.data ?? []).map((s) => s.education_level).filter(Boolean) as string[]), ...(education ? [education] : [])].filter((v, i, a) => a.indexOf(v) === i).map((l) => <option key={l}>{l}</option>)}
+          {educationLevels.map((l) => <option key={l} value={l}>{l}</option>)}
         </select>
       </div>
       <div className="mt-5">
