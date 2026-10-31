@@ -148,6 +148,13 @@
       "when": 1793423897823,
       "tag": "0020_exclude_test_accounts_from_discovery",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1793426527509,
+      "tag": "0021_validate_avatar_upload_formats",
+      "breakpoints": true
     }
   ]
 }

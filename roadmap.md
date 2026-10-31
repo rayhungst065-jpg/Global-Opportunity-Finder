@@ -1,10 +1,10 @@
 # Roadmap — Three Specific Fixes (Ray)
 
 ## Current tasks
-- [ ] Fix directly related account privacy/cache/state issues; verify with two accounts without deleting existing data or changing catalog visibility.
-- [ ] Add Start Exploring for first-time dashboards, linking to /opportunities without searching; preserve returning dashboards.
-- [ ] Accept up to 8 MB profile photos, optimize to approximately 400 × 400, verify storage limit and validation, preserve existing photos.
-- [ ] Run focused tests and two-account/browser checks; report any unverified requirement. No AI/chat, email, publishing, or unrelated changes.
+- [x] Account isolation: one guarded root identity boundary clears queries before identity publication and remounts local drafts; saved queries/writes explicitly owner-filtered. Existing owner/participant RLS confirmed. Two existing test accounts verified A→B→A and refresh, A two saves + profile update, B empty saves/deadlines and own profile; direct cross-account read/update/delete returned zero rows and forged save rejected. Catalog identical for both; no existing records deleted/reset.
+- [x] Start Exploring replaces automatic dashboard matches only with no saves or recorded exploration. CTA verified /opportunities with empty search; actual visits persist owner exploration in existing preferences. Returning dashboards verified with saves and with visit/no saves. Limitation: historic unsaved catalog visits were never stored, so those accounts cannot be distinguished from never-explored accounts; no fabricated activity or schema added.
+- [x] Photo validation accepts exactly 8 MB, rejects 8 MB + 1 byte and unsupported formats. Private bucket limit verified 8388608 bytes; restrictive INSERT/UPDATE format policies applied and verified without widening access. Direct JPEG/PNG/WebP upload succeeds; GIF fails. Real phone-size JPEG optimized to 400 × 400 WebP and uploaded/read back, square PNG/portrait WebP optimized, pre-existing B photo intact; temporary storage probes removed.
+- [x] 26 focused tests passed; preview build OK; all 29 content route heads inspected. No AI/chat/provider/email changes or publishing. Test-account data modified only through acceptance checks; no real account edited.
 
 ## Previous audit
 

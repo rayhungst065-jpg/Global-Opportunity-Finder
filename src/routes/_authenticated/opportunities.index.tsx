@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { queryOptions, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { z } from "zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SiteShell } from "@/components/site/SiteLayout";
 import { OpportunityCard, SaveButton } from "@/components/site/OpportunityCard";
 import { listOpportunities } from "@/lib/opportunities.functions";
@@ -11,6 +11,7 @@ import { useSavedIds, useToggleSave } from "@/lib/saved";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { visibleCatalog } from "@/lib/opportunity-source";
+import { markOpportunitiesExplored } from "@/lib/profile";
 
 const search = z.object({
   q: z.string().optional(),
@@ -43,6 +44,13 @@ function Opportunities() {
   const navigate = useNavigate({ from: "/opportunities/" });
   const { data } = useSuspenseQuery(listQuery(s));
   const { user } = useUser();
+  const qc = useQueryClient();
+  useEffect(() => {
+    if (!user) return;
+    void markOpportunitiesExplored(user.id).then(() => qc.invalidateQueries({ queryKey: ["profile", user.id] })).catch(() => {
+      // Visit tracking must not interrupt browsing or saving opportunities.
+    });
+  }, [user?.id, qc]);
   const saved = useSavedIds(user?.id);
   const toggle = useToggleSave(user?.id);
   const [q, setQ] = useState(s.q ?? "");

@@ -6,6 +6,8 @@ import { useUser } from "@/lib/auth";
 import { profileCompletion, recommend, useAllOpportunities, useProfile } from "@/lib/profile";
 import { upcomingOf, useSavedList } from "@/lib/saved-list";
 import { useSavedIds, useToggleSave } from "@/lib/saved";
+import { hasExplored } from "@/lib/dashboard-state";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -43,6 +45,7 @@ function Dashboard() {
   const items = saved.data ?? [];
   const upcoming = upcomingOf(items).slice(0, 4);
   const name = p?.display_name || p?.first_name;
+  const startExploring = profile.isSuccess && saved.isSuccess && !hasExplored(p, items.length);
 
   return (
     <WorkspaceShell title={`Welcome${name ? `, ${name}` : ""}`} subtitle="Your opportunities at a glance.">
@@ -90,6 +93,15 @@ function Dashboard() {
       </div>
 
       <div className="mt-5">
+        {startExploring ? (
+          <section className="border-y border-border py-6">
+            <h2 className="text-lg font-semibold">Start Exploring</h2>
+            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Discover competitions, research programs, volunteer opportunities, internships, and scholarships that match your interests.</p>
+            <Button asChild className="mt-4 rounded-full">
+              <Link to="/opportunities" search={{}}>Explore Opportunities <ArrowRight /></Link>
+            </Button>
+          </section>
+        ) : profile.isPending || saved.isPending ? <p className="text-sm text-muted-foreground">Loading…</p> : (
         <Panel title="Explore Opportunities" action={<Link to="/opportunities" className={more}>See all</Link>}>
           {all.isLoading ? <p className="text-sm text-muted-foreground">Loading…</p> : all.isError ? <p className="text-sm text-destructive">Couldn't load opportunities.</p> : recs.length === 0 ? (
             <p className="text-sm text-muted-foreground">No matches yet. Add categories or interests to your profile, or <Link to="/opportunities" className="text-primary hover:underline">browse all opportunities</Link>.</p>
@@ -114,6 +126,7 @@ function Dashboard() {
             </ul>
           )}
         </Panel>
+        )}
       </div>
 
       <div className="mt-5 grid gap-4 sm:grid-cols-3">
