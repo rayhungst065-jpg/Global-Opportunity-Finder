@@ -105,7 +105,7 @@ export function ProfileForm({ userId, profile, stepped, onDone }: { userId: stri
           <div className="grid gap-5 md:grid-cols-2">
             <label className="block"><span className="text-sm font-medium">Education level</span>
               <select className={input} value={d.education_level} onChange={(e) => set("education_level", e.target.value)}>
-                <option value="">Prefer not to say</option>{levels.map((l) => <option key={l}>{l}</option>)}
+                <option value="">Prefer not to say</option>{levels.map((l) => <option key={l} value={l}>{l}</option>)}
               </select></label>
             <label className="block"><span className="text-sm font-medium">Grade or year</span>
               <input className={input} placeholder="e.g. 11th grade, Year 2" value={d.grade} onChange={(e) => set("grade", e.target.value)} /></label>
