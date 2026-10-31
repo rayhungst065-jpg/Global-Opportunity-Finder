@@ -11,9 +11,9 @@
 
 ## Architecture rules
 - Homepage and About share one creator-introduction component and original-photo asset pointer; why: reuse the photo and layout while keeping short/full copy distinct and linking to one About anchor.
-- Opportunity listing/detail pages live under `_authenticated` and read through `requireSupabaseAuth` server functions with the user's RLS client; why: the catalog is signed-in-only.
+- Opportunity pages use WorkspaceShell under `_authenticated` and read via requireSupabaseAuth/RLS; list-return history preserves filters and scroll; why: consistent private workspace.
 - Student-owned data (profiles, saved_opportunities) is read/written from the browser client under RLS; why: RLS scopes rows to auth.uid().
-- Shared opportunity edits are admin-only via `public.has_role`; the assistant never inserts catalog rows (recommendations outside the catalog are chat-only cards), and saves stay owner-scoped; why: students must not be able to add unreviewed records to the shared catalog through chat.
+- Catalog edits use admin has_role; AI never inserts catalog rows and saves stay owner-scoped. Master imports have unique source_key, original source_record and no owner; private rows stay untouched; why: duplicate-safe approved sharing, no private AI disclosure or inferred facts. Catalog filters are separate from homepage images.
 - Demo rows carry `is_demo = true` and must be labeled in the UI; why: never present fake opportunities as real.
 - Profile pictures live in the private `avatars` bucket under `<user_id>/…`, shown via authenticated downloads (object URLs), never signed links; why: revoked visibility must apply on the next load.
 - Peer profile reads use the authenticated `student_profile_cards` RPC; direct profile reads are owner-only and avatar access follows shared-field visibility, so hidden fields cannot leak through direct database requests.
