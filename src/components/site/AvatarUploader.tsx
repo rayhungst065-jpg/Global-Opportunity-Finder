@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Avatar } from "./Avatar";
 import { AVATAR_TYPES, useAvatarActions, validateAvatar } from "@/lib/avatar";
+import { Button } from "@/components/ui/button";
 
 /** Pick → preview → save, plus replace and remove. */
 export function AvatarUploader({ userId, path, name }: { userId: string; path: string | null; name: string | null }) {
@@ -39,16 +40,16 @@ export function AvatarUploader({ userId, path, name }: { userId: string; path: s
           <input ref={fileRef} id="avatar-file" type="file" accept={AVATAR_TYPES.join(",")} className="sr-only" onChange={(e) => pick(e.target.files?.[0])} />
           {file ? (
             <div className="flex flex-wrap gap-2">
-              <button type="button" disabled={busy} onClick={() => run(() => upload(file), "Picture saved.")} className={`${btn} bg-primary text-primary-foreground hover:opacity-90`}>{busy ? "Saving…" : "Save picture"}</button>
-              <button type="button" disabled={busy} onClick={cancel} className={`${btn} text-muted-foreground hover:text-foreground`}>Cancel</button>
+              <Button type="button" disabled={busy} onClick={() => run(() => upload(file), "Picture saved.")} className={btn}>{busy ? "Saving…" : "Save picture"}</Button>
+              <Button type="button" variant="ghost" disabled={busy} onClick={cancel} className={`${btn} text-muted-foreground`}>Cancel</Button>
             </div>
           ) : (
             <div className="flex flex-wrap gap-2">
               <label htmlFor="avatar-file" className={`${btn} cursor-pointer border border-border hover:bg-accent focus-within:ring-4`}>{path ? "Replace picture" : "Upload picture"}</label>
-              {path && <button type="button" disabled={busy} onClick={() => run(remove, "Picture removed.")} className={`${btn} text-muted-foreground hover:text-destructive`}>Remove</button>}
+              {path && <Button type="button" variant="ghost" disabled={busy} onClick={() => run(remove, "Picture removed.")} className={`${btn} text-muted-foreground hover:text-destructive`}>Remove</Button>}
             </div>
           )}
-          <p className="text-xs text-muted-foreground">JPG, PNG or WebP, up to 2 MB. Stored privately.</p>
+          <p className="text-xs text-muted-foreground">JPG, PNG or WebP, up to 8 MB. Stored privately.</p>
           {msg && <p role="status" className={`text-sm ${msg.ok ? "text-primary" : "text-destructive"}`}>{msg.text}</p>}
         </div>
       </div>

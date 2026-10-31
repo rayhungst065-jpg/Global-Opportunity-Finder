@@ -11,7 +11,8 @@ export function useSavedIds(userId: string | undefined) {
     queryKey: ["saved-ids", userId],
     enabled: !!userId,
     queryFn: async () => {
-      const { data, error } = await supabase.from("saved_opportunities").select("opportunity_id");
+      if (!userId) return new Set<string>();
+      const { data, error } = await supabase.from("saved_opportunities").select("opportunity_id").eq("user_id", userId);
       if (error) throw error;
       return new Set(data.map((r) => r.opportunity_id));
     },
@@ -24,7 +25,7 @@ export function useToggleSave(userId: string | undefined) {
     mutationFn: async ({ id, saved }: { id: string; saved: boolean }) => {
       if (!userId) throw new Error("Sign in to save opportunities.");
       const res = saved
-        ? await supabase.from("saved_opportunities").delete().eq("opportunity_id", id)
+        ? await supabase.from("saved_opportunities").delete().eq("opportunity_id", id).eq("user_id", userId)
         : await supabase.from("saved_opportunities").insert({ opportunity_id: id, user_id: userId });
       if (res.error) throw res.error;
     },

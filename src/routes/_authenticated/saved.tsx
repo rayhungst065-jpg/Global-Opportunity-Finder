@@ -29,7 +29,8 @@ function Saved() {
   const saved = useSavedList(user?.id);
   const toggle = useToggleSave(user?.id);
   async function setStatus(id: string, status: SavedStatus) {
-    await supabase.from("saved_opportunities").update({ status }).eq("id", id);
+    if (!user) return;
+    await supabase.from("saved_opportunities").update({ status }).eq("id", id).eq("user_id", user.id);
     qc.invalidateQueries({ queryKey: ["saved-list"] });
   }
   const items = saved.data ?? [];
