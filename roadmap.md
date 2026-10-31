@@ -1,4 +1,12 @@
-# Roadmap — Stability & Account-Isolation Audit (Ray's testing brief)
+# Roadmap — Three Specific Fixes (Ray)
+
+## Current tasks
+- [ ] Fix directly related account privacy/cache/state issues; verify with two accounts without deleting existing data or changing catalog visibility.
+- [ ] Add Start Exploring for first-time dashboards, linking to /opportunities without searching; preserve returning dashboards.
+- [ ] Accept up to 8 MB profile photos, optimize to approximately 400 × 400, verify storage limit and validation, preserve existing photos.
+- [ ] Run focused tests and two-account/browser checks; report any unverified requirement. No AI/chat, email, publishing, or unrelated changes.
+
+## Previous audit
 
 ## Issues to fix (from uploaded brief)
 - [x] Issue 1: assistant one-turn answers — raised maxOutputTokens 2048→8192 (reasoning+tool continuations share the budget; small cap ended turns with no final text); verified earlier turns produce full answers after tool calls; BLOCKED on full re-verify: Google returned "Gemini API free tier is not available for this project" (HTTP 403, persisted pause state) — needs Ray to restore API access; no billing enabled per standing rule
