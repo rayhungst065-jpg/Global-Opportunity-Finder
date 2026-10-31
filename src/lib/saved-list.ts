@@ -7,9 +7,11 @@ export function useSavedList(userId: string | undefined) {
     queryKey: ["saved-list", userId],
     enabled: !!userId,
     queryFn: async () => {
+      if (!userId) return [];
       const { data, error } = await supabase
         .from("saved_opportunities")
         .select("id, status, created_at, opportunity:opportunities(*)")
+        .eq("user_id", userId)
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
