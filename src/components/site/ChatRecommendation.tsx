@@ -10,8 +10,8 @@ export function ChatRecommendation({ recommendation: r, action }: { recommendati
     <h3 className="text-lg font-semibold break-words">{r.name}</h3>
     <p className="mt-2 text-sm break-words">{r.description}</p>
     <p className="mt-3 text-sm text-muted-foreground">Deadline: {r.deadline ?? (r.deadlineEstimate ? `Estimated: ${r.deadlineEstimate}` : "Deadline not available")}</p>
-    <p className="mt-3 text-sm break-words"><span className="font-medium">Why Gemini recommended it: </span>{r.reason}</p>
-    <p className="mt-3 text-xs text-muted-foreground">From your Gemini chat · Not independently verified</p>
+    <p className="mt-3 text-sm break-words"><span className="font-medium">Why the assistant recommended it: </span>{r.reason}</p>
+    <p className="mt-3 text-xs text-muted-foreground">From your AI chat · Not independently verified</p>
     <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
       {url ? <Button asChild variant="link" className="h-auto whitespace-normal p-0"><a href={url} target="_blank" rel="noopener noreferrer"><ExternalLink />Official opportunity</a></Button> : <span className="text-xs text-muted-foreground">Official link not available</span>}
       {action}

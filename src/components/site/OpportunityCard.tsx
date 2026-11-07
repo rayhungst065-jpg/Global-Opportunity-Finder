@@ -40,6 +40,7 @@ export function OpportunityCard({ o, action }: { o: Opportunity; action?: React.
         <span className="rounded-full bg-primary-soft px-2.5 py-1 font-medium text-accent-foreground">{categoryName(o.category)}</span>
         <span className="rounded-full border border-border px-2.5 py-1 text-muted-foreground">{availability ?? statusLabel[o.application_status]}</span>
         {o.is_demo && <span className="rounded-full bg-destructive/10 px-2.5 py-1 font-medium text-destructive">Demo data</span>}
+        {o.owner_user_id && <span className="rounded-full bg-accent px-2.5 py-1 font-medium text-accent-foreground">AI research · only you</span>}
       </div>
       <h3 className="mt-4 text-lg font-semibold">
         <Link to="/opportunities/$id" params={{ id: o.id }} state={{ opportunityListReturn: fromCatalog ? location.href : undefined }} className="hover:underline">{o.title}</Link>

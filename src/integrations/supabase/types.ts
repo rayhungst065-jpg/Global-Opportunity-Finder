@@ -103,6 +103,24 @@ export type Database = {
           },
         ]
       }
+      assistant_usage_months: {
+        Row: {
+          credits_used: number
+          month: string
+          updated_at: string
+        }
+        Insert: {
+          credits_used?: number
+          month: string
+          updated_at?: string
+        }
+        Update: {
+          credits_used?: number
+          month?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       collab_group_members: {
         Row: {
           created_at: string
@@ -873,6 +891,10 @@ export type Database = {
       }
       is_group_creator: { Args: { _group_id: string }; Returns: boolean }
       is_group_member: { Args: { _group_id: string }; Returns: boolean }
+      record_assistant_usage: {
+        Args: { p_credits: number; p_month: string }
+        Returns: undefined
+      }
       reserve_college_research: {
         Args: { p_criteria: Json; p_key: string }
         Returns: Json

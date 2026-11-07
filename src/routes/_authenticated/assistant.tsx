@@ -15,6 +15,7 @@ import { Tool, ToolHeader, ToolContent, ToolInput, ToolOutput } from "@/componen
 import { Reasoning, ReasoningTrigger, ReasoningContent } from "@/components/ai-elements/reasoning";
 import { Shimmer } from "@/components/ai-elements/shimmer";
 import { assistantHistory, createAssistantChat, loadAssistantChat } from "@/lib/assistant.functions";
+import { formatBudget, monthKeyUtc } from "@/lib/ai/assistant-budget";
 import { SUMMARY_REQUEST } from "@/lib/assistant-policy";
 import { supabase } from "@/integrations/supabase/client";
 import { useUser } from "@/lib/auth";
@@ -45,6 +46,7 @@ function AssistantPage() {
   const [notice, setNotice] = useState("");
   const [creating, setCreating] = useState(false);
   const history = useQuery({ queryKey: ["assistant-history", user?.id], queryFn: () => historyFn() });
+  const budget = useQuery({ queryKey: ["assistant-budget", monthKeyUtc()], queryFn: async () => { const { data } = await supabase.from("assistant_usage_months").select("credits_used").eq("month", monthKeyUtc()).maybeSingle(); return Number(data?.credits_used ?? 0); } });
   const activeId = selected ?? history.data?.find(c => !c.archived)?.id ?? history.data?.[0]?.id;
   const chat = useQuery({ queryKey: ["assistant-chat", user?.id, activeId], enabled: !!activeId, queryFn: () => { if (!activeId) throw new Error("No chat selected"); return loadFn({ data: { id: activeId } }); } });
   async function startNew() {
@@ -58,7 +60,8 @@ function AssistantPage() {
       <Button variant="outline" onClick={startNew} disabled={creating}><Plus />Start New Chat</Button>
       <DropdownMenu><DropdownMenuTrigger asChild><Button variant="ghost"><History />Previous chats</Button></DropdownMenuTrigger><DropdownMenuContent className="max-h-80 w-72 overflow-y-auto">{history.data?.map(c => <DropdownMenuItem key={c.id} onClick={() => setSelected(c.id)} className="whitespace-normal">{c.title}</DropdownMenuItem>)}{!history.data?.length && <p className="p-3 text-sm text-muted-foreground">No previous chats.</p>}</DropdownMenuContent></DropdownMenu>
     </div>
-    <p className="mb-3 flex shrink-0 items-start gap-2 text-xs text-muted-foreground"><ShieldCheck className="h-4 w-4 shrink-0" />Chat messages and selected preferences are sent to Google Gemini. Google’s free API tier may use this data to improve its products. Chat uses saved opportunity records, not live web search. College Search uses the saved spreadsheet database. Do not include sensitive information.</p>
+    <p className="mb-3 flex shrink-0 items-start gap-2 text-xs text-muted-foreground"><ShieldCheck className="h-4 w-4 shrink-0" />Chat messages and selected preferences are sent to Anthropic Claude through Lovable AI. The assistant can search the live web for current opportunities; details it cannot confirm are labeled. College Search uses the saved spreadsheet database. Do not include sensitive information.</p>
+    <p className="mb-3 shrink-0 text-xs font-medium text-muted-foreground">Shared AI budget: {formatBudget(budget.data ?? 0)}</p>
     {(notice || history.error || chat.error) && <p role="alert" className="mb-4 text-sm text-destructive">{notice || history.error?.message || chat.error?.message}</p>}
     {history.isPending || (activeId && chat.isPending) ? <Shimmer>Loading your chat…</Shimmer> : chat.data ? <ChatWindow key={chat.data.chat.id} id={chat.data.chat.id} initialMessages={chat.data.messages.map(m => ({ id: m.message_id, role: m.role, parts: m.parts })) as UIMessage[]} summary={chat.data.chat.summary} /> : <div className="py-16 text-center"><img src={symbol.url} alt="Global Opportunity Finder" className="mx-auto h-16 w-auto" /><h2 className="mt-5 text-xl font-semibold">Your next opportunity</h2><Button className="mt-6" onClick={startNew} disabled={creating}>Start a conversation</Button></div>}
   </WorkspaceShell>;
@@ -84,6 +87,7 @@ function ChatWindow({ id, initialMessages, summary }: { id: string; initialMessa
     await qc.invalidateQueries({ queryKey: ["saved"] });
     await qc.invalidateQueries({ queryKey: ["saved-list"] });
     await qc.invalidateQueries({ queryKey: ["saved-ids"] });
+    await qc.invalidateQueries({ queryKey: ["assistant-budget"] });
   } });
   const busy = status === "submitted" || status === "streaming";
   useEffect(() => { if (!busy) input.current?.focus(); }, [busy]);

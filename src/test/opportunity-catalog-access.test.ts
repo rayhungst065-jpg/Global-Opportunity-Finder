@@ -11,7 +11,7 @@ vi.mock("@tanstack/react-start", () => ({ createServerFn: () => {
   const builder = {
     middleware: () => builder,
     inputValidator: (validate: (data: unknown) => unknown) => ({
-      handler: (handler: (input: unknown) => unknown) => (input: { data: unknown }) => handler({ data: validate(input.data), context: { supabase: { from: db.from } } }),
+      handler: (handler: (input: unknown) => unknown) => (input: { data: unknown }) => handler({ data: validate(input.data), context: { supabase: { from: db.from }, userId: "user-1" } }),
     }),
   };
   return builder;
@@ -20,10 +20,10 @@ import { listOpportunities } from "@/lib/opportunities.functions";
 
 beforeEach(() => vi.clearAllMocks());
 describe("Shared Explore read path", () => {
-  it("lists only ownerless catalog records, never private AI-origin rows", async () => {
+  it("lists shared catalog records plus only the signed-in student's private AI rows", async () => {
     await listOpportunities({ data: {} });
     expect(db.from).toHaveBeenCalledWith("opportunities");
-    expect(db.query["is"]).toHaveBeenCalledWith("owner_user_id", null);
+    expect(db.query["or"]).toHaveBeenCalledWith("owner_user_id.is.null,owner_user_id.eq.user-1");
   });
   it.each(["cultural_exchange", "leadership", "education"] as const)("filters the actual %s category without remapping it", async (category) => {
     await listOpportunities({ data: { category } });
