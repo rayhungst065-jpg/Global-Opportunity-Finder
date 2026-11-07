@@ -67,7 +67,7 @@ describe("uiMessagesToAnthropic", () => {
     let called = false;
     const out = await uiMessagesToAnthropic(messages, async () => { called = true; return {}; });
     expect(called).toBe(false);
-    expect(JSON.stringify(out[2]!.content[0])).toContain("has not responded");
+    expect(JSON.stringify(out[2]!.content[0])).toContain("still waiting");
   });
 
   it("replays provider web searches as plain-text notes, not fake server blocks", async () => {
