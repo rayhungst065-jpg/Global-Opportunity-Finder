@@ -79,7 +79,7 @@ export async function uiMessagesToAnthropic(
           toolResults.push({ type: "tool_result", tool_use_id: tool.toolCallId, content: "The student declined this action. Do not repeat it unless they ask again." });
         }
       } else {
-        toolResults.push({ type: "tool_result", tool_use_id: tool.toolCallId, content: "The student has not responded to this approval request. Do not assume the action happened." });
+        toolResults.push({ type: "tool_result", tool_use_id: tool.toolCallId, content: "The approval prompt is still waiting for the student's decision in the interface. Do not ask for confirmation in your text and do not assume the action happened; simply wait for their choice." });
       }
     }
     if (blocks.length) out.push({ role: "assistant", content: blocks });
