@@ -143,11 +143,11 @@ export async function handleAssistant(request: Request) {
     if (profileError) throw new Error(profileError.message);
 
     /** Persist terminal provider denials so reloads do not retry them. */
-    async function recordAccessDenial(error: unknown) {
-      if (!(error instanceof GatewayError) || ![401, 402, 403].includes(error.httpStatus ?? 0)) return;
-      const safe = `Lovable AI: access denied (HTTP ${error.httpStatus}). The built-in AI connection needs attention; no student action is required.`;
+    async function recordAccessDenial(cause: unknown) {
+      if (!(cause instanceof GatewayError) || ![401, 402, 403].includes(cause.httpStatus ?? 0)) return;
+      const safe = `Lovable AI: access denied (HTTP ${cause.httpStatus}). The built-in AI connection needs attention; no student action is required.`;
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-      const { error } = await supabaseAdmin.from("assistant_access_state").upsert({ user_id: userId, status: error.httpStatus, blocked_message: safe });
+      const { error } = await supabaseAdmin.from("assistant_access_state").upsert({ user_id: userId, status: cause.httpStatus ?? 403, blocked_message: safe });
       if (error) console.error("Unable to save assistant pause state", error.message);
     }
 
