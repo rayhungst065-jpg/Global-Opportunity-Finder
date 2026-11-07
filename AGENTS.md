@@ -27,8 +27,8 @@
 - Assistant streams through the Google AI SDK in the existing authenticated handler, with provider-tagged access denials; why: preserve chat/tool persistence while preventing old-provider denials from blocking a provider change.
 - College Search reads imported colleges through an authenticated database search function, preserving source rows and notes; why: database-side filtering/sorting without external API calls or inferred spreadsheet values.
 - Historical college research is retained but has no active provider workflow; why: preserve user data while removing premium search access.
-- AI responses use the shared direct Gemini provider with keys read inside authenticated handlers; why: preserve one model configuration without exposing credentials.
-- Recommend stores owner-selected snapshots from persisted assistant recommendation tool outputs with RLS validation; why: preserve the original Gemini recommendation and reason without another model call or shared catalog mutation.
+- Assistant AI streams Claude Haiku via the Lovable AI Gateway SDK under a shared $10/month budget (service-only usage RPC); research saves insert owner-scoped private opportunities, never shared rows; why: no app AI keys, one cost ceiling.
+- Recommend stores owner-selected snapshots from persisted assistant recommendation tool outputs with RLS validation; why: preserve the original recommendation and reason without another model call or shared catalog mutation.
 - Opportunity verification timestamps are separate from update timestamps and never backfilled from AI or ordinary edits; why: label unknown/stale evidence without silently changing deadlines.
 - Password recovery uses Cloud Auth verification and updateUser on a public reset page; why: preserve provider token expiry and avoid a separate password system.
 - Private student messages are one-to-one rows readable by participants and insertable only by the sender to an accepted friend (`are_friends`); connection participants are immutable via trigger and pairs are unique; why: friendships and messages cannot be forged from the client.
