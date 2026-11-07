@@ -129,16 +129,17 @@ export async function handleAssistant(request: Request) {
     // History comes from owner-scoped storage, not a client-supplied transcript.
     const messages = (stored ?? []).map(m => ({ id: m.message_id, role: m.role, parts: m.parts })) as UIMessage[];
     // Approval responses are tied to the persisted tool invocation, never arbitrary tool results.
-    for (const incoming of body.messages) {
-      const existing = messages.find(m => m.id === incoming.id && m.role === "assistant");
-      if (!existing) continue;
+    // Match by toolCallId + approval id: stream-generated message ids may differ from client ids.
+    const incomingParts = body.messages.flatMap(m => m.parts);
+    for (const existing of messages) {
+      if (existing.role !== "assistant") continue;
       let approvalChanged = false;
       for (const part of existing.parts) {
-        if (!part.type.startsWith("tool-") || !("state" in part) || part.state !== "approval-requested" || !("approval" in part) || !part.approval) continue;
-        const approved = incoming.parts.find(p => p["type"] === part.type && p["toolCallId"] === ("toolCallId" in part ? part.toolCallId : undefined) && p["state"] === "approval-responded");
+        if (!part.type.startsWith("tool-") || !("state" in part) || part.state !== "approval-requested" || !("approval" in part) || !part.approval || !("toolCallId" in part)) continue;
+        const approved = incomingParts.find(p => p["toolCallId"] === part.toolCallId && p["state"] === "approval-responded");
         const approval = approved?.["approval"];
-        if (approval && typeof approval === "object" && "id" in approval && approval.id === part.approval.id && "approved" in approval && typeof approval.approved === "boolean") {
-          Object.assign(part, { state: "approval-responded", approval: { id: part.approval.id, approved: approval.approved } });
+        if (approval && typeof approval === "object" && "id" in approval && approval.id === (part.approval as { id?: unknown }).id && "approved" in approval && typeof approval.approved === "boolean") {
+          Object.assign(part, { state: "approval-responded", approval: { id: (part.approval as { id?: unknown }).id, approved: approval.approved } });
           approvalChanged = true;
         }
       }
