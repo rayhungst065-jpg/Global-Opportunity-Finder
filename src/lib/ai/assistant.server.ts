@@ -80,6 +80,11 @@ const TOOLS: NonNullable<MessagesRequest["tools"]> = [
   },
 ];
 
+/** Remove provider citation markup (<cite ...>...</cite>) that can leak into tool inputs. */
+function stripCitations(value: string): string {
+  return value.replace(/<cite[^>]*>/g, "").replace(/<\/cite>/g, "").replace(/\s{2,}/g, " ").trim();
+}
+
 function parseToolInput(json: string): Record<string, unknown> {
   if (!json.trim()) return {};
   try {
@@ -164,7 +169,8 @@ export async function handleAssistant(request: Request) {
         return (rows ?? []).filter(r => isNormalRecommendation(r) && words.some(w => `${r.title} ${r.description} ${r.category} ${r.eligibility}`.toLowerCase().includes(w))).slice(0, 8).map(r => ({ ...r, verification: verificationState(r.last_verified_at, r.deadline) }));
       }
       if (name === "recommendOpportunity") {
-        const recommendation = chatRecommendationSchema.parse(input);
+        const raw = chatRecommendationSchema.parse(input);
+        const recommendation = { ...raw, name: stripCitations(raw.name), description: stripCitations(raw.description), reason: stripCitations(raw.reason), organizer: raw.organizer ? stripCitations(raw.organizer) : raw.organizer };
         if (recommendation.catalogId) {
           const { data: row, error } = await db.from("opportunities").select("*").eq("id", recommendation.catalogId).single();
           if (error || !row || !isNormalRecommendation(row)) throw new Error("This catalog opportunity is unavailable for recommendation.");
@@ -188,7 +194,8 @@ export async function handleAssistant(request: Request) {
         return { saved: true, ...row, reminder: "Saved deadlines appear on the dashboard; automatic reminders are not implemented." };
       }
       if (name === "saveResearchedOpportunity") {
-        const parsed = researchedOpportunitySchema.parse(input);
+        const raw = researchedOpportunitySchema.parse(input);
+        const parsed = { ...raw, name: stripCitations(raw.name), description: stripCitations(raw.description), organizer: stripCitations(raw.organizer), eligibility: stripCitations(raw.eligibility), location: stripCitations(raw.location) };
         const normalized = parsed.name.trim().replace(/\s+/g, " ").toLowerCase();
         // Duplicate handling: reuse a shared catalog record or this student's own private record.
         const { data: candidates, error: findError } = await db.from("opportunities").select("id, title, owner_user_id, is_demo, deadline").ilike("title", normalized).limit(10);
