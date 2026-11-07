@@ -169,6 +169,13 @@
       "when": 1793486278439,
       "tag": "0023_approved_catalog_source_fields",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1794080361588,
+      "tag": "0024_assistant_usage_budget_and_private_research",
+      "breakpoints": true
     }
   ]
 }
