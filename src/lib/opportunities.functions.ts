@@ -16,7 +16,7 @@ export const listOpportunities = createServerFn({ method: "GET" })
     let query = context.supabase
       .from("opportunities")
       .select("*")
-      .is("owner_user_id", null)
+      .or(`owner_user_id.is.null,owner_user_id.eq.${context.userId}`)
       .order("deadline", { ascending: true, nullsFirst: false })
       .order("title");
     if (data.category) query = query.eq("category", data.category);
