@@ -61,7 +61,8 @@ export async function uiMessagesToAnthropic(
         blocks.push({ type: "text", text: `[Web search performed${typeof query === "string" && query ? `: "${query}"` : ""}${count ? ` — ${count} sources found` : ""}]` });
         continue;
       }
-      blocks.push({ type: "tool_use", id: tool.toolCallId, name, input: tool.input ?? {} });
+      const toolInput: Record<string, unknown> = tool.input && typeof tool.input === "object" && !Array.isArray(tool.input) ? tool.input as Record<string, unknown> : {};
+      blocks.push({ type: "tool_use", id: tool.toolCallId, name, input: toolInput });
       if (tool.state === "output-available") {
         toolResults.push({ type: "tool_result", tool_use_id: tool.toolCallId, content: JSON.stringify(tool.output ?? null) });
       } else if (tool.state === "output-error") {
