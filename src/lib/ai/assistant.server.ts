@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { streamMessage, GatewayError } from "@lovable.dev/ai-gateway";
+import { streamMessage, GatewayError, type MessagesRequest } from "@lovable.dev/ai-gateway";
 import { createUIMessageStream, createUIMessageStreamResponse, generateId, type UIMessage } from "ai";
 import { z } from "zod";
 import type { Database, Json } from "@/integrations/supabase/types";
@@ -24,7 +24,7 @@ const researchedOpportunitySchema = z.object({
 });
 
 /** Anthropic Messages API tool declarations, including the provider-run web search. */
-const TOOLS = [
+const TOOLS: NonNullable<MessagesRequest["tools"]> = [
   { type: "web_search_20250305", name: "web_search", max_uses: 3 },
   {
     name: "searchCatalog",

@@ -1,7 +1,8 @@
 import type { UIMessage } from "ai";
+import type { MessagesRequest } from "@lovable.dev/ai-gateway";
 
-export type AnthropicContentBlock = Record<string, unknown>;
-export type AnthropicMessage = { role: "user" | "assistant"; content: AnthropicContentBlock[] };
+export type AnthropicMessage = MessagesRequest["messages"][number];
+export type AnthropicContentBlock = Extract<AnthropicMessage["content"], unknown[]>[number];
 
 /** Tools that change student data and therefore require explicit approval before running. */
 export const APPROVAL_TOOLS = new Set(["saveCatalogOpportunity", "saveResearchedOpportunity"]);
