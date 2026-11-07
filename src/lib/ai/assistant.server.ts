@@ -77,10 +77,11 @@ const TOOLS: NonNullable<MessagesRequest["tools"]> = [
   },
 ];
 
-function parseToolInput(json: string): unknown {
+function parseToolInput(json: string): Record<string, unknown> {
   if (!json.trim()) return {};
   try {
-    return JSON.parse(json);
+    const value: unknown = JSON.parse(json);
+    return value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : {};
   } catch {
     return {};
   }
@@ -103,7 +104,7 @@ export async function handleAssistant(request: Request) {
     const { data: block, error: blockError } = await db.from("assistant_access_state").select("*").eq("user_id", userId).maybeSingle();
     if (blockError) throw new Error(blockError.message);
     // Provider-tagged denials persist; denials from a previous provider must not block this one.
-    if (block?.blocked_message.startsWith("Lovable AI:")) return new Response(block.blocked_message, { status: block.status });
+    if (block?.blocked_message.startsWith("Lovable AI:")) return new Response(block.blocked_message, { status: block.status ?? 403 });
     // Shared monthly budget guard: one global counter across all students.
     const month = monthKeyUtc();
     const { data: usageRow, error: usageError } = await db.from("assistant_usage_months").select("credits_used").eq("month", month).maybeSingle();
