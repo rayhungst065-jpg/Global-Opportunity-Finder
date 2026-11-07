@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { streamMessage, GatewayError, type MessagesRequest } from "@lovable.dev/ai-gateway";
+import { streamMessage, GatewayError, type EventFor, type MessagesRequest } from "@lovable.dev/ai-gateway";
 import { createUIMessageStream, createUIMessageStreamResponse, generateId, type UIMessage } from "ai";
 import { z } from "zod";
 import type { Database, Json } from "@/integrations/supabase/types";
@@ -10,7 +10,10 @@ import { catalogCategoryKeys } from "@/lib/opportunity-catalog";
 import { ASSISTANT_MODEL, budgetExceeded, creditsForUsage, monthKeyUtc, type AssistantUsage } from "@/lib/ai/assistant-budget";
 import { APPROVAL_TOOLS, uiMessagesToAnthropic, type AnthropicContentBlock, type AnthropicMessage } from "@/lib/ai/messages-adapter";
 
-const BUDGET_MESSAGE = "The website's shared monthly AI budget ($10.00) has been reached. AI opportunity search pauses until the monthly reset on the first day of next month (UTC).";
+/** Typed stream events for the selected model; the SDK returns the stream payload as unknown. */
+type AssistantStreamEvent = EventFor<"messages", typeof ASSISTANT_MODEL>;
+
+const BUDGET_MESSAGE ="The website's shared monthly AI budget ($10.00) has been reached. AI opportunity search pauses until the monthly reset on the first day of next month (UTC).";
 
 const researchedOpportunitySchema = z.object({
   name: z.string().trim().min(1).max(250),
@@ -252,7 +255,7 @@ export async function handleAssistant(request: Request) {
           let stepOutput = 0;
           let stepSearches = 0;
           try {
-            for await (const event of gwStream) {
+            for await (const event of gwStream as AsyncIterable<AssistantStreamEvent>) {
               if (event.type === "message_start") {
                 const u = event.message.usage;
                 usage.inputTokens += (u.input_tokens ?? 0) + (u.cache_creation_input_tokens ?? 0) + (u.cache_read_input_tokens ?? 0);

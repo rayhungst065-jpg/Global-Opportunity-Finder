@@ -53,7 +53,7 @@ describe("uiMessagesToAnthropic", () => {
     const out = await uiMessagesToAnthropic(messages, async () => { called = true; return {}; });
     expect(called).toBe(false);
     expect(out[2]!.content[0]).toMatchObject({ type: "tool_result", tool_use_id: "t9" });
-    expect(String(out[2]!.content[0]!["content"])).toContain("declined");
+    expect(JSON.stringify(out[2]!.content[0])).toContain("declined");
   });
 
   it("never lets an unanswered approval look like a completed save", async () => {
@@ -67,7 +67,7 @@ describe("uiMessagesToAnthropic", () => {
     let called = false;
     const out = await uiMessagesToAnthropic(messages, async () => { called = true; return {}; });
     expect(called).toBe(false);
-    expect(String(out[2]!.content[0]!["content"])).toContain("has not responded");
+    expect(JSON.stringify(out[2]!.content[0])).toContain("has not responded");
   });
 
   it("replays provider web searches as plain-text notes, not fake server blocks", async () => {
