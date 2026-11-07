@@ -38,8 +38,8 @@ describe("uiMessagesToAnthropic", () => {
     const calls: unknown[] = [];
     const out = await uiMessagesToAnthropic(messages, async (name, input) => { calls.push([name, input]); return { saved: true }; });
     expect(calls).toEqual([["saveCatalogOpportunity", { opportunityId: "abc" }]]);
-    expect(out[1].content).toEqual([{ type: "tool_use", id: "t1", name: "saveCatalogOpportunity", input: { opportunityId: "abc" } }]);
-    expect(out[2].content).toEqual([{ type: "tool_result", tool_use_id: "t1", content: JSON.stringify({ saved: true }) }]);
+    expect(out[1]!.content).toEqual([{ type: "tool_use", id: "t1", name: "saveCatalogOpportunity", input: { opportunityId: "abc" } }]);
+    expect(out[2]!.content[0]).toEqual({ type: "tool_result", tool_use_id: "t1", content: JSON.stringify({ saved: true }) });
   });
 
   it("tells the model when a save was declined, without executing it", async () => {
@@ -52,8 +52,8 @@ describe("uiMessagesToAnthropic", () => {
     let called = false;
     const out = await uiMessagesToAnthropic(messages, async () => { called = true; return {}; });
     expect(called).toBe(false);
-    expect(out[2].content[0]).toMatchObject({ type: "tool_result", tool_use_id: "t9" });
-    expect(String(out[2].content[0]["content"])).toContain("declined");
+    expect(out[2]!.content[0]).toMatchObject({ type: "tool_result", tool_use_id: "t9" });
+    expect(String(out[2]!.content[0]!["content"])).toContain("declined");
   });
 
   it("never lets an unanswered approval look like a completed save", async () => {
@@ -67,7 +67,7 @@ describe("uiMessagesToAnthropic", () => {
     let called = false;
     const out = await uiMessagesToAnthropic(messages, async () => { called = true; return {}; });
     expect(called).toBe(false);
-    expect(String(out[2].content[0]["content"])).toContain("has not responded");
+    expect(String(out[2]!.content[0]!["content"])).toContain("has not responded");
   });
 
   it("replays provider web searches as plain-text notes, not fake server blocks", async () => {
@@ -79,8 +79,8 @@ describe("uiMessagesToAnthropic", () => {
       ] },
     ] as UIMessage[];
     const out = await uiMessagesToAnthropic(messages, noopRun);
-    expect(out[1].content[0]).toEqual({ type: "text", text: '[Web search performed: "env volunteer" — 1 sources found]' });
-    expect(out[1].content[1]).toEqual({ type: "text", text: "Found one." });
+    expect(out[1]!.content[0]).toEqual({ type: "text", text: '[Web search performed: "env volunteer" — 1 sources found]' });
+    expect(out[1]!.content[1]).toEqual({ type: "text", text: "Found one." });
   });
 
   it("merges adjacent same-role messages to satisfy the alternating-role contract", async () => {
@@ -90,6 +90,6 @@ describe("uiMessagesToAnthropic", () => {
     ] as UIMessage[];
     const out = await uiMessagesToAnthropic(messages, noopRun);
     expect(out).toHaveLength(1);
-    expect(out[0].content).toHaveLength(2);
+    expect(out[0]!.content).toHaveLength(2);
   });
 });
