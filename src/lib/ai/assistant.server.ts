@@ -80,6 +80,11 @@ const TOOLS: NonNullable<MessagesRequest["tools"]> = [
   },
 ];
 
+/** Remove provider citation markup (<cite ...>...</cite>) that can leak into tool inputs. */
+function stripCitations(value: string): string {
+  return value.replace(/<cite[^>]*>/g, "").replace(/<\/cite>/g, "").replace(/\s{2,}/g, " ").trim();
+}
+
 function parseToolInput(json: string): Record<string, unknown> {
   if (!json.trim()) return {};
   try {
@@ -124,16 +129,17 @@ export async function handleAssistant(request: Request) {
     // History comes from owner-scoped storage, not a client-supplied transcript.
     const messages = (stored ?? []).map(m => ({ id: m.message_id, role: m.role, parts: m.parts })) as UIMessage[];
     // Approval responses are tied to the persisted tool invocation, never arbitrary tool results.
-    for (const incoming of body.messages) {
-      const existing = messages.find(m => m.id === incoming.id && m.role === "assistant");
-      if (!existing) continue;
+    // Match by toolCallId + approval id: stream-generated message ids may differ from client ids.
+    const incomingParts = body.messages.flatMap(m => m.parts);
+    for (const existing of messages) {
+      if (existing.role !== "assistant") continue;
       let approvalChanged = false;
       for (const part of existing.parts) {
-        if (!part.type.startsWith("tool-") || !("state" in part) || part.state !== "approval-requested" || !("approval" in part) || !part.approval) continue;
-        const approved = incoming.parts.find(p => p["type"] === part.type && p["toolCallId"] === ("toolCallId" in part ? part.toolCallId : undefined) && p["state"] === "approval-responded");
+        if (!part.type.startsWith("tool-") || !("state" in part) || part.state !== "approval-requested" || !("approval" in part) || !part.approval || !("toolCallId" in part)) continue;
+        const approved = incomingParts.find(p => p["toolCallId"] === part.toolCallId && p["state"] === "approval-responded");
         const approval = approved?.["approval"];
-        if (approval && typeof approval === "object" && "id" in approval && approval.id === part.approval.id && "approved" in approval && typeof approval.approved === "boolean") {
-          Object.assign(part, { state: "approval-responded", approval: { id: part.approval.id, approved: approval.approved } });
+        if (approval && typeof approval === "object" && "id" in approval && approval.id === (part.approval as { id?: unknown }).id && "approved" in approval && typeof approval.approved === "boolean") {
+          Object.assign(part, { state: "approval-responded", approval: { id: (part.approval as { id?: unknown }).id, approved: approval.approved } });
           approvalChanged = true;
         }
       }
@@ -164,7 +170,8 @@ export async function handleAssistant(request: Request) {
         return (rows ?? []).filter(r => isNormalRecommendation(r) && words.some(w => `${r.title} ${r.description} ${r.category} ${r.eligibility}`.toLowerCase().includes(w))).slice(0, 8).map(r => ({ ...r, verification: verificationState(r.last_verified_at, r.deadline) }));
       }
       if (name === "recommendOpportunity") {
-        const recommendation = chatRecommendationSchema.parse(input);
+        const raw = chatRecommendationSchema.parse(input);
+        const recommendation = { ...raw, name: stripCitations(raw.name), description: stripCitations(raw.description), reason: stripCitations(raw.reason), organizer: raw.organizer ? stripCitations(raw.organizer) : raw.organizer };
         if (recommendation.catalogId) {
           const { data: row, error } = await db.from("opportunities").select("*").eq("id", recommendation.catalogId).single();
           if (error || !row || !isNormalRecommendation(row)) throw new Error("This catalog opportunity is unavailable for recommendation.");
@@ -188,7 +195,8 @@ export async function handleAssistant(request: Request) {
         return { saved: true, ...row, reminder: "Saved deadlines appear on the dashboard; automatic reminders are not implemented." };
       }
       if (name === "saveResearchedOpportunity") {
-        const parsed = researchedOpportunitySchema.parse(input);
+        const raw = researchedOpportunitySchema.parse(input);
+        const parsed = { ...raw, name: stripCitations(raw.name), description: stripCitations(raw.description), organizer: stripCitations(raw.organizer), eligibility: stripCitations(raw.eligibility), location: stripCitations(raw.location) };
         const normalized = parsed.name.trim().replace(/\s+/g, " ").toLowerCase();
         // Duplicate handling: reuse a shared catalog record or this student's own private record.
         const { data: candidates, error: findError } = await db.from("opportunities").select("id, title, owner_user_id, is_demo, deadline").ilike("title", normalized).limit(10);
