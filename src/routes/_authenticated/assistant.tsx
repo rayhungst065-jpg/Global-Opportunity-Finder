@@ -46,7 +46,7 @@ function AssistantPage() {
   const [notice, setNotice] = useState("");
   const [creating, setCreating] = useState(false);
   const history = useQuery({ queryKey: ["assistant-history", user?.id], queryFn: () => historyFn() });
-  const budget = useQuery({ queryKey: ["assistant-budget", monthKeyUtc()], queryFn: async () => { const { data } = await supabase.from("assistant_usage_months").select("credits_used").eq("month", monthKeyUtc()).maybeSingle(); return Number(data?.credits_used ?? 0); } });
+  const budget = useQuery({ queryKey: ["assistant-budget", monthKeyUtc()], queryFn: async () => { const { data } = await supabase.rpc("current_assistant_usage"); return Number(data ?? 0); } });
   const activeId = selected ?? history.data?.find(c => !c.archived)?.id ?? history.data?.[0]?.id;
   const chat = useQuery({ queryKey: ["assistant-chat", user?.id, activeId], enabled: !!activeId, queryFn: () => { if (!activeId) throw new Error("No chat selected"); return loadFn({ data: { id: activeId } }); } });
   async function startNew() {

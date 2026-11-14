@@ -115,9 +115,10 @@ export async function handleAssistant(request: Request) {
     if (block?.blocked_message.startsWith("Lovable AI:")) return new Response(block.blocked_message, { status: block.status ?? 403 });
     // Shared monthly budget guard: one global counter across all students.
     const month = monthKeyUtc();
-    const { data: usageRow, error: usageError } = await db.from("assistant_usage_months").select("credits_used").eq("month", month).maybeSingle();
+    void month;
+    const { data: usageTotal, error: usageError } = await db.rpc("current_assistant_usage");
     if (usageError) throw new Error(usageError.message);
-    if (budgetExceeded(Number(usageRow?.credits_used ?? 0))) return new Response(BUDGET_MESSAGE, { status: 429 });
+    if (budgetExceeded(Number(usageTotal ?? 0))) return new Response(BUDGET_MESSAGE, { status: 429 });
     const latest = body.messages.at(-1);
     const latestUser = [...body.messages].reverse().find(m => m.role === "user");
     if (!latest || !latestUser) return new Response("Enter a message.", { status: 400 });

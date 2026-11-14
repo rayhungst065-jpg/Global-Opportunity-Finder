@@ -176,6 +176,13 @@
       "when": 1794080361588,
       "tag": "0024_assistant_usage_budget_and_private_research",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1794633842131,
+      "tag": "0025_usage_total_rpc",
+      "breakpoints": true
     }
   ]
 }
