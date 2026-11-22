@@ -25,7 +25,7 @@
 - Assistant catalog saves require AI SDK tool approval and use the user's RLS client; why: restrict writes to explicit student-owned saves, never shared opportunity mutations.
 - Assistant provider access blocks persist in server-owned access state; why: prevent reloads from retrying terminal provider denials.
 - Assistant streams through the Google AI SDK in the existing authenticated handler, with provider-tagged access denials; why: preserve chat/tool persistence while preventing old-provider denials from blocking a provider change.
-- College Search reads imported colleges through an authenticated database search function, preserving source rows and notes; why: database-side filtering/sorting without external API calls or inferred spreadsheet values.
+- College Search reads imported colleges only through an authenticated security-definer search function (no direct table SELECT), preserving source rows and notes; why: database-side filtering/sorting without external API calls or inferred spreadsheet values.
 - Historical college research is retained but has no active provider workflow; why: preserve user data while removing premium search access.
 - Assistant AI streams Claude Haiku via the Lovable AI Gateway SDK under a shared $20/month budget (service-only usage RPC); research saves insert owner-scoped private opportunities, never shared rows; why: no app AI keys, one cost ceiling.
 - Recommend stores owner-selected snapshots from persisted assistant recommendation tool outputs with RLS validation; why: preserve the original recommendation and reason without another model call or shared catalog mutation.

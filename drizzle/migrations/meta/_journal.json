@@ -183,6 +183,13 @@
       "when": 1794633842131,
       "tag": "0025_usage_total_rpc",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1795380537994,
+      "tag": "0026_college_reads_via_search_only",
+      "breakpoints": true
     }
   ]
 }
