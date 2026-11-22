@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 import { ASSISTANT_MONTHLY_BUDGET_CREDITS, budgetExceeded, creditsForUsage, formatBudget, monthKeyUtc, PRICE_INPUT_PER_TOKEN, PRICE_OUTPUT_PER_TOKEN, PRICE_PER_WEB_SEARCH } from "@/lib/ai/assistant-budget";
 
 describe("assistant budget", () => {
-  it("caps the shared monthly budget at 10 credits ($10)", () => {
-    expect(ASSISTANT_MONTHLY_BUDGET_CREDITS).toBe(10);
+  it("caps the shared monthly budget at 20 credits ($20)", () => {
+    expect(ASSISTANT_MONTHLY_BUDGET_CREDITS).toBe(20);
   });
 
   it("computes credits from tokens and web searches at catalog list prices", () => {
@@ -17,9 +17,9 @@ describe("assistant budget", () => {
   });
 
   it("blocks exactly at the limit and not before", () => {
-    expect(budgetExceeded(9.99)).toBe(false);
-    expect(budgetExceeded(10)).toBe(true);
-    expect(budgetExceeded(10.01)).toBe(true);
+    expect(budgetExceeded(19.99)).toBe(false);
+    expect(budgetExceeded(20)).toBe(true);
+    expect(budgetExceeded(20.01)).toBe(true);
   });
 
   it("uses the UTC calendar month as the reset key", () => {
@@ -28,8 +28,8 @@ describe("assistant budget", () => {
     expect(monthKeyUtc(new Date("2026-12-01T00:00:00Z"))).toBe("2026-12");
   });
 
-  it("formats the budget line as dollars used of the $10 monthly limit", () => {
-    expect(formatBudget(0)).toBe("$0.00 used / $10.00 monthly limit");
-    expect(formatBudget(3.456)).toBe("$3.46 used / $10.00 monthly limit");
+  it("formats the budget line as dollars used of the $20 monthly limit", () => {
+    expect(formatBudget(0)).toBe("$0.00 used / $20.00 monthly limit");
+    expect(formatBudget(3.456)).toBe("$3.46 used / $20.00 monthly limit");
   });
 });

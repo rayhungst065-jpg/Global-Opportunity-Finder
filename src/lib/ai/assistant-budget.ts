@@ -1,9 +1,9 @@
 /**
  * Shared monthly AI budget for the whole website (all students combined).
- * $10 USD ≈ 10 Lovable credits at provider list price on a monthly plan.
+ * $20 USD ≈ 20 Lovable credits at provider list price on a monthly plan.
  * The assistant is the only AI feature, so this table covers all AI spend.
  */
-export const ASSISTANT_MONTHLY_BUDGET_CREDITS = 10;
+export const ASSISTANT_MONTHLY_BUDGET_CREDITS = 20;
 
 /** anthropic/claude-haiku-4-5 via Lovable AI — the lowest-cost built-in model with live web search. */
 export const ASSISTANT_MODEL = "anthropic/claude-haiku-4-5";

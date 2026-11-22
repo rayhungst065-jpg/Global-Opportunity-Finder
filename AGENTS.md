@@ -27,7 +27,7 @@
 - Assistant streams through the Google AI SDK in the existing authenticated handler, with provider-tagged access denials; why: preserve chat/tool persistence while preventing old-provider denials from blocking a provider change.
 - College Search reads imported colleges through an authenticated database search function, preserving source rows and notes; why: database-side filtering/sorting without external API calls or inferred spreadsheet values.
 - Historical college research is retained but has no active provider workflow; why: preserve user data while removing premium search access.
-- Assistant AI streams Claude Haiku via the Lovable AI Gateway SDK under a shared $10/month budget (service-only usage RPC); research saves insert owner-scoped private opportunities, never shared rows; why: no app AI keys, one cost ceiling.
+- Assistant AI streams Claude Haiku via the Lovable AI Gateway SDK under a shared $20/month budget (service-only usage RPC); research saves insert owner-scoped private opportunities, never shared rows; why: no app AI keys, one cost ceiling.
 - Recommend stores owner-selected snapshots from persisted assistant recommendation tool outputs with RLS validation; why: preserve the original recommendation and reason without another model call or shared catalog mutation.
 - Opportunity verification timestamps are separate from update timestamps and never backfilled from AI or ordinary edits; why: label unknown/stale evidence without silently changing deadlines.
 - Password recovery uses Cloud Auth verification and updateUser on a public reset page; why: preserve provider token expiry and avoid a separate password system.

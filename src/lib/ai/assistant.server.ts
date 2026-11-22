@@ -13,7 +13,7 @@ import { APPROVAL_TOOLS, uiMessagesToAnthropic, type AnthropicContentBlock, type
 /** Typed stream events for the selected model; the SDK returns the stream payload as unknown. */
 type AssistantStreamEvent = EventFor<"messages", typeof ASSISTANT_MODEL>;
 
-const BUDGET_MESSAGE ="The website's shared monthly AI budget ($10.00) has been reached. AI opportunity search pauses until the monthly reset on the first day of next month (UTC).";
+const BUDGET_MESSAGE ="The website's shared monthly AI budget ($20.00) has been reached. AI opportunity search pauses until the monthly reset on the first day of next month (UTC).";
 
 const researchedOpportunitySchema = z.object({
   name: z.string().trim().min(1).max(250),
