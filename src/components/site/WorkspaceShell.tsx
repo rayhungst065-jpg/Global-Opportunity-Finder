@@ -119,7 +119,7 @@ export function WorkspaceShell({ title, subtitle, children, fitViewport = false 
             ))}
           </nav>
         </div>
-        <main className={fitViewport ? "mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col px-5 py-4 md:px-10 md:py-6" : "mx-auto max-w-5xl px-5 py-8 md:px-10 md:py-10"}>
+        <main className={fitViewport ? "mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col px-5 py-4 md:px-10 md:py-6" : "mx-auto w-full max-w-5xl px-4 py-8 sm:px-5 md:px-10 md:py-10"}>
           <h1 className="shrink-0 text-2xl font-semibold md:text-3xl">{title}</h1>
           {subtitle && <p className="mt-1.5 text-sm text-muted-foreground">{subtitle}</p>}
           <div className={fitViewport ? "mt-4 flex min-h-0 flex-1 flex-col" : "mt-8"}>{children}</div>
@@ -133,7 +133,7 @@ export function Panel({ title, action, children }: { title: string; action?: Rea
   return (
     <section className="rounded-2xl border border-border bg-card p-5 shadow-soft">
       <div className="flex items-center justify-between gap-4">
-        <h2 className="text-base font-semibold">{title}</h2>
+        <h2 className="min-w-0 text-base font-semibold">{title}</h2>
         {action}
       </div>
       <div className="mt-3">{children}</div>

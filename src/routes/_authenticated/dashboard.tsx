@@ -63,13 +63,13 @@ function Dashboard() {
         {pct < 100 && <Link to="/profile" search={{ edit: true }} className="shrink-0 rounded-full border border-border bg-background px-4 py-2 text-sm hover:bg-accent">Complete profile</Link>}
       </section>
 
-      <div className="mt-5 grid gap-5 lg:grid-cols-2">
+      <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-2 [&>*]:min-w-0">
         <Panel title="Upcoming deadlines" action={<Link to="/deadlines" className={more}>View all</Link>}>
           {upcoming.length === 0 ? <p className="text-sm text-muted-foreground">No upcoming deadlines among your saved opportunities.</p> : (
             <ul className="divide-y divide-border">
               {upcoming.map((s) => (
                 <li key={s.id} className="flex justify-between gap-4 py-2.5 text-sm">
-                  <Link to="/opportunities/$id" params={{ id: s.opportunity!.id }} className="truncate hover:underline">{s.opportunity!.title}</Link>
+                  <Link to="/opportunities/$id" params={{ id: s.opportunity!.id }} className="min-w-0 truncate hover:underline">{s.opportunity!.title}</Link>
                   <span className="shrink-0 text-muted-foreground">{formatDeadline(s.opportunity!.deadline, s.opportunity!.deadline_estimate)}</span>
                 </li>
               ))}
@@ -83,7 +83,7 @@ function Dashboard() {
             <ul className="divide-y divide-border">
               {items.slice(0, 4).map((s) => s.opportunity && (
                 <li key={s.id} className="flex justify-between gap-4 py-2.5 text-sm">
-                  <Link to="/opportunities/$id" params={{ id: s.opportunity.id }} className="truncate hover:underline">{s.opportunity.title}</Link>
+                  <Link to="/opportunities/$id" params={{ id: s.opportunity.id }} className="min-w-0 truncate hover:underline">{s.opportunity.title}</Link>
                   <span className="shrink-0 capitalize text-muted-foreground">{s.status}</span>
                 </li>
               ))}
@@ -106,11 +106,11 @@ function Dashboard() {
           {all.isLoading ? <p className="text-sm text-muted-foreground">Loading…</p> : all.isError ? <p className="text-sm text-destructive">Couldn't load opportunities.</p> : recs.length === 0 ? (
             <p className="text-sm text-muted-foreground">No matches yet. Add categories or interests to your profile, or <Link to="/opportunities" className="text-primary hover:underline">browse all opportunities</Link>.</p>
           ) : (
-            <ul className="grid gap-4 md:grid-cols-3">
+            <ul className="grid grid-cols-1 gap-4 md:grid-cols-3">
               {recs.map(({ o, reasons }) => {
                 const isSaved = savedIds.data?.has(o.id) ?? false;
                 return (
-                  <li key={o.id} className="flex flex-col rounded-xl border border-border p-4">
+                  <li key={o.id} className="flex min-w-0 flex-col break-words rounded-xl border border-border p-4">
                     <p className="text-xs text-primary">{categoryName(o.category)}{o.is_demo && <span className="ml-2 rounded-full bg-destructive/10 px-2 py-0.5 text-destructive">Demo data · not real</span>}</p>
                     <Link to="/opportunities/$id" params={{ id: o.id }} className="mt-1 font-medium hover:underline">{o.title}</Link>
                     <p className="text-xs text-muted-foreground">{o.organizer}</p>
@@ -129,9 +129,9 @@ function Dashboard() {
         )}
       </div>
 
-      <div className="mt-5 grid gap-4 sm:grid-cols-3">
+      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
         {quickLinks.map((q) => (
-          <Link key={q.to} to={q.to} className="group flex items-center gap-3 rounded-2xl border border-border bg-card p-4 shadow-soft transition hover:-translate-y-0.5 hover:shadow-lift">
+          <Link key={q.to} to={q.to} className="group flex min-w-0 items-center gap-3 rounded-2xl border border-border bg-card p-4 shadow-soft transition hover:-translate-y-0.5 hover:shadow-lift">
             <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl ${q.classes}`}><q.icon className="h-5 w-5" /></span>
             <span className="min-w-0 flex-1">
               <span className="block truncate text-sm font-medium">{q.label}</span>
